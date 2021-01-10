@@ -35,8 +35,6 @@ class RecPointController(Resource):
 
     def get(self):
         """[GET]
-        Returns:
-            `[
                 ...
             ]`
         """
@@ -109,8 +107,6 @@ class RecPointController(Resource):
 
     def put(self):
         """[PUT]
-        Arguments:
-            id {string} -- RecPoint id
         Returns:
             [type] -- [description]
         """
@@ -138,4 +134,5 @@ class RecPointController(Resource):
         if not bool(rec_point):
             return {"message": "RecPoint not found id={}".format(args['id'])}, 404
 
-        return json.loads(rec_point.to_json())
+       return json.loads(rec_point.to_json())
+

@@ -1,4 +1,5 @@
 from mongoengine import Document, StringField, ListField
+
 from mongoengine.fields import ReferenceField
 from mongoengine.queryset.queryset import QuerySet
 from pprint import pprint
@@ -26,10 +27,7 @@ def read() -> QuerySet:
 
 def create(name: str) -> Partner:
     """This is functon thats creates filter
-    Args:
-        name (str): Filter name
-        var_name (str): Filter varible name
-        image (str, optional): Filter icon. Defaults to "".
+
     Returns:
         Filter: Created filter
     """
@@ -48,6 +46,7 @@ def update(_id: str, updates: object) -> Partner:
         updates.var_name (str): Filter varible name
         updates.image (str): Filter icon
         updates.key_words (str[]): Filter key_words
+
     Returns:
         Filter: Updated filter
     """
@@ -60,8 +59,7 @@ def update(_id: str, updates: object) -> Partner:
 
 def delete(_id: str) -> Partner:
     """This is functon thats deletes filter
-    Args:
-        _id (str): Filter id
+
     Returns:
         Filter: Deleted filter
     """
@@ -70,3 +68,4 @@ def delete(_id: str) -> Partner:
         return None
     pn.delete()
     return pn
+

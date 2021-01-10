@@ -1,11 +1,11 @@
 from mongoengine import Document, StringField, ListField, ReferenceField, EmbeddedDocumentField, DictField, BooleanField, EmbeddedDocument, DecimalField
 from mongoengine.queryset.queryset import QuerySet
 
-
 from models.FilterModel import Filter
 
 class RecPoint(Document):
     ''' Recycle model to store Recycle points
+
     Args:
         Document ([type]): [description]
     '''
@@ -39,6 +39,7 @@ class RecPoint(Document):
 
 def read() -> QuerySet:
     """This is functon thats return all Recycly points
+
     Returns:
         QuerySet: Set of RecPoint Documents
     """
@@ -79,6 +80,7 @@ def delete(_id: str) -> RecPoint:
     """This is functon thats deletes Recycle points
     Args:
         _id (str): RecPoints id
+
     Returns:
         RecPoint: Deleted RecPoint
     """
@@ -87,3 +89,4 @@ def delete(_id: str) -> RecPoint:
         return None
     rec_point.delete()
     return rec_point
+

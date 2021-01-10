@@ -1,6 +1,7 @@
 import json
 from flask import request
 from flask_restful import Resource
+
 import models.PartnerModel as PartnerModel
 
 class PartnerController(Resource):
@@ -53,8 +54,6 @@ class PartnerController(Resource):
 
     def put(self):
         """[PUT]
-        Arguments:
-            id {string} -- Filter id
         Returns:
             [type] -- [description]
         """
