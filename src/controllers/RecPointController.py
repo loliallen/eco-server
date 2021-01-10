@@ -133,6 +133,5 @@ class RecPointController(Resource):
         rec_point = RecPoint.delete(args['id'])
         if not bool(rec_point):
             return {"message": "RecPoint not found id={}".format(args['id'])}, 404
-
-       return json.loads(rec_point.to_json())
+        return json.loads(rec_point.to_json())
 
