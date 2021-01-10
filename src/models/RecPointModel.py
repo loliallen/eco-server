@@ -1,9 +1,5 @@
-from flask import jsonify
 from mongoengine import Document, StringField, ListField, ReferenceField, EmbeddedDocumentField, DictField, BooleanField, EmbeddedDocument, DecimalField
 from mongoengine.queryset.queryset import QuerySet
-from bson import json_util
-from pprint import pprint
-import json
 
 from models.FilterModel import Filter
 
@@ -17,11 +13,11 @@ class RecPoint(Document):
     description = StringField()
     getBonus = BooleanField()
     address = StringField(requrend=True)
-    partner = ReferenceField('Partner', required=True)
+    partner = ReferenceField('Partner', required=False)
     photo_path = StringField()
     contacts = StringField()
     coords = DictField(required=True)
-    accept_types = ListField(ReferenceField(Filter), required=True)
+    accept_types = ListField(ReferenceField(Filter), required=False)
     work_time = DictField(required=True)
     meta = {
         "db_alias": "core",
@@ -82,7 +78,6 @@ def update(_id: str, updates: object) -> RecPoint:
 
 def delete(_id: str) -> RecPoint:
     """This is functon thats deletes Recycle points
-
     Args:
         _id (str): RecPoints id
 
@@ -94,6 +89,4 @@ def delete(_id: str) -> RecPoint:
         return None
     rec_point.delete()
     return rec_point
-
-
 

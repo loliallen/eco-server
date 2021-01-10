@@ -35,10 +35,6 @@ class RecPointController(Resource):
 
     def get(self):
         """[GET]
-
-        Returns:
-            `[
-
                 ...
             ]`
         """
@@ -58,7 +54,6 @@ class RecPointController(Resource):
 
     def post(self):
         """[POST]
-
         Returns:
             {
              "_id": {
@@ -92,7 +87,6 @@ class RecPointController(Resource):
         }
     }
    }
-
             `
         """
         _rec_point = request.json
@@ -100,8 +94,12 @@ class RecPointController(Resource):
         if not partner:
             return {"message": "Filter not found id={}"}, 404
         accept_types = []
+        """
+        Странный кусок кода
+
         accept_types.append(FilterModel.Filter.objects(id='5ff8b5e658bdaf20f718f2d1').first())
         accept_types.append(FilterModel.Filter.objects(id='5ff8de6ca2443b0828e04115').first())
+        """
         rec_point = RecPoint.create(_rec_point['name'], _rec_point['address'],
                                     partner, _rec_point['point'], accept_types,
                                     _rec_point['work_time']).to_json()
@@ -109,10 +107,6 @@ class RecPointController(Resource):
 
     def put(self):
         """[PUT]
-
-        Arguments:
-            id {string} -- RecPoint id
-
         Returns:
             [type] -- [description]
         """
@@ -140,4 +134,5 @@ class RecPointController(Resource):
         if not bool(rec_point):
             return {"message": "RecPoint not found id={}".format(args['id'])}, 404
 
-        return json.loads(rec_point.to_json())
+       return json.loads(rec_point.to_json())
+

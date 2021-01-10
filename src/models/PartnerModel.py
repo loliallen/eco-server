@@ -1,19 +1,23 @@
 from mongoengine import Document, StringField, ListField
+
+from mongoengine.fields import ReferenceField
 from mongoengine.queryset.queryset import QuerySet
 from pprint import pprint
+
+from models.RecPointModel import RecPoint
 
 
 class Partner(Document):
     name = StringField(required=True)
+    points = ListField(ReferenceField(RecPoint))
     meta = {
         "db_alias": "core",
         "collection": "partners"
     }
 
 
-def read() -> Partner:
+def read() -> QuerySet:
     """This is functon thats return all filters
-
     Returns:
         QuerySet: Set of Filter Documents
     """
@@ -23,11 +27,6 @@ def read() -> Partner:
 
 def create(name: str) -> Partner:
     """This is functon thats creates filter
-
-    Args:
-        name (str): Filter name
-        var_name (str): Filter varible name
-        image (str, optional): Filter icon. Defaults to "".
 
     Returns:
         Filter: Created filter
@@ -40,7 +39,6 @@ def create(name: str) -> Partner:
 
 def update(_id: str, updates: object) -> Partner:
     """This is functon thats updates filter
-
     Args:
         _id (str): - Filter id
         updates (object) - Updates
@@ -62,9 +60,6 @@ def update(_id: str, updates: object) -> Partner:
 def delete(_id: str) -> Partner:
     """This is functon thats deletes filter
 
-    Args:
-        _id (str): Filter id
-
     Returns:
         Filter: Deleted filter
     """
@@ -73,3 +68,4 @@ def delete(_id: str) -> Partner:
         return None
     pn.delete()
     return pn
+
