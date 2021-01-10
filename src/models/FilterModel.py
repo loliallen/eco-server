@@ -2,7 +2,6 @@ from mongoengine import Document, StringField, ListField
 from mongoengine.queryset.queryset import QuerySet
 from pprint import pprint
 
-from utils.mongo import dict_to_update
 
 class Filter(Document):
     """Filter model, using for sort recyclables
