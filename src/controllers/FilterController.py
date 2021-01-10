@@ -1,6 +1,6 @@
 import json
 from re import A
-from flask import request, json
+from flask import request
 from flask_restful import Resource, reqparse
 import models.FilterModel as FilterModel
 

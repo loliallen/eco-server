@@ -1,4 +1,3 @@
-from flask import jsonify
 from mongoengine import Document, StringField, ListField
 from mongoengine.queryset.queryset import QuerySet
 from pprint import pprint
@@ -19,6 +18,10 @@ class Filter(Document):
         "db_alias": "core",
         "collection": "filters"
     }
+
+
+
+
 
 
 def read() -> QuerySet:
