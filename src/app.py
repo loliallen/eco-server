@@ -10,7 +10,7 @@ app = Flask(__name__)
 api = Api(app)
 
 
-api.add_resource(FilterController, '/')
+api.add_resource(FilterController, '/filters')
 api.add_resource(RecPointController, '/rec_points')
 api.add_resource(PartnerController, '/partners')
 

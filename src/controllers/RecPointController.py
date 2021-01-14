@@ -4,8 +4,8 @@ from flask_restful import Resource, reqparse
 import models.RecPointModel as RecPoint
 from models.PartnerModel import Partner
 import models.FilterModel as FilterModel
-from bson import json_util
-
+from ast import literal_eval 
+from pprint import pprint
 
 parser = reqparse.RequestParser()
 
@@ -41,16 +41,32 @@ class RecPointController(Resource):
 
         args = request.args.to_dict()
 
+
         if "id" in args:
             rec_point = RecPoint.RecPoint.objects(id=args['id']).first()
             if not rec_point:
                 return {"message": "RecPoint not found id={}".format(args['id'])}, 404
-
+            rec_point = rec_point
+            print(rec_point.to_mongo())
             return json.loads(rec_point.to_json())
         else:
-            rec_points = RecPoint.read()
-            #print(json_util.dumps([i.to_json() for i in rec_points]).encode('utf-8'))
-            return json.loads(rec_points.to_json())
+            rec_points = RecPoint.read().select_related(2)
+            # rec_points = json.loads(rec_points)
+            print(rec_points.as_pymongo())
+            res = []
+            for rec in rec_points:
+                filters = []
+                for f in rec["accept_types"]:
+                    pprint(f)
+                    fl = FilterModel.find_by_id(f.id).to_json()
+                    filters.append(f)
+
+                pprint(filters)
+                rec["accept_types"] = filters
+                # print(rec)
+                res.append(json.loads(rec.to_json()))
+            # print(res)
+            return json.loads(json.dumps(res))
 
     def post(self):
         """[POST]
@@ -89,20 +105,35 @@ class RecPointController(Resource):
    }
             `
         """
-        _rec_point = request.json
-        partner = Partner.objects(id=_rec_point['partner_id']).first()
-        if not partner:
-            return {"message": "Filter not found id={}"}, 404
-        accept_types = []
+    
+        __rec_point = request.form.to_dict()
+
+        if "work_time" in __rec_point:
+            _w_t = literal_eval(__rec_point["work_time"])
+            print(_w_t, type(_w_t))
+            w_t = _w_t
+            __rec_point["work_time"] = w_t
+        
+        if "accept_types" in __rec_point:
+            __rec_point["accept_types"] = literal_eval(__rec_point["accept_types"])
+        if "coords" in __rec_point:
+            __rec_point["coords"] = literal_eval(__rec_point["coords"])
+        _rec_point = __rec_point
+
+        print(_rec_point)
+        # partner
+
+        # if 'partner_id' in _rec_point:
+        #     partner = Partner.objects(id=_rec_point['partner_id']).first()
+        #     if not partner:
+        #         return {"message": "Filter not found id={}"}, 404
         """
         Странный кусок кода
 
         accept_types.append(FilterModel.Filter.objects(id='5ff8b5e658bdaf20f718f2d1').first())
         accept_types.append(FilterModel.Filter.objects(id='5ff8de6ca2443b0828e04115').first())
         """
-        rec_point = RecPoint.create(_rec_point['name'], _rec_point['address'],
-                                    partner, _rec_point['point'], accept_types,
-                                    _rec_point['work_time']).to_json()
+        rec_point = RecPoint.create(_rec_point).to_json()
         return json.loads(rec_point)
 
     def put(self):

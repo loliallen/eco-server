@@ -1,3 +1,4 @@
+from ast import literal_eval
 import json
 from re import A
 from flask import request
@@ -61,6 +62,7 @@ class FilterController(Resource):
             return json.loads(filter.to_json())
         else: 
             filters = FilterModel.read()
+            print(filters)
             return json.loads(filters.to_json())
     
     def post(self):
@@ -79,10 +81,12 @@ class FilterController(Resource):
             }
             `
         """
-        _filter = request.json
+        _filter = request.form.to_dict()
+
+        if "key_words" in _filter:
+            _filter["key_words"] = literal_eval(_filter["key_words"])
         print(_filter)
-        print(_filter['name'])
-        fl = FilterModel.create(_filter['name'],_filter['var_name']).to_json()
+        fl = FilterModel.create(**_filter).to_json()
         return json.loads(fl)
 
     def put(self):

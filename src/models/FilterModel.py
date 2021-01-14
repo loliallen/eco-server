@@ -12,7 +12,7 @@ class Filter(Document):
     name = StringField(required=True)
     var_name = StringField(required=True)
     image = StringField()
-    key_words = ListField(StringField(max_length=30))
+    key_words = ListField(StringField())
     meta = {
         "db_alias": "core",
         "collection": "filters"
@@ -29,11 +29,11 @@ def read() -> QuerySet:
     Returns:
         QuerySet: Set of Filter Documents
     """
-    filters = Filter.objects.exclude("key_words")
+    filters = Filter.objects.all()
     return filters
 
 
-def create(name: str, var_name: str, image: str = "") -> Filter:
+def create(name: str, var_name: str, key_words: list, image: str = "") -> Filter:
     """This is functon thats creates filter
 
     Args:
@@ -47,6 +47,7 @@ def create(name: str, var_name: str, image: str = "") -> Filter:
     fl = Filter()
     fl.name = name
     fl.var_name = var_name
+    fl.key_words = key_words
     if image != "":
         fl.image = image
     fl.save()

@@ -1,5 +1,8 @@
+from bson import json_util
 from mongoengine import Document, StringField, ListField, ReferenceField, EmbeddedDocumentField, DictField, BooleanField, EmbeddedDocument, DecimalField
+from mongoengine.fields import LazyReferenceField
 from mongoengine.queryset.queryset import QuerySet
+from models.CustomQueySet import CustomQuerySet
 
 from models.FilterModel import Filter
 
@@ -16,8 +19,8 @@ class RecPoint(Document):
     partner = ReferenceField('Partner', required=False)
     photo_path = StringField()
     contacts = StringField()
-    coords = DictField(required=True)
-    accept_types = ListField(ReferenceField(Filter), required=False)
+    coords = DictField(required=False)
+    accept_types = ListField(LazyReferenceField(Filter), required=False)
     work_time = DictField(required=True)
     meta = {
         "db_alias": "core",
@@ -44,24 +47,13 @@ def read() -> QuerySet:
         QuerySet: Set of RecPoint Documents
     """
     rec_points = RecPoint.objects.all()
+
     return rec_points
 
-def create(_name: str, _address: str, _partner: object, _coords: dict,_accept_types: list,
-           _work_time: dict,_desc: str="", _contacts: str="",_photo_path: str="",_getBonus: bool=False) -> RecPoint:
+def create(obj: object) -> RecPoint:
 
-    rec_point = RecPoint(name=_name,
-                         address=_address,
-                         partner=_partner,
-                         coords=_coords,
-                         accept_types=_accept_types,
-                         work_time=_work_time
-                         )
-    if _contacts != "":
-        rec_point.contacts = _contacts
-    if _photo_path != "":
-        rec_point.photo_path = _photo_path
-    if _desc != "":
-        rec_point.description = _desc
+    rec_point = RecPoint(**obj)
+    
     rec_point.save()
     return rec_point
 
