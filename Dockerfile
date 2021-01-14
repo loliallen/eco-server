@@ -1,5 +1,8 @@
 FROM python:3.7-alpine
 
+ENV http_proxy http://proxy-chain.xxx.com:911/
+ENV https_proxy http://proxy-chain.xxx.com:912/
+
 COPY . /app
 
 WORKDIR /app 
