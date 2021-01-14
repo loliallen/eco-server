@@ -1,12 +1,11 @@
 FROM python:3.7-alpine
 
-COPY . /app
 
-WORKDIR /app 
+RUN mkdir -p /usr/src/app 
+WORKDIR /usr/src/app
 
-RUN python -m venv env
-RUN pip install --trusted-host pypi.python.org -r requirements.txt
+RUN pip install --no-chache-dir -r requirements.txt
 
 EXPOSE 5000
 
-CMD ["python", "src/app.py"]
+ENTRYPOINT ["python3", "src/app.py"]
