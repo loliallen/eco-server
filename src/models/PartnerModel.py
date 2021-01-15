@@ -17,19 +17,19 @@ class Partner(Document):
 
 
 def read() -> QuerySet:
-    """This is functon thats return all filters
+    """This is functon thats return all partners
     Returns:
-        QuerySet: Set of Filter Documents
+        QuerySet: Set of Partner Documents
     """
     partners = Partner.objects.all()
     return partners
 
 
 def create(name: str) -> Partner:
-    """This is functon thats creates filter
+    """This is functon thats creates partner
 
     Returns:
-        Filter: Created filter
+        Filter: Created partner
     """
     pn = Partner()
     pn.name = name
@@ -38,17 +38,14 @@ def create(name: str) -> Partner:
 
 
 def update(_id: str, updates: object) -> Partner:
-    """This is functon thats updates filter
+    """This is functon thats updates partner
     Args:
-        _id (str): - Filter id
+        _id (str): - partner id
         updates (object) - Updates
-        updates.name (str): Filter new name
-        updates.var_name (str): Filter varible name
-        updates.image (str): Filter icon
-        updates.key_words (str[]): Filter key_words
-
+        updates.name (str): partner new name
+        updates.points [ObjectId]: RecPoints id
     Returns:
-        Filter: Updated filter
+        RecPoint: Updated RecPoint
     """
     pn = Partner.objects(id=_id).first()
     if not pn:
@@ -58,10 +55,10 @@ def update(_id: str, updates: object) -> Partner:
 
 
 def delete(_id: str) -> Partner:
-    """This is functon thats deletes filter
+    """This is functon thats deletes partner
 
     Returns:
-        Filter: Deleted filter
+        RecPoint: Deleted partner
     """
     pn = Partner.objects(id=_id).first()
     if not pn:
@@ -69,3 +66,8 @@ def delete(_id: str) -> Partner:
     pn.delete()
     return pn
 
+def find_by_id(_id: str) -> Partner:
+    partner = Partner.objects(id=_id).first()
+    if not partner:
+        return None
+    return partner
