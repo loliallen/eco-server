@@ -1,10 +1,13 @@
-from bson import json_util
-from mongoengine import Document, StringField, ListField, ReferenceField, EmbeddedDocumentField, DictField, BooleanField, EmbeddedDocument, DecimalField
+from mongoengine import Document, StringField, ListField, ReferenceField, DictField, BooleanField
 from mongoengine.fields import LazyReferenceField
 from mongoengine.queryset.queryset import QuerySet
-from models.CustomQueySet import CustomQuerySet
+import json
 
 from models.FilterModel import Filter
+from models.ReceptionTargetModel import ReceptionTarget
+from models.ReceptionTypeModel import ReceptionType
+from utils.JsonEncoder import JSONEncoder
+from utils.haversine import haversine
 
 class RecPoint(Document):
     ''' Recycle model to store Recycle points
@@ -18,27 +21,27 @@ class RecPoint(Document):
     address = StringField(requrend=True)
     partner = ReferenceField('Partner', required=False)
     photo_path = StringField()
+    reception_target = ReferenceField(ReceptionTarget)
+    reception_type = ReferenceField(ReceptionType)
     contacts = StringField()
     coords = DictField(required=False)
-    accept_types = ListField(LazyReferenceField(Filter), required=False)
+    accept_types = ListField(ReferenceField(Filter), required=False)
     work_time = DictField(required=True)
     meta = {
         "db_alias": "core",
         "collection": "rec_points"
     }
-
-'''
-   Этот метод решает проблему, но появляются проблемы с кодировкой (в JSON почему-то слеши)
-    def to_json(self):
+    def to_jsony(self):
         self.select_related(max_depth=2)
         data = self.to_mongo()
-        data['id'] = json_util.dumps(self.id)
-        data['partner'] = self.partner.to_mongo()
-        for i, r_point in enumerate(self.accept_types):
+        data['partner'] = self.partner.to_mongo() #reference field
+        data['reception_target'] = self.reception_target.to_mongo()
+        data['reception_type'] = self.reception_type.to_mongo()
+        for i, r_point in enumerate(self.accept_types):  #ListFiled(ReferenceField)
             data['accept_types'][i] = r_point.to_mongo()
-        print(json.dumps(data, default=json_util.default))
-        return json.dumps(data, default=json_util.default)
-    '''
+        print(json.loads(json.dumps(data, cls=JSONEncoder)))
+        return json.loads(json.dumps(data, cls=JSONEncoder))
+
 
 def read() -> QuerySet:
     """This is functon thats return all Recycly points
@@ -82,3 +85,51 @@ def delete(_id: str) -> RecPoint:
     rec_point.delete()
     return rec_point
 
+def find_by_id(_id: str) -> RecPoint:
+    rec_point = RecPoint.objects(id=_id).first()
+    if not rec_point:
+        return None
+    return rec_point
+
+
+def select_rec_points_near(lon: float, lat: float) -> list:
+    rec_points = read()
+    # radius at kilometres
+    radius = 10
+    rec_points_res = []
+    for rec_point in rec_points:
+        coords = rec_point['coords']
+        if haversine(lon, lat, float(coords['lon']), float(coords['lat'])) < radius:
+            rec_points_res.append(rec_point)
+    return rec_points_res
+
+
+def filter_by_reception_target(rec_target: ReceptionTarget, _rec_points: list = []) -> list:
+    if not _rec_points:
+        _rec_points = read()
+    result_list = []
+    for rec_point in _rec_points:
+        if rec_point.reception_target.id == rec_target.id:
+            result_list.append(rec_point)
+    return result_list
+
+
+def filter_by_reception_type(rec_type: ReceptionType , _rec_points: list = []) -> list:
+    if not _rec_points:
+        _rec_points = read()
+    result_list = []
+    for rec_point in _rec_points:
+        if rec_point.reception_type.id == rec_type.id:
+            result_list.append(rec_point)
+    return result_list
+
+def filter_by_accept_type(filter: Filter , _rec_points: list = []) -> list:
+    if not _rec_points:
+        _rec_points = read()
+    result_list = []
+    for rec_point in _rec_points:
+        for fl in rec_point.accept_types:
+            if fl.id == filter.id:
+                result_list.append(rec_point)
+
+    return result_list

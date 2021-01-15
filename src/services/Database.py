@@ -5,8 +5,8 @@ def global_connect():
     db = connect(
         alias="core",
         name="eco",
-        # username="",
-        # password="",
+        username="user",
+        password="pwd",
         host="localhost:27017"
     )
     print("[Database]: Connected")
