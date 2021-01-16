@@ -9,17 +9,21 @@ from controllers.ReceptionTypeController import RecepTypeController
 from controllers.RecPointSortingController import RecPointsSorting
 import services.Database as Database
 
-app = Flask(__name__)
-api = Api(app)
+def main(debug):
 
+    app = Flask(__name__)
+    api = Api(app)
 
-api.add_resource(FilterController, '/filters')
-api.add_resource(RecPointController, '/rec_points')
-api.add_resource(PartnerController, '/partners')
-api.add_resource(RecPointsSorting, '/recpoints_sort')
-api.add_resource(RecepTargetController, '/reception_targets')
-api.add_resource(RecepTypeController, '/reception_types')
+    if(debug):
+        app.run(debug=True)
+
+    api.add_resource(FilterController, '/filters')
+    api.add_resource(RecPointController, '/rec_points')
+    api.add_resource(PartnerController, '/partners')
+    api.add_resource(RecPointsSorting, '/recpoints_sort')
+    api.add_resource(RecepTargetController, '/reception_targets')
+    api.add_resource(RecepTypeController, '/reception_types')
 
 if __name__ == "__main__":
     Database.global_connect()
-    app.run(debug=True)
+    main(True)

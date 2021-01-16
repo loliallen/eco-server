@@ -1,1 +1,1 @@
-export FLASK_APP="app.py"
+gunicron -w 2 app.py:app

@@ -24,7 +24,7 @@ class RecPoint(Document):
     reception_target = ReferenceField(ReceptionTarget)
     reception_type = ReferenceField(ReceptionType)
     contacts = StringField()
-    coords = DictField(required=False)
+    coords = DictField(required=False) # { lat: int, lng: int }
     accept_types = ListField(ReferenceField(Filter), required=False)
     work_time = DictField(required=True)
     meta = {
@@ -34,9 +34,13 @@ class RecPoint(Document):
     def to_jsony(self):
         self.select_related(max_depth=2)
         data = self.to_mongo()
-        data['partner'] = self.partner.to_mongo() #reference field
-        data['reception_target'] = self.reception_target.to_mongo()
-        data['reception_type'] = self.reception_type.to_mongo()
+        if 'partner' in data: #reference field
+            data['partner'] = self.partner.to_mongo() #reference field
+        if 'reception_target' in data:
+            data['reception_target'] = self.reception_target.to_mongo()
+        if 'reception_type' in data:
+            data['reception_type'] = self.reception_type.to_mongo()
+        
         for i, r_point in enumerate(self.accept_types):  #ListFiled(ReferenceField)
             data['accept_types'][i] = r_point.to_mongo()
         print(json.loads(json.dumps(data, cls=JSONEncoder)))
