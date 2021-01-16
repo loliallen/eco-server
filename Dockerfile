@@ -11,4 +11,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 5000
 
-ENTRYPOINT ["python3", "src/app.py"]
+RUN chmod a+x src/start.sh
+
+ENTRYPOINT ["src/start.sh"]
