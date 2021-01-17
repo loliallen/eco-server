@@ -1,1 +1,0 @@
-gunicron -w 2 app.py:app
