@@ -6,8 +6,8 @@ WORKDIR /usr/src/app
 
 COPY . /usr/src/app
 
+RUN apk --update add gcc build-base freetype-dev libpng-dev openblas-dev
 RUN apk update
-RUN apk add --virtual gcc
 
 RUN pip install --no-cache-dir -r requirements.txt
 
