@@ -7,7 +7,7 @@ WORKDIR /usr/src/app
 COPY . /usr/src/app
 
 RUN apk update
-RUN apk add build-essential
+RUN apk add --virtual gcc
 
 RUN pip install --no-cache-dir -r requirements.txt
 
