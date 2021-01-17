@@ -1,7 +1,7 @@
 import json
 from flask import request, jsonify
 from flask_restful import Resource, reqparse
-import models.RecPointModel as RecPoint
+import src.models.RecPointModel as RecPoint
 from ast import literal_eval
 from bson import ObjectId
 from pprint import pprint

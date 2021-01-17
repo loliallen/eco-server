@@ -4,7 +4,7 @@ from mongoengine.fields import ReferenceField
 from mongoengine.queryset.queryset import QuerySet
 from pprint import pprint
 
-from models.RecPointModel import RecPoint
+from src.models.RecPointModel import RecPoint
 
 
 class Partner(Document):
