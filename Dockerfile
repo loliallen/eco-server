@@ -6,8 +6,8 @@ WORKDIR /usr/src/app
 
 COPY . /usr/src/app
 
-RUN sudo apt update
-RUN sudo apt install build-essential
+RUN apt update
+RUN apt install build-essential
 
 RUN pip install --no-cache-dir -r requirements.txt
 
