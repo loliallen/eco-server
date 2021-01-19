@@ -1,5 +1,5 @@
 venv
-/u_env
+u_env
 .idea
 src/*/__pycache__
 __pycache__/
