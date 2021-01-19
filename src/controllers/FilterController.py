@@ -85,6 +85,8 @@ class FilterController(Resource):
 
         if "key_words" in _filter:
             _filter["key_words"] = literal_eval(_filter["key_words"])
+        if "bad_words" in _filter:
+            _filter["bad_words"] = literal_eval(_filter["bad_words"])
         print(_filter)
         fl = FilterModel.create(**_filter).to_json()
         return json.loads(fl)

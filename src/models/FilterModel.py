@@ -13,6 +13,7 @@ class Filter(Document):
     var_name = StringField(required=True)
     image = StringField()
     key_words = ListField(StringField())
+    bad_words = ListField(StringField())
     meta = {
         "db_alias": "core",
         "collection": "filters"
