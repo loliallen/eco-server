@@ -34,7 +34,7 @@ def read() -> QuerySet:
     return filters
 
 
-def create(name: str, var_name: str, key_words: list, image: str = "") -> Filter:
+def create(name: str, var_name: str, key_words: list, bad_words: list, image: str = "") -> Filter:
     """This is functon thats creates filter
 
     Args:
@@ -49,6 +49,7 @@ def create(name: str, var_name: str, key_words: list, image: str = "") -> Filter
     fl.name = name
     fl.var_name = var_name
     fl.key_words = key_words
+    fl.bad_words = bad_words
     if image != "":
         fl.image = image
     fl.save()
