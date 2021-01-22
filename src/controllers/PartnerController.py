@@ -2,7 +2,7 @@ import json
 from flask import request
 from flask_restful import Resource
 
-import models.PartnerModel as PartnerModel
+import src.models.PartnerModel as PartnerModel
 
 class PartnerController(Resource):
     def get(self):

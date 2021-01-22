@@ -2,8 +2,8 @@ import json
 from re import A
 from flask import request
 from flask_restful import Resource, reqparse
-import models.ReceptionTargetModel as ReceptionTargetModel
-import models.RecPointModel as RecPointModel
+import src.models.ReceptionTargetModel as ReceptionTargetModel
+import src.models.RecPointModel as RecPointModel
 
 parser = reqparse.RequestParser()
 

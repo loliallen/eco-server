@@ -1,12 +1,18 @@
 from ast import literal_eval
 import json
-from re import A
+import os
+import werkzeug
+from pathlib import Path 
+
 from flask import request
 from flask_restful import Resource, reqparse
-import models.FilterModel as FilterModel
+import src.models.FilterModel as FilterModel
+from werkzeug.utils import secure_filename
 
 
-parser = reqparse.RequestParser()
+# setting path from /eco/server for images
+REL_PATH = "/static/filters"
+files_storage = Path('./src'+REL_PATH)
 
 class FilterController(Resource):
     """FilterController [summary]
@@ -14,41 +20,21 @@ class FilterController(Resource):
     Arguments:
         Resource {[type]} -- [description]
     """
-    # def get(self):
-    #     """[GET]
-
-    #     Returns:
-    #         `[
-    #             {
-    #                 _id: {
-    #                     $oid: string
-    #                 },
-    #                 name: string,
-    #                 var_name: string,
-    #                 image: string
-    #             },
-    #             ...
-    #         ]`
-    #     """        
-    #     filter = FilterModel.find_by_id(id).to_json()
-    #     print(filter)
-    #     return json.loads(filter)
         
     def get(self):
-        """[GET]
-
-        Returns:
-            `[
+        """[GET] /api/filters
+        return
+        '''
+            [
                 {
-                    _id: {
-                        $oid: string
-                    },
-                    name: string,
-                    var_name: string,
-                    image: string
-                },
-                ...
-            ]`
+                    "name": str,
+                    "var_name": str,
+                    "image": str,
+                    "key_words": Array<str>,
+                    "bad_words": Array<str>,
+                }
+            ]
+        '''
         """   
         
         args = request.args.to_dict()
@@ -81,12 +67,29 @@ class FilterController(Resource):
             }
             `
         """
+        parser = reqparse.RequestParser()
+
         _filter = request.form.to_dict()
+        parser.add_argument('image', type=werkzeug.datastructures.FileStorage, location='files')
+       
+        args = parser.parse_args()
+        file = args['image']
+        relp = ""
+
+        if file:
+            filename = secure_filename(file.filename)
+            relp=filename
+            FILES_PATH = files_storage / filename
+            file.save(FILES_PATH.resolve())
+            
 
         if "key_words" in _filter:
             _filter["key_words"] = literal_eval(_filter["key_words"])
-        print(_filter)
-        fl = FilterModel.create(**_filter).to_json()
+
+        if "bad_words" in _filter:
+            _filter["bad_words"] = literal_eval(_filter["bad_words"])
+
+        fl = FilterModel.create(**_filter, image=relp).to_json()
         return json.loads(fl)
 
     def put(self):
