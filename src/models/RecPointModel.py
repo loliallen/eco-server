@@ -1,13 +1,20 @@
 from mongoengine import Document, StringField, ListField, ReferenceField, DictField, BooleanField
 from mongoengine.fields import LazyReferenceField
 from mongoengine.queryset.queryset import QuerySet
+from pathlib import Path
 import json
+import os
 
 from src.models.FilterModel import Filter
 from src.models.ReceptionTargetModel import ReceptionTarget
 from src.models.ReceptionTypeModel import ReceptionType
 from src.utils.JsonEncoder import JSONEncoder
 from src.utils.haversine import haversine
+
+from src.utils.coords import coords as CheckCoords
+
+REL_PATH = "/static/recpoints"
+files_storage = Path('./src'+REL_PATH)
 
 class RecPoint(Document):
     ''' Recycle model to store Recycle points
@@ -17,10 +24,10 @@ class RecPoint(Document):
     '''
     name = StringField(required=True, default='Пункт приема')
     description = StringField()
+    images = ListField(StringField())
     getBonus = BooleanField()
     address = StringField(requrend=True)
     partner = ReferenceField('Partner', required=False)
-    photo_path = StringField()
     reception_target = ReferenceField(ReceptionTarget)
     reception_type = ReferenceField(ReceptionType)
     contacts = StringField()
@@ -43,25 +50,48 @@ class RecPoint(Document):
         
         for i, r_point in enumerate(self.accept_types):  #ListFiled(ReferenceField)
             data['accept_types'][i] = r_point.to_mongo()
-        print(json.loads(json.dumps(data, cls=JSONEncoder)))
         return json.loads(json.dumps(data, cls=JSONEncoder))
 
 
-def read() -> QuerySet:
+def read(coords=None) -> QuerySet:
     """This is functon thats return all Recycly points
 
     Returns:
         QuerySet: Set of RecPoint Documents
     """
-    rec_points = RecPoint.objects.all()
-
-    return rec_points
-
-def create(obj: object) -> RecPoint:
+    rec_points = RecPoint.objects
+    if coords != None:
+        frp = []
+        for point in rec_points:
+            print("lat" in point.coords and "lng" in point.coords)
+            print(point.coords)
+            if "lat" in point.coords and "lng" in point.coords :
+                dot = [point.coords["lat"], point.coords["lng"]]
+                if CheckCoords(dot, coords):
+                    frp.append(point)
+        print(frp)
+        return frp
+    return rec_points.all()
+    
+def create(obj: object, images: list) -> RecPoint:
 
     rec_point = RecPoint(**obj)
-    
     rec_point.save()
+
+    imgs = []
+    for image in images:
+        if image != "":
+            mime_type = image.split('.')[1]
+            filename = str(rec_point.id) + "." + mime_type 
+            img_path = REL_PATH + "/" + filename
+            old_path = files_storage / image
+            new_path = files_storage / filename
+            os.rename(old_path.resolve(), new_path.resolve())
+            imgs.append(img_path)
+        pass
+
+    rec_point.save()
+
     return rec_point
 
 

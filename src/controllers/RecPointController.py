@@ -92,25 +92,18 @@ class RecPointController(Resource):
     },
     ]
         """
-
         args = request.args.to_dict()
+        print(args)
 
         if "id" in args:
             rec_point = RecPoint.find_by_id(args['id'])
             if not rec_point:
                 return {"message": "RecPoint not found id={}".format(args['id'])}, 404
             return rec_point.to_jsony()
-
-        if 'lat' and 'lon' in args:
-            '''That method return all rec_points in radius 10km
-               :params  - current coordinates
-               lon - float
-               lat - float 
-            '''
-
-            rec_points = RecPoint.select_rec_points_near(float(args['lon']), float(args['lat']))
+        elif "coords" in args:
+            coords = literal_eval(args["coords"])
+            rec_points = RecPoint.read(coords)
             return jsonify([i.to_jsony() for i in rec_points])
-
         else:
             rec_points = RecPoint.read()
             return jsonify([i.to_jsony() for i in rec_points])

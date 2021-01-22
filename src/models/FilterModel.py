@@ -1,6 +1,12 @@
 from mongoengine import Document, StringField, ListField
 from mongoengine.queryset.queryset import QuerySet
 from pprint import pprint
+from pathlib import Path
+
+import os
+
+REL_PATH = "/static/filters"
+files_storage = Path('./src'+REL_PATH)
 
 
 class Filter(Document):
@@ -50,9 +56,18 @@ def create(name: str, var_name: str, key_words: list, bad_words: list, image: st
     fl.var_name = var_name
     fl.key_words = key_words
     fl.bad_words = bad_words
-    if image != "":
-        fl.image = image
     fl.save()
+    print(fl)
+    if image != "":
+        mime_type = image.split('.')[1]
+        filename = str(fl.id) + "." + mime_type 
+        img_path = REL_PATH + "/" + filename
+        old_path = files_storage / image
+        new_path = files_storage / filename
+        os.rename(old_path.resolve(), new_path.resolve())
+        fl.image = img_path
+        print(fl.image)
+    # fl.save()
     return fl
 
 
