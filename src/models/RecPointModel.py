@@ -74,22 +74,15 @@ def read(coords=None) -> QuerySet:
     return rec_points.all()
     
 def create(obj: object, images: list) -> RecPoint:
-
     rec_point = RecPoint(**obj)
     rec_point.save()
 
     imgs = []
     for image in images:
         if image != "":
-            mime_type = image.split('.')[1]
-            filename = str(rec_point.id) + "." + mime_type 
-            img_path = REL_PATH + "/" + filename
-            old_path = files_storage / image
-            new_path = files_storage / filename
-            os.rename(old_path.resolve(), new_path.resolve())
-            imgs.append(img_path)
+            imgs.append(image + "/" + image)
         pass
-
+    rec_point.images = imgs
     rec_point.save()
 
     return rec_point

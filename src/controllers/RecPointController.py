@@ -1,12 +1,18 @@
 import json
 from flask import request, jsonify
 from flask_restful import Resource, reqparse
+from werkzeug.utils import secure_filename
 import src.models.RecPointModel as RecPoint
 from ast import literal_eval
 from bson import ObjectId
-from pprint import pprint
+from pathlib import Path
 
-parser = reqparse.RequestParser()
+import os
+import uuid
+
+
+REL_PATH = "/static/recpoints"
+files_storage = Path('./src'+REL_PATH)
 
 class RecPointController(Resource):
     """RecPointController [summary]
@@ -145,30 +151,44 @@ class RecPointController(Resource):
             `
         """
     
-        __rec_point = request.form.to_dict()
+        __rec_point = request.form.to_dict()        
+        
+        # parser.add_argument('image', type=werkzeug.datastructures.FileStorage, location='files')
 
+        directory = str(uuid.uuid1())
+        directory_path = files_storage
+
+        images = request.files.getlist('image')
+        # args = parser.parse_args()
+        # files = args['image']
+        os.mkdir((directory_path / directory).resolve())
+        relps = []
+        for (i, image) in enumerate(images):
+            filename = secure_filename(image.filename)
+            relp = directory + "/" + str(i) + "." + filename.split('.')[1]
+            file_path = directory_path / relp
+            image.save(file_path.resolve())
+            relps.append(relp)
 
         if "work_time" in __rec_point:
-            print("ok")
-            print(__rec_point)
             _w_t = literal_eval(__rec_point["work_time"])
             w_t = _w_t
             __rec_point["work_time"] = w_t
         
         if "accept_types" in __rec_point:
             __rec_point["accept_types"] = literal_eval(__rec_point["accept_types"])
+        
         if "coords" in __rec_point:
             __rec_point["coords"] = literal_eval(__rec_point["coords"])
 
         _rec_point = __rec_point
-        print(_rec_point)
         # partner
 
         # if 'partner_id' in _rec_point:
         #     partner = Partner.objects(id=_rec_point['partner_id']).first()
         #     if not partner:
         #         return {"message": "Filter not found id={}"}, 404
-        rec_point = RecPoint.create(_rec_point).to_jsony()
+        rec_point = RecPoint.create(_rec_point, relps).to_jsony()
         return rec_point
 
     def put(self):
