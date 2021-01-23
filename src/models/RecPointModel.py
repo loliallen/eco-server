@@ -79,8 +79,9 @@ def create(obj: object, images: list) -> RecPoint:
 
     imgs = []
     for image in images:
+        print(image)
         if image != "":
-            imgs.append(image + "/" + image)
+            imgs.append(REL_PATH + "/" + image)
         pass
     rec_point.images = imgs
     rec_point.save()
