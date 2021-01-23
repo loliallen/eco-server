@@ -161,7 +161,7 @@ class RecPointController(Resource):
         images = request.files.getlist('image')
         # args = parser.parse_args()
         # files = args['image']
-        os.mkdir((directory_path / directory).resolve())
+        os.makedirs((directory_path / directory).resolve())
         relps = []
         for (i, image) in enumerate(images):
             filename = secure_filename(image.filename)
