@@ -158,7 +158,7 @@ class RecPointController(Resource):
         directory = str(uuid.uuid1())
         directory_path = files_storage
 
-        images = request.files.getlist('image')
+        images = request.files.getlist('images')
         # args = parser.parse_args()
         # files = args['image']
         os.makedirs((directory_path / directory).resolve())
@@ -167,6 +167,7 @@ class RecPointController(Resource):
             filename = secure_filename(image.filename)
             relp = directory + "/" + str(i) + "." + filename.split('.')[1]
             file_path = directory_path / relp
+            print(file_path.resolve())
             image.save(file_path.resolve())
             relps.append(relp)
 
