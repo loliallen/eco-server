@@ -53,22 +53,28 @@ class RecPoint(Document):
         return json.loads(json.dumps(data, cls=JSONEncoder))
 
 
-def read(coords=None) -> QuerySet:
+def read(coords=None, filters=None) -> QuerySet:
     """This is functon thats return all Recycly points
 
     Returns:
         QuerySet: Set of RecPoint Documents
     """
+    print(filters, coords)
     rec_points = RecPoint.objects
     if coords != None:
         frp = []
         for point in rec_points:
             print("lat" in point.coords and "lng" in point.coords)
             print(point.coords)
-            if "lat" in point.coords and "lng" in point.coords :
-                dot = [point.coords["lat"], point.coords["lng"]]
-                if CheckCoords(dot, coords):
-                    frp.append(point)
+            if "lat" in point.coords and "lng" in point.coords:
+                if filters != None:
+                    dot = [point.coords["lat"], point.coords["lng"]]
+                    if CheckCoords(dot, coords) and does_point_contains_filters(point, filters):
+                        frp.append(point)
+                else:
+                    dot = [point.coords["lat"], point.coords["lng"]]
+                    if CheckCoords(dot, coords):
+                        frp.append(point)
         print(frp)
         return frp
     return rec_points.all()
@@ -161,3 +167,11 @@ def filter_by_accept_type(filter: Filter , _rec_points: list = []) -> list:
                 result_list.append(rec_point)
 
     return result_list
+
+def does_point_contains_filters(point, filters):
+    contains = True
+    for filter_id in filters:
+        for filt in point.accept_types:
+            if filt.var_name != filter_id:
+                contains = False  
+    return contains
