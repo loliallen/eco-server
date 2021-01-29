@@ -107,9 +107,17 @@ class RecPointController(Resource):
                 return {"message": "RecPoint not found id={}".format(args['id'])}, 404
             return rec_point.to_jsony()
         elif "coords" in args:
-            coords = literal_eval(args["coords"])
-            rec_points = RecPoint.read(coords)
-            return jsonify([i.to_jsony() for i in rec_points])
+            print("filters" in args)
+            if "filters" in args:
+                coords = literal_eval(args["coords"])
+                filters = literal_eval(args["filters"])
+                
+                rec_points = RecPoint.read(coords, filters)
+                return jsonify([i.to_jsony() for i in rec_points])
+            else:
+                coords = literal_eval(args["coords"])
+                rec_points = RecPoint.read(coords)
+                return jsonify([i.to_jsony() for i in rec_points])
         else:
             rec_points = RecPoint.read()
             return jsonify([i.to_jsony() for i in rec_points])
