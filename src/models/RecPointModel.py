@@ -1,11 +1,11 @@
 from mongoengine import Document, StringField, ListField, ReferenceField, DictField, BooleanField
-from mongoengine.fields import LazyReferenceField
+from bson import ObjectId
 from mongoengine.queryset.queryset import QuerySet
 from pathlib import Path
 import json
 import os
 
-from src.models.FilterModel import Filter
+import src.models.FilterModel as Filter
 from src.models.ReceptionTargetModel import ReceptionTarget
 from src.models.ReceptionTypeModel import ReceptionType
 from src.utils.JsonEncoder import JSONEncoder
@@ -32,7 +32,7 @@ class RecPoint(Document):
     reception_type = ReferenceField(ReceptionType)
     contacts = StringField()
     coords = DictField(required=False) # { lat: int, lng: int }
-    accept_types = ListField(ReferenceField(Filter), required=False)
+    accept_types = ListField(ReferenceField(Filter.Filter), required=False)
     work_time = DictField(required=True)
     meta = {
         "db_alias": "core",
@@ -43,17 +43,13 @@ class RecPoint(Document):
         data = self.to_mongo()
         if 'partner' in data: #reference field
             data['partner'] = self.partner.to_mongo() #reference field
-        if 'reception_target' in data:
-            data['reception_target'] = self.reception_target.to_mongo()
-        if 'reception_type' in data:
-            data['reception_type'] = self.reception_type.to_mongo()
         
         for i, r_point in enumerate(self.accept_types):  #ListFiled(ReferenceField)
             data['accept_types'][i] = r_point.to_mongo()
         return json.loads(json.dumps(data, cls=JSONEncoder))
 
 
-def read(coords=None, filters=None) -> QuerySet:
+def read(coords=None, filters=None, text=None) -> QuerySet:
     """This is functon thats return all Recycly points
 
     Returns:
@@ -61,8 +57,12 @@ def read(coords=None, filters=None) -> QuerySet:
     """
     print(filters, coords)
     rec_points = RecPoint.objects
+    founded_filters = []
     if coords != None:
         frp = []
+        if text:
+            key_words = text.split(" ")
+            founded_filters = Filter.find_filter_by_key_words(key_words)
         for point in rec_points:
             print("lat" in point.coords and "lng" in point.coords)
             print(point.coords)
@@ -70,6 +70,10 @@ def read(coords=None, filters=None) -> QuerySet:
                 if filters != None:
                     dot = [point.coords["lat"], point.coords["lng"]]
                     if CheckCoords(dot, coords) and does_point_contains_filters(point, filters):
+                        frp.append(point)
+                elif text:
+                    dot = [point.coords["lat"], point.coords["lng"]]
+                    if CheckCoords(dot, coords) and does_point_contains_filters(point, founded_filters):
                         frp.append(point)
                 else:
                     dot = [point.coords["lat"], point.coords["lng"]]
@@ -169,9 +173,10 @@ def filter_by_accept_type(filter: Filter , _rec_points: list = []) -> list:
     return result_list
 
 def does_point_contains_filters(point, filters):
-    contains = True
+    '''Поправил, а то как то непонятно работал'''
+    contains = False
     for filter_id in filters:
         for filt in point.accept_types:
-            if filt.var_name != filter_id:
-                contains = False  
+            if filt.id == ObjectId(filter_id):
+                contains = True
     return contains

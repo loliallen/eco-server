@@ -114,6 +114,10 @@ class RecPointController(Resource):
                 
                 rec_points = RecPoint.read(coords, filters)
                 return jsonify([i.to_jsony() for i in rec_points])
+            elif "text" in args:
+                coords = literal_eval(args["coords"])
+                rec_points = RecPoint.read(coords, text=args['text'])
+                return jsonify([i.to_jsony() for i in rec_points])
             else:
                 coords = literal_eval(args["coords"])
                 rec_points = RecPoint.read(coords)

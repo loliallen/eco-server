@@ -120,3 +120,28 @@ def append_key_word_by_id(_id: str, new_key_word: str) -> Filter:
         return None
     fl.update(add_to_set__key_word=new_key_word)
     return fl
+
+def find_filter_by_key_words(key_words: []):
+    if not key_words:
+        return None
+
+    filters = Filter.objects.all()
+    filters_list = []
+
+    for filter in filters:
+        for word in filter.key_words:
+            flag = False
+            words = word.split(" ")
+            for key_word in key_words:
+                flag = False
+                for word1 in words:
+                    if word1.find(key_word) != -1:
+                        filters_list.append(filter.id)
+                        flag = True
+                        break
+                if flag:
+                    break
+            if flag:
+                break
+
+    return filters_list
