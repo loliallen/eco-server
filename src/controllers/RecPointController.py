@@ -6,6 +6,7 @@ import src.models.RecPointModel as RecPoint
 from ast import literal_eval
 from bson import ObjectId
 from pathlib import Path
+from src.utils.dict import get as get_field
 
 import os
 import uuid
@@ -106,20 +107,20 @@ class RecPointController(Resource):
             if not rec_point:
                 return {"message": "RecPoint not found id={}".format(args['id'])}, 404
             return rec_point.to_jsony()
-        elif "coords" in args:
-            print("filters" in args)
-            if "filters" in args:
-                coords = literal_eval(args["coords"])
-                filters = literal_eval(args["filters"])
+        # elif "coords" in args:
+        #     print("filters" in args)
+        #     if "filters" in args:
+        #         coords = literal_eval(args["coords"])
+        #         filters = literal_eval(args["filters"])
                 
-                rec_points = RecPoint.read(coords, filters)
-                return jsonify([i.to_jsony() for i in rec_points])
-            else:
-                coords = literal_eval(args["coords"])
-                rec_points = RecPoint.read(coords)
-                return jsonify([i.to_jsony() for i in rec_points])
+        #         rec_points = RecPoint.read(coords, filters)
+        #         return jsonify([i.to_jsony() for i in rec_points])
+        #     else:
+        #         coords = literal_eval(args["coords"])
+        #         rec_points = RecPoint.read(coords)
+        #         return jsonify([i.to_jsony() for i in rec_points])
         else:
-            rec_points = RecPoint.read()
+            rec_points = RecPoint.read(coords=get_field("coords", args), filters=get_field("filters", args), rec_type=get_field("rec_type", args), payback_type=get_field("payback_type", args))
             return jsonify([i.to_jsony() for i in rec_points])
 
     def post(self):
@@ -171,9 +172,10 @@ class RecPointController(Resource):
         # files = args['image']
         os.makedirs((directory_path / directory).resolve())
         relps = []
+        # saving images
         for (i, image) in enumerate(images):
             filename = secure_filename(image.filename)
-            relp = directory + "/" + str(i) + "." + filename.split('.')[1]
+            relp = directory + "/" + str(i) + "." + filename.split('.').pop()
             file_path = directory_path / relp
             print(file_path.resolve())
             image.save(file_path.resolve())
@@ -183,7 +185,11 @@ class RecPointController(Resource):
             _w_t = literal_eval(__rec_point["work_time"])
             w_t = _w_t
             __rec_point["work_time"] = w_t
-        
+
+        if "contacts" in __rec_point:
+            _contacts = literal_eval(__rec_point["contacts"])
+            __rec_point["contacts"] = _contacts
+            
         if "accept_types" in __rec_point:
             __rec_point["accept_types"] = literal_eval(__rec_point["accept_types"])
         

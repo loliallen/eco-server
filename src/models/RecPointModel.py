@@ -1,4 +1,4 @@
-from mongoengine import Document, StringField, ListField, ReferenceField, DictField, BooleanField
+from mongoengine import Document, StringField, ListField, ReferenceField, DictField, BooleanField, IntField
 from mongoengine.fields import LazyReferenceField
 from mongoengine.queryset.queryset import QuerySet
 from pathlib import Path
@@ -28,9 +28,9 @@ class RecPoint(Document):
     getBonus = BooleanField()
     address = StringField(requrend=True)
     partner = ReferenceField('Partner', required=False)
-    reception_target = ReferenceField(ReceptionTarget)
-    reception_type = ReferenceField(ReceptionType)
-    contacts = StringField()
+    reception_type = StringField()
+    payback_type = StringField()
+    contacts = ListField()
     coords = DictField(required=False) # { lat: int, lng: int }
     accept_types = ListField(ReferenceField(Filter), required=False)
     work_time = DictField(required=True)
@@ -43,39 +43,54 @@ class RecPoint(Document):
         data = self.to_mongo()
         if 'partner' in data: #reference field
             data['partner'] = self.partner.to_mongo() #reference field
-        if 'reception_target' in data:
-            data['reception_target'] = self.reception_target.to_mongo()
-        if 'reception_type' in data:
-            data['reception_type'] = self.reception_type.to_mongo()
+        # if 'reception_target' in data:
+        #     data['reception_target'] = self.reception_target.to_mongo()
+        # if 'reception_type' in data:
+        #     data['reception_type'] = self.reception_type.to_mongo()
         
         for i, r_point in enumerate(self.accept_types):  #ListFiled(ReferenceField)
             data['accept_types'][i] = r_point.to_mongo()
         return json.loads(json.dumps(data, cls=JSONEncoder))
 
 
-def read(coords=None, filters=None) -> QuerySet:
+def read(coords=None, filters=None, rec_type=None, payback_type=None) -> QuerySet:
     """This is functon thats return all Recycly points
 
     Returns:
         QuerySet: Set of RecPoint Documents
     """
     print(filters, coords)
-    rec_points = RecPoint.objects
+    rec_points = RecPoint.objects   
     if coords != None:
         frp = []
         for point in rec_points:
-            print("lat" in point.coords and "lng" in point.coords)
-            print(point.coords)
+            
             if "lat" in point.coords and "lng" in point.coords:
+            
                 if filters != None:
-                    dot = [point.coords["lat"], point.coords["lng"]]
-                    if CheckCoords(dot, coords) and does_point_contains_filters(point, filters):
-                        frp.append(point)
+                    
+                    if rec_type != None:
+
+                        if payback_type != None:
+                            dot = [point.coords["lat"], point.coords["lng"]]
+                            if CheckCoords(dot, coords) and does_point_contains_filters(point, filters) and point.reception_type == rec_type and point.payback_type == payback_type:
+                                frp.append(point)
+                    
+                        else:
+                            dot = [point.coords["lat"], point.coords["lng"]]
+                            if CheckCoords(dot, coords) and does_point_contains_filters(point, filters) and point.reception_type == rec_type:
+                                frp.append(point)
+                    
+                    else:
+                        dot = [point.coords["lat"], point.coords["lng"]]
+                        if CheckCoords(dot, coords) and does_point_contains_filters(point, filters):
+                            frp.append(point)
+            
                 else:
                     dot = [point.coords["lat"], point.coords["lng"]]
                     if CheckCoords(dot, coords):
                         frp.append(point)
-        print(frp)
+
         return frp
     return rec_points.all()
     
@@ -170,8 +185,8 @@ def filter_by_accept_type(filter: Filter , _rec_points: list = []) -> list:
 
 def does_point_contains_filters(point, filters):
     contains = True
+    var_names = list(map(lambda x: x["var_name"], point.accept_types))
     for filter_id in filters:
-        for filt in point.accept_types:
-            if filt.var_name != filter_id:
-                contains = False  
+        if filter_id not in var_names:
+            contains = False  
     return contains
