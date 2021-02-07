@@ -120,7 +120,10 @@ class RecPointController(Resource):
         #         rec_points = RecPoint.read(coords)
         #         return jsonify([i.to_jsony() for i in rec_points])
         else:
-            rec_points = RecPoint.read(coords=get_field("coords", args), filters=get_field("filters", args), rec_type=get_field("rec_type", args), payback_type=get_field("payback_type", args))
+            coords = literal_eval(get_field("coords", args)) if get_field("coords", args) != None else None 
+            filters = literal_eval(get_field("filters", args)) if get_field("filters", args) != None else None
+
+            rec_points = RecPoint.read(coords=coords, filters=filters, rec_type=get_field("rec_type", args), payback_type=get_field("payback_type", args))
             return jsonify([i.to_jsony() for i in rec_points])
 
     def post(self):
