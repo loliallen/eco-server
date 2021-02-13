@@ -27,9 +27,6 @@ class Filter(Document):
 
 
 
-
-
-
 def read() -> QuerySet:
     """This is functon thats return all filters
 
@@ -59,7 +56,7 @@ def create(name: str, var_name: str, key_words: list, bad_words: list, image: st
     fl.save()
     print(fl)
     if image != "":
-        mime_type = image.split('.')[1]
+        mime_type = image.split('.').pop()
         filename = str(fl.id) + "." + mime_type 
         img_path = REL_PATH + "/" + filename
         old_path = files_storage / image
