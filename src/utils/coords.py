@@ -4,10 +4,6 @@ import numpy as np
 
 def coords(dot, coords):
     print("coords")
-    print(coords[0])
-    print(coords[1])
-    print(coords[2])
-    print(coords[3])
     lu = np.array(coords[0]) 
     ru = np.array(coords[1]) 
     rd = np.array(coords[2]) 

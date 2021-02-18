@@ -11,7 +11,7 @@ import datetime
 import jwt
 
 import src.models.UserModel as User
-from send_email import send_email
+from src.send_email import send_email
 from src.utils.decorators import token_required, check_confirmed
 
 REL_PATH = "/static/users"
@@ -19,10 +19,11 @@ files_storage = Path('./src'+REL_PATH)
 
 
 class UserController(Resource):
-    @token_required
-    @check_confirmed
+    # @token_required
+# @check_confirmed
     def get(self):
         args = request.args.to_dict()
+        print(current_app)
 
         if 'username' in args:
             user = User.find_user_by_username(username=args['username'])
@@ -37,15 +38,14 @@ class UserController(Resource):
             return json.loads(users.to_json())
 
     def post(self):
-        data = request.json
+        data = request.form.to_dict()
+
         parser = reqparse.RequestParser()
 
-        _filter = request.form.to_dict()
         parser.add_argument('image', type=werkzeug.datastructures.FileStorage, location='files')
 
         args = parser.parse_args()
         file = args['image']
-        data['public_id'] = str(uuid4())
         relp = ""
 
         if file:
@@ -57,21 +57,22 @@ class UserController(Resource):
         user = User.create(data, image=relp)
         login_user(user)
 
-        token = jwt.encode({'username': user.username, 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=2)}, current_app.config['SECRET_KEY'], algorithm="HS256")
-        confirm_url = Api.url_for(Api(current_app), resource=UserConfirmController, token=token, _external=True)
-        html = render_template('email.html', confirm_url=confirm_url)
-        subject = "Please confirm your email"
-        message = Message(subject=subject, html=html, recipients=[user.username])
-        send_email(message)
+        # token = jwt.encode({'username': user.username, 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=2)}, current_app.config['SECRET_KEY'], algorithm="HS256")
+        # confirm_url = Api.url_for(Api(current_app), resource=UserConfirmController, token=token, _external=True)
+        # html = render_template('email.html', confirm_url=confirm_url)
+        # subject = "Please confirm your email"
+        # message = Message(subject=subject, html=html, recipients=[user.username])
+        # send_email(message)
 
         return json.loads(user.to_json())
 
 
-    @token_required
-    @check_confirmed
+    # @token_required
+# @check_confirmed
     def put(self):
         args = request.args.to_dict()
         updates = request.json
+        print(updates)
 
         user = None
 
@@ -86,8 +87,8 @@ class UserController(Resource):
         return json.loads(user.to_json())
 
 
-    @token_required
-    @check_confirmed
+    # @token_required
+# @check_confirmed
     def delete(self):
         args = request.args
 

@@ -4,16 +4,8 @@ from mongoengine.fields import ReferenceField
 from mongoengine.queryset.queryset import QuerySet
 from pprint import pprint
 
-from src.models.RecPointModel import RecPoint
+from src.models.RecPointModel import Partner
 
-
-class Partner(Document):
-    name = StringField(required=True)
-    points = ListField(ReferenceField(RecPoint))
-    meta = {
-        "db_alias": "core",
-        "collection": "partners"
-    }
 
 
 def read() -> QuerySet:

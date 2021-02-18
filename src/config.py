@@ -6,3 +6,5 @@ class Configuration:
     MAIL_USERNAME = ''  # введите свой адрес электронной почты здесь
     MAIL_DEFAULT_SENDER = ''  # и здесь
     MAIL_PASSWORD = ''
+
+    APP_HOST = 'https://localhost'

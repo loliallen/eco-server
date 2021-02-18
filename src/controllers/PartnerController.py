@@ -1,5 +1,5 @@
 import json
-from flask import request
+from flask import request, jsonify
 from flask_restful import Resource
 
 import src.models.PartnerModel as PartnerModel
@@ -28,10 +28,10 @@ class PartnerController(Resource):
             if not partner_model:
                 return {"message": "Filter not found id={}".format(args['id'])}, 404
 
-            return json.loads(partner_model.to_json())
+            return json.loads(partner_model.to_jsony())
         else:
             parners = PartnerModel.read()
-            return json.loads(parners.to_json())
+            return jsonify([i.to_jsony() for i in parners])
 
     def post(self):
         """[POST]
@@ -48,7 +48,7 @@ class PartnerController(Resource):
             }
             `
         """
-        _partner = request.json
+        _partner = request.form.to_dict()
         pn = PartnerModel.create(_partner['name']).to_json()
         return json.loads(pn)
 

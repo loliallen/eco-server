@@ -3,6 +3,7 @@ from mongoengine.fields import LazyReferenceField
 from mongoengine.queryset.queryset import QuerySet
 from pathlib import Path
 import json
+from bson.objectid import ObjectId
 import os
 
 from src.models.FilterModel import Filter
@@ -16,6 +17,31 @@ from src.utils.coords import coords as CheckCoords
 REL_PATH = "/static/recpoints"
 files_storage = Path('./src'+REL_PATH)
 
+
+
+class Partner(Document):
+    name = StringField(required=True)
+    points = ListField(ReferenceField('RecPoint'))
+    meta = {
+        "db_alias": "core",
+        "collection": "partners"
+    }
+    def to_jsony(self):
+        self.select_related(max_depth=2)
+        data = self.to_mongo()
+        # if 'points' in data: #reference field
+        #     data['points'] = self.points.to_mongo() #reference field
+        # if 'reception_target' in data:
+        #     data['reception_target'] = self.reception_target.to_mongo()
+        # if 'reception_type' in data:
+        #     data['reception_type'] = self.reception_type.to_mongo()
+        
+        for i, r_point in enumerate(self.points):  #ListFiled(ReferenceField)
+            data['points'][i] = r_point.to_mongo()
+        return json.loads(json.dumps(data, cls=JSONEncoder))
+
+
+
 class RecPoint(Document):
     ''' Recycle model to store Recycle points
 
@@ -27,7 +53,7 @@ class RecPoint(Document):
     images = ListField(StringField())
     getBonus = BooleanField()
     address = StringField(requrend=True)
-    partner = ReferenceField('Partner', required=False)
+    partner = ReferenceField(Partner, required=False)
     reception_type = StringField()
     payback_type = StringField()
     contacts = ListField()
@@ -95,8 +121,14 @@ def read(coords=None, filters=None, rec_type=None, payback_type=None) -> QuerySe
     return rec_points.all()
     
 def create(obj: object, images: list) -> RecPoint:
+    print("obj", obj)
     rec_point = RecPoint(**obj)
     rec_point.save()
+    if "partner" in obj:
+        rec_point.partner.points.append(rec_point.id)
+        rec_point.partner.save()
+        # partner.points.append(rec_point._id)
+        # partner.save()
 
     imgs = []
     for image in images:

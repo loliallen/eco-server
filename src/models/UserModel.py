@@ -13,7 +13,6 @@ class User(Document, UserMixin):
     name = StringField(required=True)
     surname = StringField()
     password = StringField(required=True)
-    public_id = StringField(required=True)
     image = StringField()
     confirmed = BooleanField(default=False)
     confirmed_on = DateTimeField()
