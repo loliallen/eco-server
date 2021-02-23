@@ -1,6 +1,6 @@
 ## Models
 
-### 1. Filter
+# 1. Filter
 ## [GET] /api/filters
 ```json
 {
@@ -13,13 +13,16 @@
   "bad_words": ["Газета", "Книга"],
 }
 ```
-### 2. RecPoint
+# 2. RecPoint
 ## [GET] /api/rec_points
 
 | Query Params | Required | Description |
 | ------------ | -------- | ----------- |
 | id           | False | Get one recpoint |
 | coords       | True | Send coords of map square |
+| rec_type     | False | pass string |
+| payback_type | False | pass string |
+| filters      | False | array of var_names |
 
 > Get with `coords` parameter
 
@@ -28,6 +31,10 @@
 > - second rigth up point
 > - third rigth down point
 > - fourth left down point
+
+> `&rec_type=some_type`
+> `&payback_type=some_type`
+> `&filters=['some', 'filter']`
 
 ```json
 {
@@ -105,7 +112,7 @@
 }
 ```
 
-### 3. Marker
+# 3. Marker
 
 ## [GET]/api/markers/list/all
 !!! warning
@@ -121,6 +128,16 @@
   }
 ]
 ```
+
+
+# 4. Auth
+
+## [POST]/api/login
+
+## [POST]/api/users
+> Create user
+
+## [POST]/api/login
 
 ## Routes
 
