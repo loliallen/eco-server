@@ -22,6 +22,8 @@ files_storage = Path('./src'+REL_PATH)
 class Partner(Document):
     name = StringField(required=True)
     points = ListField(ReferenceField('RecPoint'))
+    products = ListField(ReferenceField('Product'))
+    bills = ListField(ReferenceField('ProductItemTransaction'))
     meta = {
         "db_alias": "core",
         "collection": "partners"
@@ -167,7 +169,7 @@ def delete(_id: str) -> RecPoint:
     return rec_point
 
 def find_by_id(_id: str) -> RecPoint:
-    rec_point = RecPoint.objects(id=_id).first()
+    rec_point = RecPoint.objects.get(_id=ObjectId(_id))
     if not rec_point:
         return None
     return rec_point

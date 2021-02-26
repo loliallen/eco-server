@@ -1,0 +1,2 @@
+class NotEnoughtCoins(Exception):
+    pass
