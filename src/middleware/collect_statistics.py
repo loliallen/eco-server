@@ -7,7 +7,6 @@ class Collector(object):
         self.app = app
     def __call__(self, environ, start_response):
         stat = Statistic()
-        print("env", environ)
         request = Request(environ)
         stat.request_uri = environ['RAW_URI']
         if 'Authorization' in request.headers:

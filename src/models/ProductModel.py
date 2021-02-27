@@ -1,9 +1,9 @@
 from mongoengine import Document, IntField, StringField, ReferenceField, ListField
-from exceptions.Product import NotEnoughtCoins
-from exceptions.Models import ObjectNotFound
+from src.exceptions.Product import NotEnoughtCoins
+from src.exceptions.Models import ObjectNotFound
 
 from src.models.ProductItemModel import ProductItem
-import models.ProductItemTransactionModel as ProductItemTransaction
+import src.models.ProductItemTransactionModel as ProductItemTransaction
 from .UserModel import User, find_user_by_id
 from bson.objectid import ObjectId
 
