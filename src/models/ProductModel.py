@@ -2,6 +2,7 @@ from mongoengine import Document, IntField, StringField, ReferenceField, ListFie
 from exceptions.Product import NotEnoughtCoins
 from exceptions.Models import ObjectNotFound
 
+from src.models.ProductItemModel import ProductItem
 import models.ProductItemTransactionModel as ProductItemTransaction
 from .UserModel import User, find_user_by_id
 from bson.objectid import ObjectId

@@ -6,6 +6,7 @@ import json
 from bson.objectid import ObjectId
 import os
 
+from src.models.ProductModel import Product
 from src.models.FilterModel import Filter
 from src.models.ReceptionTargetModel import ReceptionTarget
 from src.models.ReceptionTypeModel import ReceptionType
@@ -13,6 +14,7 @@ from src.utils.JsonEncoder import JSONEncoder
 from src.utils.haversine import haversine
 
 from src.utils.coords import coords as CheckCoords
+
 
 REL_PATH = "/static/recpoints"
 files_storage = Path('./src'+REL_PATH)
