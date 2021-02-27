@@ -12,7 +12,7 @@ files_storage = Path('./src'+REL_PATH)
 
 
 class User(Document, UserMixin):
-    username = StringField(required=True)
+    username = StringField(required=True, unique=True)
     name = StringField(required=True)
     surname = StringField()
     password = StringField(required=True)

@@ -10,6 +10,8 @@ from flask_login import login_user, logout_user, current_user
 import datetime
 import jwt
 
+from mongoengine.errors import NotUniqueError
+
 import src.models.UserModel as User
 import src.models.InvitationModel as Invitation
 from src.send_email import send_email
@@ -57,24 +59,26 @@ class UserController(Resource):
             relp = filename
             FILES_PATH = files_storage / filename
             file.save(FILES_PATH.resolve())
+        try:
+            user = User.create(data, image=relp)
+            if "code" in argv:
+                print("code", argv['code'])
+                iv = Invitation.use_invitation_code(argv['code'])
+            
+            login_user(user)
 
-        user = User.create(data, image=relp)
-        if "code" in argv:
-            print("code", argv['code'])
-            iv = Invitation.use_invitation_code(argv['code'])
-        
-        login_user(user)
+            # token = jwt.encode({'username': user.username, 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=2)}, current_app.config['SECRET_KEY'], algorithm="HS256")
+            # confirm_url = Api.url_for(Api(current_app), resource=UserConfirmController, token=token, _external=True)
+            code = user.code
+            html = render_template('email.html', code=code)
+            subject = "Please confirm your email"
+            message = Message(subject=subject, html=html, recipients=[user.username])
+            send_email(message)
+            user.code = None
 
-        # token = jwt.encode({'username': user.username, 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=2)}, current_app.config['SECRET_KEY'], algorithm="HS256")
-        # confirm_url = Api.url_for(Api(current_app), resource=UserConfirmController, token=token, _external=True)
-        code = user.code
-        html = render_template('email.html', code=code)
-        subject = "Please confirm your email"
-        message = Message(subject=subject, html=html, recipients=[user.username])
-        send_email(message)
-
-        return json.loads(user.to_json())
-
+            return json.loads(user.to_json())
+        except NotUniqueError as e:
+            return {'message': e.args }, 400
 
     # @token_required
 # @check_confirmed
@@ -131,7 +135,7 @@ class TokenAuthentication(Resource):
         #     print(encoded_jwt)
         #     token = jwt.encode({'_id': user._id}, current_app.config['SECRET_KEY'], algorithm="HS256")
         login_user(user)
-        return jsonify({'token': user.token})
+        return json.loads(user.to_json())
 
         # return make_response("Could not verify", 401, {"WWW-Authenticate": 'Basic realm="Login required!"'})
 
@@ -160,7 +164,7 @@ class UserConfirmController(Resource):
         }
         if code == user.code:
             User.update(str(user.id), updates)
-            return jsonify({'message': 'You have confirmed your account. Thanks!'})
+            return json.loads(user.to_json())
         return jsonify({'message': 'Not valid code'}), 400
 
 
