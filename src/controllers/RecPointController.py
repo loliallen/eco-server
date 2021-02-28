@@ -12,7 +12,7 @@ import os
 import uuid
 
 
-REL_PATH = "/static/recpoints"
+REL_PATH = "/statics/recpoints"
 files_storage = Path('./src'+REL_PATH)
 
 class RecPointController(Resource):

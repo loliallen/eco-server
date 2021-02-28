@@ -17,7 +17,7 @@ import src.login as login
 
 Database.global_connect()
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path="/statics", static_folder='static')
 app.config.from_object(Configuration)
 app.wsgi_app = Collector(app.wsgi_app)
 api = Api(app)
@@ -39,8 +39,8 @@ api.add_resource(UserLogoutController, '/api/logout')
 api.add_resource(UserForgetPwdController, '/api/forget')
 api.add_resource(UserConfirmController, '/api/confirm')
 api.add_resource(InvitationController, '/api/invitation')
-api.add_resource(StatisticController, '/admin/stats')
-api.add_resource(ModlesStaticController, '/admin/stats/models')
+api.add_resource(StatisticController, '/api/admin/stats')
+api.add_resource(ModlesStaticController, '/api/admin/stats/models')
 
 
 
