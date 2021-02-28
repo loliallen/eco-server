@@ -6,7 +6,7 @@ from pathlib import Path
 import os
 
 
-REL_PATH = "/statics/markers"
+REL_PATH = "/static/markers"
 files_storage = Path('./src'+REL_PATH)
 
 class Marker(Document):

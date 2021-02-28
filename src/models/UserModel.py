@@ -7,7 +7,7 @@ from src.utils.generator import random_string, generate_code
 from src.utils.qrcodes import create_qr_code 
 
 
-REL_PATH = "/statics/users"
+REL_PATH = "/static/users"
 files_storage = Path('./src'+REL_PATH)
 
 

@@ -4,7 +4,7 @@ from src.config import Configuration
 from uuid import uuid1
 from pathlib import Path
 
-REL_PATH = "/statics/users"
+REL_PATH = "/static/users"
 files_storage = Path('./src'+REL_PATH)
 
 def create_qr_code(plain_text):

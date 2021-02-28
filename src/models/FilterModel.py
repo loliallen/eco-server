@@ -5,7 +5,7 @@ from pathlib import Path
 
 import os
 
-REL_PATH = "/statics/filters"
+REL_PATH = "/static/filters"
 files_storage = Path('./src'+REL_PATH)
 
 

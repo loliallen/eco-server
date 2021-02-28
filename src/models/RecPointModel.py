@@ -16,7 +16,7 @@ from src.utils.haversine import haversine
 from src.utils.coords import coords as CheckCoords
 
 
-REL_PATH = "/statics/recpoints"
+REL_PATH = "/static/recpoints"
 files_storage = Path('./src'+REL_PATH)
 
 

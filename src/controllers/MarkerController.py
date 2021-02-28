@@ -11,7 +11,7 @@ import os
 import uuid
 
 
-REL_PATH = "/statics/recpoints"
+REL_PATH = "/static/recpoints"
 files_storage = Path('./src'+REL_PATH)
 
 class MarkerController(Resource):

@@ -19,7 +19,7 @@ from src.utils.decorators import token_required, check_confirmed
 from src.utils.dict import get as get_field
 from src.utils.generator import generate_code
 
-REL_PATH = "/statics/users"
+REL_PATH = "/static/users"
 files_storage = Path('./src'+REL_PATH)
 
 
