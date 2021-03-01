@@ -11,7 +11,7 @@ from werkzeug.utils import secure_filename
 
 
 # setting path from /eco/server for images
-REL_PATH = "/static/filters"
+REL_PATH = "/statics/filters"
 files_storage = Path('./src'+REL_PATH)
 
 class FilterController(Resource):
