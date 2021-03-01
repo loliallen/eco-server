@@ -25,7 +25,6 @@ class Partner(Document):
     name = StringField(required=True)
     points = ListField(ReferenceField('RecPoint'))
     products = ListField(ReferenceField('Product'))
-    bills = ListField(ReferenceField('ProductItemTransaction'))
     meta = {
         "db_alias": "core",
         "collection": "partners"
@@ -42,6 +41,10 @@ class Partner(Document):
         
         for i, r_point in enumerate(self.points):  #ListFiled(ReferenceField)
             data['points'][i] = r_point.to_mongo()
+        for i, r_point in enumerate(self.products):  #ListFiled(ReferenceField)
+            data['products'][i] = r_point.to_mongo()
+        # for i, r_point in enumerate(self.points):  #ListFiled(ReferenceField)
+            # data['points'][i] = r_point.to_mongo()
         return json.loads(json.dumps(data, cls=JSONEncoder))
 
 
