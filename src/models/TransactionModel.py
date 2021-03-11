@@ -75,7 +75,7 @@ def confirm(transaction_id, status):
     transaction.status = status
     if status == 'c':
         user = transaction._from
-        user.eco_coins += transaction.ammount
+        user.eco_coins += transaction.reward
         user.save()
 
     transaction.save()

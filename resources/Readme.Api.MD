@@ -190,6 +190,8 @@
 # 5. RecPoint offers
 
 ## [POST]/api/recoff
+> To update the exsiting recpoint pass `recpoint: <recpoint_id>` in body
+
 body
 ```json
 {
@@ -201,7 +203,8 @@ body
     "contact": {
         "name": "str",
         "phone": "phone"
-    } 
+    } ,
+    `...rest of recpoint data`
 }
 ```
 
@@ -224,7 +227,7 @@ response:
         "_id": "603a47cf0c01a0a55af57c03",
         "code": 296362,
         "confirmed": false,
-        "eco_coins": 0,
+        "eco_coins": 1323,
         "image": "",
         "name": "name",
         "password": "sha256$G53StB0z$0f1194c73c10e6807260d83d44ed4fc66e046c1797170d3774edbb01a43fcbb7",
@@ -232,7 +235,7 @@ response:
         "token": "OLZRgFtmTJ2D2fyhqW4ZvU26SmxK0nkVIUKCs8VAU5Tn1CXYtiKuZy6FO2CpZQr1",
         "username": "levaya.pochta.sobaka@gmail.com"
     },
-    "_id": "6049a929102b529dc21e237b",
+    "_id": "6049ae18ee3c2f3f7c4f9ab3",
     "_to": {
         "_id": "602e0824e31d7249c7ffe450",
         "accept_types": [],
@@ -302,7 +305,7 @@ response:
             }
         }
     },
-    "ammount": 123.0,
+    "ammount": 1323.0,
     "filter_type": {
         "_id": "602ef32013700f8cf099fcb3",
         "bad_words": [],
@@ -311,7 +314,8 @@ response:
         "var_name": "waasd"
     },
     "image": "",
-    "reward": 0
+    "reward": 0,
+    "status": "i"
 }
 ```
 
