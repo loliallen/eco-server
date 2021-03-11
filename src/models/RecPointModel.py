@@ -174,7 +174,7 @@ def delete(_id: str) -> RecPoint:
     return rec_point
 
 def find_by_id(_id: str) -> RecPoint:
-    rec_point = RecPoint.objects.get(_id=ObjectId(_id))
+    rec_point = RecPoint.objects.get(id=ObjectId(_id))
     if not rec_point:
         return None
     return rec_point

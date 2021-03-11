@@ -104,11 +104,9 @@ def delete(_id: str) -> Filter:
     return fl
 
 def find_by_id(_id: str) -> Filter:
-    print(_id)
     fl = Filter.objects(id=_id).first()
     if not fl:
         return None
-    pprint(fl.to_json())
     return fl
 
 def append_key_word_by_id(_id: str, new_key_word: str) -> Filter:

@@ -9,6 +9,7 @@ from src.controllers.UserController import UserController, TokenAuthentication, 
 from src.controllers.PartnerController import PartnerController
 from src.controllers.InvitationController import InvitationController
 from src.controllers.RecPointOfferController import RecPointOfferController
+from src.controllers.RecycleController import RecycleController
 from src.controllers.StatisticController import StatisticController, ModlesStaticController
 from src.send_email import mail
 from src.middleware.collect_statistics import Collector
@@ -39,6 +40,7 @@ api.add_resource(UserLogoutController, '/api/logout')
 api.add_resource(UserForgetPwdController, '/api/forget')
 api.add_resource(UserConfirmController, '/api/confirm')
 api.add_resource(InvitationController, '/api/invitation')
+api.add_resource(RecycleController, '/api/recycle')
 api.add_resource(StatisticController, '/api/admin/stats')
 api.add_resource(ModlesStaticController, '/api/admin/stats/models')
 

@@ -204,3 +204,935 @@ body
     } 
 }
 ```
+
+# 6. Transactions
+
+## [POST]/api/recycle
+
+form-data:
+| Key | Description |
+| --- | ----------- |
+| qrcode | string readed from qrcode |
+| _to | recpoint id |
+| filter_type | filter type |
+| ammount | kgs |
+
+response: 
+```json
+{
+    "_from": {
+        "_id": "603a47cf0c01a0a55af57c03",
+        "code": 296362,
+        "confirmed": false,
+        "eco_coins": 0,
+        "image": "",
+        "name": "name",
+        "password": "sha256$G53StB0z$0f1194c73c10e6807260d83d44ed4fc66e046c1797170d3774edbb01a43fcbb7",
+        "qrcode": "/static/users/f9d6e29c-78fe-11eb-ace7-f50348ab8d02.png",
+        "token": "OLZRgFtmTJ2D2fyhqW4ZvU26SmxK0nkVIUKCs8VAU5Tn1CXYtiKuZy6FO2CpZQr1",
+        "username": "levaya.pochta.sobaka@gmail.com"
+    },
+    "_id": "6049a929102b529dc21e237b",
+    "_to": {
+        "_id": "602e0824e31d7249c7ffe450",
+        "accept_types": [],
+        "address": "ул. Дубравная, 2д, Казань, Респ. Татарстан, Россия, 420139",
+        "contacts": [
+            {
+                "name": "123",
+                "phone": "(123) 123-1233"
+            },
+            {
+                "name": "123123123",
+                "phone": "(123) 123-1231"
+            }
+        ],
+        "coords": {
+            "lat": 55.739914,
+            "lng": 49.2241303
+        },
+        "description": "123",
+        "images": [],
+        "name": "123",
+        "partner": "602ddbe08b0e3817efe8f322",
+        "payback_type": "paid",
+        "reception_type": "recycle",
+        "work_time": {
+            "ВС": {
+                "0": "10:25",
+                "1": "10:25",
+                "2": "10:25",
+                "3": "10:25"
+            },
+            "ВТ": {
+                "0": "10:25",
+                "1": "10:25",
+                "2": "10:25",
+                "3": "10:25"
+            },
+            "ПН": {
+                "0": "00:03",
+                "1": "10:25",
+                "2": "10:25",
+                "3": "10:25"
+            },
+            "ПТ": {
+                "0": "10:25",
+                "1": "10:25",
+                "2": "10:25",
+                "3": "10:25"
+            },
+            "СБ": {
+                "0": "10:25",
+                "1": "10:25",
+                "2": "10:25",
+                "3": "10:25"
+            },
+            "СР": {
+                "0": "10:25",
+                "1": "10:25",
+                "2": "10:25",
+                "3": "10:25"
+            },
+            "ЧТ": {
+                "0": "10:25",
+                "1": "10:25",
+                "2": "10:25",
+                "3": "10:25"
+            }
+        }
+    },
+    "ammount": 123.0,
+    "filter_type": {
+        "_id": "602ef32013700f8cf099fcb3",
+        "bad_words": [],
+        "key_words": [],
+        "name": "waasd",
+        "var_name": "waasd"
+    },
+    "image": "",
+    "reward": 0
+}
+```
+
+## [GET] api/recycle?id=`<instance_id>`&type=`<instance_type>`
+
+`<instance_id>` = ObjectId
+`<instance_type>` = user|recpoint
+
+response:
+```json
+[
+    {
+        "_from": {
+            "_id": "603a47cf0c01a0a55af57c03",
+            "code": 296362,
+            "confirmed": false,
+            "eco_coins": 0,
+            "image": "",
+            "name": "name",
+            "password": "sha256$G53StB0z$0f1194c73c10e6807260d83d44ed4fc66e046c1797170d3774edbb01a43fcbb7",
+            "qrcode": "/static/users/f9d6e29c-78fe-11eb-ace7-f50348ab8d02.png",
+            "token": "OLZRgFtmTJ2D2fyhqW4ZvU26SmxK0nkVIUKCs8VAU5Tn1CXYtiKuZy6FO2CpZQr1",
+            "username": "levaya.pochta.sobaka@gmail.com"
+        },
+        "_id": "6049a7aeb817338304764c40",
+        "_to": {
+            "_id": "602e0824e31d7249c7ffe450",
+            "accept_types": [],
+            "address": "ул. Дубравная, 2д, Казань, Респ. Татарстан, Россия, 420139",
+            "contacts": [
+                {
+                    "name": "123",
+                    "phone": "(123) 123-1233"
+                },
+                {
+                    "name": "123123123",
+                    "phone": "(123) 123-1231"
+                }
+            ],
+            "coords": {
+                "lat": 55.739914,
+                "lng": 49.2241303
+            },
+            "description": "123",
+            "images": [],
+            "name": "123",
+            "partner": "602ddbe08b0e3817efe8f322",
+            "payback_type": "paid",
+            "reception_type": "recycle",
+            "work_time": {
+                "ВС": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ВТ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ПН": {
+                    "0": "00:03",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ПТ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "СБ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "СР": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ЧТ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                }
+            }
+        },
+        "ammount": 123.0,
+        "image": "",
+        "reward": 0
+    },
+    {
+        "_from": {
+            "_id": "603a47cf0c01a0a55af57c03",
+            "code": 296362,
+            "confirmed": false,
+            "eco_coins": 0,
+            "image": "",
+            "name": "name",
+            "password": "sha256$G53StB0z$0f1194c73c10e6807260d83d44ed4fc66e046c1797170d3774edbb01a43fcbb7",
+            "qrcode": "/static/users/f9d6e29c-78fe-11eb-ace7-f50348ab8d02.png",
+            "token": "OLZRgFtmTJ2D2fyhqW4ZvU26SmxK0nkVIUKCs8VAU5Tn1CXYtiKuZy6FO2CpZQr1",
+            "username": "levaya.pochta.sobaka@gmail.com"
+        },
+        "_id": "6049a7c9b817338304764c42",
+        "_to": {
+            "_id": "602e0824e31d7249c7ffe450",
+            "accept_types": [],
+            "address": "ул. Дубравная, 2д, Казань, Респ. Татарстан, Россия, 420139",
+            "contacts": [
+                {
+                    "name": "123",
+                    "phone": "(123) 123-1233"
+                },
+                {
+                    "name": "123123123",
+                    "phone": "(123) 123-1231"
+                }
+            ],
+            "coords": {
+                "lat": 55.739914,
+                "lng": 49.2241303
+            },
+            "description": "123",
+            "images": [],
+            "name": "123",
+            "partner": "602ddbe08b0e3817efe8f322",
+            "payback_type": "paid",
+            "reception_type": "recycle",
+            "work_time": {
+                "ВС": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ВТ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ПН": {
+                    "0": "00:03",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ПТ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "СБ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "СР": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ЧТ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                }
+            }
+        },
+        "ammount": 123.0,
+        "image": "",
+        "reward": 0
+    },
+    {
+        "_from": {
+            "_id": "603a47cf0c01a0a55af57c03",
+            "code": 296362,
+            "confirmed": false,
+            "eco_coins": 0,
+            "image": "",
+            "name": "name",
+            "password": "sha256$G53StB0z$0f1194c73c10e6807260d83d44ed4fc66e046c1797170d3774edbb01a43fcbb7",
+            "qrcode": "/static/users/f9d6e29c-78fe-11eb-ace7-f50348ab8d02.png",
+            "token": "OLZRgFtmTJ2D2fyhqW4ZvU26SmxK0nkVIUKCs8VAU5Tn1CXYtiKuZy6FO2CpZQr1",
+            "username": "levaya.pochta.sobaka@gmail.com"
+        },
+        "_id": "6049a7d08654f8cd28f6b3be",
+        "_to": {
+            "_id": "602e0824e31d7249c7ffe450",
+            "accept_types": [],
+            "address": "ул. Дубравная, 2д, Казань, Респ. Татарстан, Россия, 420139",
+            "contacts": [
+                {
+                    "name": "123",
+                    "phone": "(123) 123-1233"
+                },
+                {
+                    "name": "123123123",
+                    "phone": "(123) 123-1231"
+                }
+            ],
+            "coords": {
+                "lat": 55.739914,
+                "lng": 49.2241303
+            },
+            "description": "123",
+            "images": [],
+            "name": "123",
+            "partner": "602ddbe08b0e3817efe8f322",
+            "payback_type": "paid",
+            "reception_type": "recycle",
+            "work_time": {
+                "ВС": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ВТ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ПН": {
+                    "0": "00:03",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ПТ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "СБ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "СР": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ЧТ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                }
+            }
+        },
+        "ammount": 123.0,
+        "image": "",
+        "reward": 0
+    },
+    {
+        "_from": {
+            "_id": "603a47cf0c01a0a55af57c03",
+            "code": 296362,
+            "confirmed": false,
+            "eco_coins": 0,
+            "image": "",
+            "name": "name",
+            "password": "sha256$G53StB0z$0f1194c73c10e6807260d83d44ed4fc66e046c1797170d3774edbb01a43fcbb7",
+            "qrcode": "/static/users/f9d6e29c-78fe-11eb-ace7-f50348ab8d02.png",
+            "token": "OLZRgFtmTJ2D2fyhqW4ZvU26SmxK0nkVIUKCs8VAU5Tn1CXYtiKuZy6FO2CpZQr1",
+            "username": "levaya.pochta.sobaka@gmail.com"
+        },
+        "_id": "6049a7e8d20893429c655c3c",
+        "_to": {
+            "_id": "602e0824e31d7249c7ffe450",
+            "accept_types": [],
+            "address": "ул. Дубравная, 2д, Казань, Респ. Татарстан, Россия, 420139",
+            "contacts": [
+                {
+                    "name": "123",
+                    "phone": "(123) 123-1233"
+                },
+                {
+                    "name": "123123123",
+                    "phone": "(123) 123-1231"
+                }
+            ],
+            "coords": {
+                "lat": 55.739914,
+                "lng": 49.2241303
+            },
+            "description": "123",
+            "images": [],
+            "name": "123",
+            "partner": "602ddbe08b0e3817efe8f322",
+            "payback_type": "paid",
+            "reception_type": "recycle",
+            "work_time": {
+                "ВС": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ВТ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ПН": {
+                    "0": "00:03",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ПТ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "СБ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "СР": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ЧТ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                }
+            }
+        },
+        "ammount": 123.0,
+        "image": "",
+        "reward": 0
+    },
+    {
+        "_from": {
+            "_id": "603a47cf0c01a0a55af57c03",
+            "code": 296362,
+            "confirmed": false,
+            "eco_coins": 0,
+            "image": "",
+            "name": "name",
+            "password": "sha256$G53StB0z$0f1194c73c10e6807260d83d44ed4fc66e046c1797170d3774edbb01a43fcbb7",
+            "qrcode": "/static/users/f9d6e29c-78fe-11eb-ace7-f50348ab8d02.png",
+            "token": "OLZRgFtmTJ2D2fyhqW4ZvU26SmxK0nkVIUKCs8VAU5Tn1CXYtiKuZy6FO2CpZQr1",
+            "username": "levaya.pochta.sobaka@gmail.com"
+        },
+        "_id": "6049a8144904106dd658a0f2",
+        "_to": {
+            "_id": "602e0824e31d7249c7ffe450",
+            "accept_types": [],
+            "address": "ул. Дубравная, 2д, Казань, Респ. Татарстан, Россия, 420139",
+            "contacts": [
+                {
+                    "name": "123",
+                    "phone": "(123) 123-1233"
+                },
+                {
+                    "name": "123123123",
+                    "phone": "(123) 123-1231"
+                }
+            ],
+            "coords": {
+                "lat": 55.739914,
+                "lng": 49.2241303
+            },
+            "description": "123",
+            "images": [],
+            "name": "123",
+            "partner": "602ddbe08b0e3817efe8f322",
+            "payback_type": "paid",
+            "reception_type": "recycle",
+            "work_time": {
+                "ВС": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ВТ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ПН": {
+                    "0": "00:03",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ПТ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "СБ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "СР": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ЧТ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                }
+            }
+        },
+        "ammount": 123.0,
+        "image": "",
+        "reward": 0
+    },
+    {
+        "_from": {
+            "_id": "603a47cf0c01a0a55af57c03",
+            "code": 296362,
+            "confirmed": false,
+            "eco_coins": 0,
+            "image": "",
+            "name": "name",
+            "password": "sha256$G53StB0z$0f1194c73c10e6807260d83d44ed4fc66e046c1797170d3774edbb01a43fcbb7",
+            "qrcode": "/static/users/f9d6e29c-78fe-11eb-ace7-f50348ab8d02.png",
+            "token": "OLZRgFtmTJ2D2fyhqW4ZvU26SmxK0nkVIUKCs8VAU5Tn1CXYtiKuZy6FO2CpZQr1",
+            "username": "levaya.pochta.sobaka@gmail.com"
+        },
+        "_id": "6049a929102b529dc21e237b",
+        "_to": {
+            "_id": "602e0824e31d7249c7ffe450",
+            "accept_types": [],
+            "address": "ул. Дубравная, 2д, Казань, Респ. Татарстан, Россия, 420139",
+            "contacts": [
+                {
+                    "name": "123",
+                    "phone": "(123) 123-1233"
+                },
+                {
+                    "name": "123123123",
+                    "phone": "(123) 123-1231"
+                }
+            ],
+            "coords": {
+                "lat": 55.739914,
+                "lng": 49.2241303
+            },
+            "description": "123",
+            "images": [],
+            "name": "123",
+            "partner": "602ddbe08b0e3817efe8f322",
+            "payback_type": "paid",
+            "reception_type": "recycle",
+            "work_time": {
+                "ВС": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ВТ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ПН": {
+                    "0": "00:03",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ПТ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "СБ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "СР": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ЧТ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                }
+            }
+        },
+        "ammount": 123.0,
+        "filter_type": {
+            "_id": "602ef32013700f8cf099fcb3",
+            "bad_words": [],
+            "key_words": [],
+            "name": "waasd",
+            "var_name": "waasd"
+        },
+        "image": "",
+        "reward": 0
+    },
+    {
+        "_from": {
+            "_id": "603a47cf0c01a0a55af57c03",
+            "code": 296362,
+            "confirmed": false,
+            "eco_coins": 0,
+            "image": "",
+            "name": "name",
+            "password": "sha256$G53StB0z$0f1194c73c10e6807260d83d44ed4fc66e046c1797170d3774edbb01a43fcbb7",
+            "qrcode": "/static/users/f9d6e29c-78fe-11eb-ace7-f50348ab8d02.png",
+            "token": "OLZRgFtmTJ2D2fyhqW4ZvU26SmxK0nkVIUKCs8VAU5Tn1CXYtiKuZy6FO2CpZQr1",
+            "username": "levaya.pochta.sobaka@gmail.com"
+        },
+        "_id": "6049aa5757df2f8d01ca777d",
+        "_to": {
+            "_id": "602e0824e31d7249c7ffe450",
+            "accept_types": [],
+            "address": "ул. Дубравная, 2д, Казань, Респ. Татарстан, Россия, 420139",
+            "contacts": [
+                {
+                    "name": "123",
+                    "phone": "(123) 123-1233"
+                },
+                {
+                    "name": "123123123",
+                    "phone": "(123) 123-1231"
+                }
+            ],
+            "coords": {
+                "lat": 55.739914,
+                "lng": 49.2241303
+            },
+            "description": "123",
+            "images": [],
+            "name": "123",
+            "partner": "602ddbe08b0e3817efe8f322",
+            "payback_type": "paid",
+            "reception_type": "recycle",
+            "work_time": {
+                "ВС": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ВТ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ПН": {
+                    "0": "00:03",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ПТ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "СБ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "СР": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ЧТ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                }
+            }
+        },
+        "ammount": 123.0,
+        "filter_type": {
+            "_id": "602ef32013700f8cf099fcb3",
+            "bad_words": [],
+            "key_words": [],
+            "name": "waasd",
+            "var_name": "waasd"
+        },
+        "image": "",
+        "reward": 0
+    },
+    {
+        "_from": {
+            "_id": "603a47cf0c01a0a55af57c03",
+            "code": 296362,
+            "confirmed": false,
+            "eco_coins": 0,
+            "image": "",
+            "name": "name",
+            "password": "sha256$G53StB0z$0f1194c73c10e6807260d83d44ed4fc66e046c1797170d3774edbb01a43fcbb7",
+            "qrcode": "/static/users/f9d6e29c-78fe-11eb-ace7-f50348ab8d02.png",
+            "token": "OLZRgFtmTJ2D2fyhqW4ZvU26SmxK0nkVIUKCs8VAU5Tn1CXYtiKuZy6FO2CpZQr1",
+            "username": "levaya.pochta.sobaka@gmail.com"
+        },
+        "_id": "6049ac2b57df2f8d01ca777f",
+        "_to": {
+            "_id": "602e0824e31d7249c7ffe450",
+            "accept_types": [],
+            "address": "ул. Дубравная, 2д, Казань, Респ. Татарстан, Россия, 420139",
+            "contacts": [
+                {
+                    "name": "123",
+                    "phone": "(123) 123-1233"
+                },
+                {
+                    "name": "123123123",
+                    "phone": "(123) 123-1231"
+                }
+            ],
+            "coords": {
+                "lat": 55.739914,
+                "lng": 49.2241303
+            },
+            "description": "123",
+            "images": [],
+            "name": "123",
+            "partner": "602ddbe08b0e3817efe8f322",
+            "payback_type": "paid",
+            "reception_type": "recycle",
+            "work_time": {
+                "ВС": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ВТ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ПН": {
+                    "0": "00:03",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ПТ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "СБ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "СР": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ЧТ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                }
+            }
+        },
+        "ammount": 1233.0,
+        "filter_type": {
+            "_id": "602ef32013700f8cf099fcb3",
+            "bad_words": [],
+            "key_words": [],
+            "name": "waasd",
+            "var_name": "waasd"
+        },
+        "image": "",
+        "reward": 0
+    },
+    {
+        "_from": {
+            "_id": "603a47cf0c01a0a55af57c03",
+            "code": 296362,
+            "confirmed": false,
+            "eco_coins": 0,
+            "image": "",
+            "name": "name",
+            "password": "sha256$G53StB0z$0f1194c73c10e6807260d83d44ed4fc66e046c1797170d3774edbb01a43fcbb7",
+            "qrcode": "/static/users/f9d6e29c-78fe-11eb-ace7-f50348ab8d02.png",
+            "token": "OLZRgFtmTJ2D2fyhqW4ZvU26SmxK0nkVIUKCs8VAU5Tn1CXYtiKuZy6FO2CpZQr1",
+            "username": "levaya.pochta.sobaka@gmail.com"
+        },
+        "_id": "6049ac2f57df2f8d01ca7781",
+        "_to": {
+            "_id": "602e0824e31d7249c7ffe450",
+            "accept_types": [],
+            "address": "ул. Дубравная, 2д, Казань, Респ. Татарстан, Россия, 420139",
+            "contacts": [
+                {
+                    "name": "123",
+                    "phone": "(123) 123-1233"
+                },
+                {
+                    "name": "123123123",
+                    "phone": "(123) 123-1231"
+                }
+            ],
+            "coords": {
+                "lat": 55.739914,
+                "lng": 49.2241303
+            },
+            "description": "123",
+            "images": [],
+            "name": "123",
+            "partner": "602ddbe08b0e3817efe8f322",
+            "payback_type": "paid",
+            "reception_type": "recycle",
+            "work_time": {
+                "ВС": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ВТ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ПН": {
+                    "0": "00:03",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ПТ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "СБ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "СР": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                },
+                "ЧТ": {
+                    "0": "10:25",
+                    "1": "10:25",
+                    "2": "10:25",
+                    "3": "10:25"
+                }
+            }
+        },
+        "ammount": 1323.0,
+        "filter_type": {
+            "_id": "602ef32013700f8cf099fcb3",
+            "bad_words": [],
+            "key_words": [],
+            "name": "waasd",
+            "var_name": "waasd"
+        },
+        "image": "",
+        "reward": 0
+    }
+]
+```
