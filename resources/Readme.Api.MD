@@ -190,7 +190,7 @@
 # 5. RecPoint offers
 
 ## [POST]/api/recoff
-> To update the exsiting recpoint pass `recpoint: <recpoint_id>` in body
+> To update the exsiting recpoint pass `recpoint: <recpoint_id>` in bodyп
 
 body
 ```json
