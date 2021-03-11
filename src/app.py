@@ -18,7 +18,7 @@ import src.login as login
 
 Database.global_connect()
 
-app = Flask(__name__, static_url_path="/statics", static_folder='static')
+app = Flask(__name__, static_url_path="/statics", static_folder='statics')
 app.config.from_object(Configuration)
 app.wsgi_app = Collector(app.wsgi_app)
 api = Api(app)
