@@ -14,7 +14,7 @@ from mongoengine.errors import NotUniqueError
 
 import src.models.UserModel as User
 import src.models.InvitationModel as Invitation
-from src.send_email import send_email
+from src.utils.send_email import send_email
 from src.utils.decorators import token_required, check_confirmed
 from src.utils.dict import get as get_field
 from src.utils.generator import generate_code

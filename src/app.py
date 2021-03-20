@@ -11,10 +11,11 @@ from src.controllers.InvitationController import InvitationController
 from src.controllers.RecPointOfferController import RecPointOfferController
 from src.controllers.RecycleController import RecycleController
 from src.controllers.StatisticController import StatisticController, ModlesStaticController
-from src.send_email import mail
+from src.controllers.NewsController import NewsController
+from src.utils.send_email import mail
 from src.middleware.collect_statistics import Collector
 import src.services.Database as Database
-import src.login as login
+import src.utils.login as login
 
 Database.global_connect()
 
@@ -43,6 +44,6 @@ api.add_resource(InvitationController, '/api/invitation')
 api.add_resource(RecycleController, '/api/recycle')
 api.add_resource(StatisticController, '/api/admin/stats')
 api.add_resource(ModlesStaticController, '/api/admin/stats/models')
-
+api.add_resource(NewsController, '/api/news')
 
 
