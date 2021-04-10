@@ -4,7 +4,7 @@ from pathlib import Path
 from datetime import datetime
 from flask_login import UserMixin
 from src.utils.generator import random_string, generate_code
-from src.utils.qrcodes import create_qr_code 
+from src.utils.qrcodes import create_qr_code
 
 
 REL_PATH = "/statics/users"
@@ -20,12 +20,12 @@ class User(Document, UserMixin):
     confirmed = BooleanField(default=False)
     confirmed_on = DateTimeField()
     eco_coins = IntField(default=0)
-
+    eco_coins_is_avalible = BooleanField(default=False)
     code = IntField(default=generate_code)
     qrcode = StringField()
 
     token = StringField(default=random_string)
-    
+
     meta = {
         "db_alias": "core",
         "collection": "users"
@@ -52,9 +52,9 @@ def get_one_user(user_id: str) -> User:
 def create(obj: dict, image: str) -> User:
     obj['password'] = generate_password_hash(obj['password'], method='sha256')
     user = User(**obj)
-    
+
     user.qrcode = create_qr_code(user.token)
-    
+
     if image != "":
         image = REL_PATH + "/" + image
     user.image = image
@@ -71,6 +71,10 @@ def update(user_id: str, updates:object) -> User:
         return None
 
     user.update(**updates)
+    if not user.eco_coins_is_avalible:
+        user.eco_coins_is_avalible = True
+        user.eco_coins += 20
+        user.save()
     if "password" in updates:
         user.password = generate_password_hash(user.password, method='sha256')
     user.save()

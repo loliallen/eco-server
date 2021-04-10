@@ -64,7 +64,7 @@ class UserController(Resource):
             if "code" in argv:
                 print("code", argv['code'])
                 iv = Invitation.use_invitation_code(argv['code'])
-            
+
             login_user(user)
 
             # token = jwt.encode({'username': user.username, 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=2)}, current_app.config['SECRET_KEY'], algorithm="HS256")
@@ -144,7 +144,7 @@ class TokenAuthentication(Resource):
 class UserConfirmController(Resource):
     def get(self):
         args = request.args.to_dict()
-        
+
         _id = get_field("id", args)
         code = int(get_field("code", args))
 
@@ -217,6 +217,3 @@ class UserForgetPwdController(Resource):
         send_email(message)
 
         return 200
-
-    
-        

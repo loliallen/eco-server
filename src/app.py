@@ -11,6 +11,7 @@ from src.controllers.InvitationController import InvitationController
 from src.controllers.RecPointOfferController import RecPointOfferController
 from src.controllers.RecycleController import RecycleController
 from src.controllers.StatisticController import StatisticController, ModlesStaticController
+from src.controllers.ConfirmUser import ConfirmUser
 from src.send_email import mail
 from src.middleware.collect_statistics import Collector
 import src.services.Database as Database
@@ -38,11 +39,9 @@ api.add_resource(UserController, '/api/users')
 api.add_resource(TokenAuthentication, '/api/login')
 api.add_resource(UserLogoutController, '/api/logout')
 api.add_resource(UserForgetPwdController, '/api/forget')
+api.add_resource(ConfirmUser, '/api/enable/coins')
 api.add_resource(UserConfirmController, '/api/confirm')
 api.add_resource(InvitationController, '/api/invitation')
 api.add_resource(RecycleController, '/api/recycle')
 api.add_resource(StatisticController, '/api/admin/stats')
 api.add_resource(ModlesStaticController, '/api/admin/stats/models')
-
-
-

@@ -159,6 +159,19 @@
 ## [POST]/api/forget?username=username_email&code=104356&pwd=123
 ### Set new password
 
+## [GET] /api/enable/coins
+
+return all questions
+
+## [POST] /api/enable/coins
+
+### Answer one of this questions
+```json
+{
+  "answer": "some answer",
+  "id": "id"
+}
+```
 
 # 5. Invitations
 
@@ -220,7 +233,7 @@ form-data:
 | filter_type | filter type |
 | ammount | kgs |
 
-response: 
+response:
 ```json
 {
     "_from": {
