@@ -1,6 +1,6 @@
 
-from flask import request
-from flask_restful import Resource, reqparse, jsonify
+from flask import request, jsonify
+from flask_restful import Resource, reqparse
 import src.models.UserModel as UserModel
 import src.models.QuestionModel as QuestionModel
 
