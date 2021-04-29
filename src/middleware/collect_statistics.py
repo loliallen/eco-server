@@ -1,5 +1,5 @@
-from src.models.StatisticsModel import Statistic
-from src.models.UserModel import User
+from src.models.statistic.StatisticsModel import Statistic
+from src.models.user.UserModel import User
 from flask import Request
 
 class Collector(object):

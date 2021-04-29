@@ -3,7 +3,7 @@ from pathlib import Path
 
 from mongoengine import Document, StringField, ListField, FloatField
 
-from BaseCrud import BaseCrud
+from models.utils.BaseCrud import BaseCrud
 
 REL_PATH = "/statics/filters"
 files_storage = Path('./src'+REL_PATH)

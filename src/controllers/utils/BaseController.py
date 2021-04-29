@@ -7,7 +7,7 @@ def _not_found(name, id):
     return {"message": f"{name} not found id={id}"}, 404
 
 
-class BaseController(Resource):
+class BaseController:
     resource_fields = None
     model = None
     name = 'Resource'
@@ -34,7 +34,7 @@ class BaseController(Resource):
         return marshal(json.loads(obj.to_json()), self.resource_fields)
 
 
-class BaseListController(Resource):
+class BaseListController:
     resource_fields = None
     model = None
     name = 'Resource'
