@@ -2,5 +2,6 @@ venv
 u_env
 env
 .idea
+.vscode
 src/*/__pycache__
 __pycache__/
