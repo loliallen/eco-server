@@ -15,7 +15,7 @@ class Filter(Document, BaseCrud):
     image = StringField(comment='Картинка ресурса')
     key_words = ListField(StringField(), comment='Список слов-ассоциаций для поиска')
     bad_words = ListField(StringField(), comment='Стоп список слов для поиска')
-    coins_by_unit = FloatField(default=1, comment='Кол-во эко-коинов за единицу сданного ресурса')
+    coins_per_unit = FloatField(default=1, comment='Кол-во эко-коинов за единицу сданного ресурса')
     meta = {
         "db_alias": "core",
         "collection": "filters",

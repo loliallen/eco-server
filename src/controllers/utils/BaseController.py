@@ -13,13 +13,13 @@ class BaseController(Resource):
     name = 'Resource'
     parser = None
 
-    def get(self, id):
+    def get_(self, id):
         obj = self.model.find_by_id_(id)
         if not obj:
             return _not_found(self.name, id)
         return marshal(json.loads(obj.to_json()), self.resource_fields)
 
-    def put(self, id):
+    def put_(self, id):
         updates = self.parser.parse_args()
         obj = self.model.update_(id, updates)
         if not obj:
@@ -27,7 +27,7 @@ class BaseController(Resource):
 
         return marshal(json.loads(obj.to_json()), self.resource_fields)
 
-    def delete(self, id):
+    def delete_(self, id):
         obj = self.model.delete_(id)
         if not bool(obj):
             return _not_found(self.name, id)
@@ -40,11 +40,11 @@ class BaseListController(Resource):
     name = 'Resource'
     parser = None
 
-    def get(self):
+    def get_(self):
         objs = self.model.read_()
         return marshal(json.loads(objs.to_json()), self.resource_fields)
 
-    def post(self):
+    def post_(self):
         args = self.parser.parse_args()
         obj = self.model.create_(**args).to_json()
         return marshal(json.loads(obj.to_json()), self.resource_fields)
