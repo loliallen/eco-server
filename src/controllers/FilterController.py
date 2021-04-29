@@ -37,6 +37,9 @@ class FilterControllerList(BaseListController):
     name = 'Filter'
     parser = parser
 
+    def get(self):
+        super(FilterControllerList, self).get_()
+
     # custom post
     @marshal_with(resource_fields)
     def post(self):
@@ -60,3 +63,12 @@ class FilterController(BaseController):
     model = Filter
     name = 'Filter'
     parser = parser
+
+    def get(self, filter_id):
+        super(BaseController, self).get_(filter_id)
+
+    def put(self, filter_id):
+        super(BaseController, self).put(filter_id)
+
+    def delete(self, filter_id):
+        super(BaseController, self).get_(filter_id)

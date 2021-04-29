@@ -2,7 +2,7 @@ from flask import Flask
 from flask_restful import Api
 
 from src.config import Configuration
-from src.controllers.FilterController import FilterController
+from src.controllers.FilterController import FilterController, FilterListController
 from src.controllers.RecPointController import RecPointController
 from src.controllers.MarkerController import MarkerController, MarkerControllerList, MarkerControllerListAll
 from src.controllers.UserController import UserController, TokenAuthentication, UserConfirmController, UserLogoutController, UserForgetPwdController
@@ -31,6 +31,7 @@ login.login_manager.init_app(app)
 # print(current_app
 
 api.add_resource(FilterController, '/api/filters')
+api.add_resource(FilterListController, '/api/filters/<filter_id>')
 api.add_resource(RecPointController, '/api/rec_points')
 api.add_resource(RecPointOfferController, '/api/recoff')
 api.add_resource(MarkerController, '/api/markers')
