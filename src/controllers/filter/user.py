@@ -51,9 +51,3 @@ class FilterController(BaseController):
 
     def get(self, filter_id):
         return super().get_(filter_id)
-
-    def put(self, filter_id):
-        return super().put_(filter_id)
-
-    def delete(self, filter_id):
-        return super().get_(filter_id)
