@@ -30,10 +30,6 @@ login.login_manager.init_app(app)
 
 # print(current_app
 
-api.add_resource(AdminRouter, '/admin')
-api.add_resource(UserRouter, '/api/v1')
-
-
 api.add_resource(FilterController, '/api/filters')
 api.add_resource(RecPointController, '/api/rec_points')
 api.add_resource(RecPointOfferController, '/api/recoff')
