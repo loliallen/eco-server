@@ -1,11 +1,13 @@
 from mongoengine import Document, BooleanField, ListField, StringField, DictField, ReferenceField
 
-class RecPointOffer(Document):
+from models.utils.BaseCrud import BaseCrud
+
+
+class RecPointOffer(Document, BaseCrud):
     coords = DictField()
     description = StringField()
     contact = ListField()
     recpoint = ReferenceField('RecPoint')
-    description = StringField()
     images = ListField(StringField())
     getBonus = BooleanField()
     address = StringField(requrend=True)
@@ -18,9 +20,3 @@ class RecPointOffer(Document):
         "db_alias": "core",
         "collection": "rec_points_offer"
     }
-
-def create(obj):
-    rec_off = RecPointOffer(**obj)
-    rec_off.save()
-
-    return rec_off
