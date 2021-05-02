@@ -48,7 +48,7 @@ resource_fields_ = {
     'work_time': custom_fields.Dict,
     'contacts': fields.List(fields.String),
     'accept_types': fields.List(fields.String(attribute=lambda x: x['$oid'])),
-    'coords': custom_fields.Dict,
+    'coords': fields.List(fields.Float, attribute=lambda x: x['coords']['coordinates']),
     'description': fields.String,
     'getBonus': fields.Boolean,
 }
@@ -62,7 +62,7 @@ class RecPointListController(BaseListController):
 
     def get(self):
         args = get_parser.parse_args()
-        points = json.loads(RecPoint.read_(**args))
+        points = json.loads(RecPoint.read_(**args).to_json())
         return marshal(points, resource_fields_)
 
     def post(self):

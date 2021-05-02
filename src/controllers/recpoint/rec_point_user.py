@@ -1,7 +1,8 @@
+import json
 from ast import literal_eval
 
 from bson import ObjectId
-from flask_restful import reqparse, fields
+from flask_restful import reqparse, fields, marshal
 
 from controllers.utils import fields as custom_fields
 from controllers.utils.BaseController import BaseListController, BaseController
@@ -38,7 +39,7 @@ resource_fields_ = {
     'work_time': custom_fields.Dict,
     'contacts': fields.List(fields.String),
     'accept_types': fields.List(fields.String(attribute=lambda x: x['$oid'])),
-    'coords': custom_fields.Dict,
+    'coords': fields.List(fields.Float, attribute=lambda x: x['coords']['coordinates']),
     'description': fields.String,
     'getBonus': fields.Boolean,
 }
@@ -51,7 +52,9 @@ class RecPointListController(BaseListController):
     post_parser = post_parser
 
     def get(self):
-        super().get_()
+        args = get_parser.parse_args()
+        points = json.loads(RecPoint.read_(**args).to_json())
+        return marshal(points, resource_fields_)
 
 
 class RecPointController(BaseController):
