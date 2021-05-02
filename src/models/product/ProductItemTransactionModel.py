@@ -1,6 +1,9 @@
 from mongoengine import Document, ReferenceField, StringField
 
-class ProductItemTransaction(Document):
+from models.utils.BaseCrud import BaseCrud
+
+
+class ProductItemTransaction(Document, BaseCrud):
     product = ReferenceField('Product')
     item = ReferenceField('ProductItem')
     user = ReferenceField('User')
@@ -11,13 +14,3 @@ class ProductItemTransaction(Document):
         "db_alias": "core",
         "collection": "product_item_transactions"
     }
-
-
-def create(product, item, user):
-    transaction = ProductItemTransaction(
-        product=product,
-        item=item,
-        user=user,
-    )
-    transaction.save()
-    return transaction

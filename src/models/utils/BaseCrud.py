@@ -1,3 +1,4 @@
+from mongoengine import Document
 from mongoengine.queryset.queryset import QuerySet
 
 
@@ -33,4 +34,3 @@ class BaseCrud:
     @classmethod
     def find_by_id_(cls, _id: str):
         return cls.objects(id=_id).first()
-

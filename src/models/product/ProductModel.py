@@ -1,14 +1,14 @@
 from mongoengine import Document, IntField, StringField, ReferenceField, ListField
-from src.exceptions.Product import NotEnoughtCoins
-from src.exceptions.Models import ObjectNotFound
 
-from src.models.ProductItemModel import ProductItem
-import src.models.ProductItemTransactionModel as ProductItemTransaction
-from .UserModel import User, find_user_by_id
-from bson.objectid import ObjectId
+from exceptions.Models import ObjectNotFound
+from src.exceptions.Product import NotEnoughtCoins, ProductsIsOver
+from src.models.product.ProductItemTransactionModel import ProductItemTransaction
+from src.models.user.UserModel import User
+from src.models.utils.BaseCrud import BaseCrud
 
-class Product(Document):
-    ammount = IntField()
+
+class Product(Document, BaseCrud):
+    price = IntField()
     name = StringField()
     items = ListField(ReferenceField('ProductItem'))
     transactions = ListField(ReferenceField('ProductItemTransaction'))
@@ -17,40 +17,24 @@ class Product(Document):
         "collection": "products"
     }
 
-def buy(user_id, product_id):
-    try:
+    def buy(self, user_id):
+        user = User.find_by_id_(user_id)
+        if user is None:
+            raise ObjectNotFound('user not found')
+        with user.lock() as user:
+            if self.price > user.eco_coins:
+                raise NotEnoughtCoins
 
-        user = find_user_by_id(user_id)
-        product = find_product_by_id(product_id)
-
-        if product.ammount > user.eco_coins:
-            raise NotEnoughtCoins
-
-        # Making status for item
-        item = product.items.filter(in_transaction=false).first()
-        item.in_transaction = True
-        item.save()
-        
-        # Creating transaction
-        transaction = ProductItemTransaction.create(product=product, item=item, user=user)
-        product.transactions.append(transaction)
-        product.save()
-
-        #
-        user.eco_coins -= product.ammount
-        user.save() 
-
-        transaction.status = "success"
-        transaction.save()
-
+            item = self.items.filter(in_freeze=False, is_active=True, user=None).first()
+            if not item:
+                raise ProductsIsOver
+            with item.lock() as item:
+                # Creating transaction
+                transaction = ProductItemTransaction.create_(product=self, item=item, user=user)
+                self.transactions.append(transaction)
+                self.save()
+                user.eco_coins -= self.price
+                user.save()
+                transaction.status = "success"
+                transaction.save()
         return transaction
-
-    except NotEnoughtCoins:
-        raise NotEnoughtCoins
-    finally:
-        raise ObjectNotFound(product_id)
-
-
-def find_product_by_id(product_id:str) -> Product:
-    product = Product.objects.get(_id=ObjectId(product_id))
-    return product
