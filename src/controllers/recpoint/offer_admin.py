@@ -22,14 +22,14 @@ post_parser.add_argument('getBonus', type=bool, required=False, location='form')
 
 
 resource_fields_ = {
-    'id': fields.String(attribute=lambda x: x['_id']['$oid']),
+    'id': fields.String,
     'partner': fields.String,
     'payback_type': fields.String,
     'reception_type': fields.String,
     'work_time': custom_fields.Dict,
     'contacts': fields.List(fields.String),
-    'accept_types': fields.List(fields.String(attribute=lambda x: x['$oid'])),
-    'coords': fields.List(fields.Float, attribute=lambda x: x['coords']['coordinates']),
+    'accept_types': fields.List(fields.String(attribute='name')),
+    'coords': fields.List(fields.Float(attribute='coords.coordinates')),
     'description': fields.String,
     'getBonus': fields.Boolean,
 }

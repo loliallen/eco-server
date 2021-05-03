@@ -4,6 +4,7 @@ import uuid
 from ast import literal_eval
 
 import werkzeug
+from flask import request
 from flask_restful import Resource, marshal
 from mongoengine import NotUniqueError
 from pymongo.errors import DuplicateKeyError
@@ -32,7 +33,7 @@ class BaseController(Resource):
         obj = self.model.find_by_id_(id)
         if not obj:
             return not_found(self.name, id)
-        return marshal(json.loads(obj.to_json()), self.resource_fields)
+        return marshal(obj, self.resource_fields)
 
     def put_(self, id):
         updates = self.parser.parse_args()
@@ -40,13 +41,13 @@ class BaseController(Resource):
         if not obj:
             return not_found(self.name, id)
 
-        return marshal(json.loads(obj.to_json()), self.resource_fields)
+        return marshal(obj, self.resource_fields)
 
     def delete_(self, id):
         obj = self.model.delete_(id)
         if not bool(obj):
             return not_found(self.name, id)
-        return marshal(json.loads(obj.to_json()), self.resource_fields)
+        return marshal(obj, self.resource_fields)
 
 
 class BaseListController(Resource):
@@ -60,13 +61,13 @@ class BaseListController(Resource):
 
     def get_(self):
         objs = self.model.read_()
-        return marshal(json.loads(objs.to_json()), self.resource_fields)
+        return marshal(list(objs), self.resource_fields)
 
     def post_(self):
         obj, error = self._create_obj()
         if error:
             return error
-        return marshal(json.loads(obj.to_json()), self.resource_fields)
+        return marshal(obj, self.resource_fields)
 
     def _create_obj(self):
         args = self.parser.parse_args()
@@ -74,7 +75,7 @@ class BaseListController(Resource):
             if self.img_field_type is str:
                 self.save_img(args)
             if self.img_field_type is list:
-                self.save_img(args)
+                self.save_imgs(args)
         try:
             obj = self.model.create_(**args)
         except DuplicateKeyError as ex:
@@ -94,7 +95,7 @@ class BaseListController(Resource):
     def save_imgs(self, args):
         directory = str(uuid.uuid1())
         directory_path = self.img_path
-        images = self.request.files.getlist('images')
+        images = request.files.getlist('images')
         os.makedirs((directory_path / directory).resolve())
         imgs = []
         # saving images
@@ -104,4 +105,5 @@ class BaseListController(Resource):
             file_path = directory_path / relp
             image.save(file_path.resolve())
             imgs.append(relp)
-        args[self.img_field] = imgs
+        if len(imgs) > 0:
+            args[self.img_field] = imgs

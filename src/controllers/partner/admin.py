@@ -9,7 +9,7 @@ post_parser.add_argument('name', type=str, required=True, location='form')
 
 
 resource_fields_ = {
-    'id': fields.String(attribute=lambda x: x['_id']['$oid']),
+    'id': fields.String,
     'name': fields.String,
     'points': custom_fields.Dict,
     'products': custom_fields.Dict,

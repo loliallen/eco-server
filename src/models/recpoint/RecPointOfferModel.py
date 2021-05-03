@@ -1,10 +1,10 @@
-from mongoengine import Document, BooleanField, ListField, StringField, DictField, ReferenceField
+from mongoengine import Document, BooleanField, ListField, StringField, DictField, ReferenceField, PointField
 
 from models.utils.BaseCrud import BaseCrud
 
 
 class RecPointOffer(Document, BaseCrud):
-    coords = DictField()
+    coords = PointField(auto_index=False, reqired=True)
     description = StringField()
     contact = ListField()
     recpoint = ReferenceField('RecPoint')
@@ -18,5 +18,6 @@ class RecPointOffer(Document, BaseCrud):
     
     meta = {
         "db_alias": "core",
-        "collection": "rec_points_offer"
+        "collection": "rec_points_offer",
+        "indexes": [[("coords", "2dsphere")]]
     }

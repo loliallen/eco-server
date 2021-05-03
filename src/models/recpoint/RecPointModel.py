@@ -23,7 +23,7 @@ class RecPoint(Document, BaseCrud):
     reception_type = StringField()
     payback_type = StringField()
     contacts = ListField()
-    coords = PointField(auto_index=False, reqired=True)  # { lat: int, lng: int }
+    coords = PointField(auto_index=False, reqired=True)
     accept_types = ListField(ReferenceField(Filter), required=False)
     work_time = DictField(required=True)
     meta = {

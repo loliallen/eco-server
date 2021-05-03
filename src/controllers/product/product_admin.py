@@ -8,7 +8,7 @@ parser.add_argument('name', type=str, required=True, location='form')
 parser.add_argument('price', type=int, required=True, location='form')
 
 resource_fields_ = {
-    'id': fields.String(attribute=lambda x: x['_id']['$oid']),
+    'id': fields.String,
     'name': fields.String,
     'price': fields.Integer,
 }

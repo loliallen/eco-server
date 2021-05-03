@@ -10,10 +10,11 @@ parser.add_argument('product', type=str, required=True, location='form')
 parser.add_argument('contents', type=str, required=True, location='form')
 
 resource_fields_ = {
-    'id': fields.String(attribute=lambda x: x['_id']['$oid']),
-    'product': fields.String(attribute=lambda x: x['product']['$oid']),
+    'id': fields.String,
+    'product_id': fields.String(attribute='product.id'),
+    'product_name': fields.String(attribute='product.name'),
     'contents': fields.String,
-    'is_bought': fields.Boolean(attribute=lambda x: bool(x.get('user')))
+    'is_bought': fields.Boolean(attribute=lambda x: bool(x.user))
 }
 
 
@@ -46,4 +47,4 @@ class ProductItemController(BaseController):
             return not_found(self.name, product_id)
         if obj.user is not None:
             return {'error': 'can\' put, because product already bought'}, 400
-        return marshal(json.loads(obj.to_json()), self.resource_fields)
+        return marshal(obj, self.resource_fields)

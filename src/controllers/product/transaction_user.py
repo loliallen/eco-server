@@ -10,11 +10,12 @@ parser.add_argument('product', type=str, required=True, location='form')
 parser.add_argument('user', type=str, required=True, location='form')
 
 resource_fields_ = {
+    'id': fields.String,
     'product': fields.String,
     'item': fields.String,
-    'content': fields.String(attribute=lambda x: x['item'].contents),
+    'content': fields.String(attribute='item.contents'),
     'amount': fields.Integer,
-    'bill_rest': fields.Integer(attribute=lambda x: x['user'].eco_coins),
+    'bill_rest': fields.Integer(attribute='user.eco_coins'),
     'date': fields.DateTime
 }
 

@@ -1,7 +1,7 @@
 from mongoengine import Document, StringField, ReferenceField, BooleanField
 
 from models.user.UserModel import User
-from controllers.utils.Atomic import Atomic
+from models.utils.Atomic import Atomic
 from models.utils.BaseCrud import BaseCrud
 
 
