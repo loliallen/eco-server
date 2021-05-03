@@ -1,12 +1,14 @@
-from mongoengine import Document, ReferenceField, StringField
+from mongoengine import Document, ReferenceField, StringField, DateTimeField, IntField
 
 from models.utils.BaseCrud import BaseCrud
 
 
 class ProductItemTransaction(Document, BaseCrud):
-    product = ReferenceField('Product')
-    item = ReferenceField('ProductItem')
-    user = ReferenceField('User')
+    product = ReferenceField('Product', required=True)
+    item = ReferenceField('ProductItem', required=True)
+    user = ReferenceField('User', required=True)
+    date = DateTimeField(required=True)
+    amount = IntField(required=True)
 
     status = StringField(default="idle")
 

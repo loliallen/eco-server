@@ -1,6 +1,9 @@
 import json
+import os
+import uuid
 from ast import literal_eval
 
+import werkzeug
 from flask_restful import Resource, marshal
 from mongoengine import NotUniqueError
 from pymongo.errors import DuplicateKeyError
@@ -51,17 +54,54 @@ class BaseListController(Resource):
     model = None
     name = 'Resource'
     parser = None
+    img_field = None
+    img_field_type = str
+    img_path = None
 
     def get_(self):
         objs = self.model.read_()
         return marshal(json.loads(objs.to_json()), self.resource_fields)
 
     def post_(self):
+        obj, error = self._create_obj()
+        if error:
+            return error
+        return marshal(json.loads(obj.to_json()), self.resource_fields)
+
+    def _create_obj(self):
         args = self.parser.parse_args()
+        if self.img_field and self.img_path:
+            if self.img_field_type is str:
+                self.save_img(args)
+            if self.img_field_type is list:
+                self.save_img(args)
         try:
-            obj = self.model.create_(**args).to_json()
+            obj = self.model.create_(**args)
         except DuplicateKeyError as ex:
-            return {"message": handle_duplicate_error(ex)}, 400
+            return None, {"message": handle_duplicate_error(ex)}, 400
         except NotUniqueError as ex:
-            return {"message": handle_unique_error(ex)}, 400
-        return marshal(json.loads(obj), self.resource_fields)
+            return None, {"message": handle_unique_error(ex)}, 400
+        return obj, None
+
+    def save_img(self, args):
+        file = args['image']
+        if file:
+            filename = werkzeug.utils.secure_filename(file.filename)
+            path = self.img_path / filename
+            file.save(path.resolve())
+            args[self.img_field] = filename
+
+    def save_imgs(self, args):
+        directory = str(uuid.uuid1())
+        directory_path = self.img_path
+        images = self.request.files.getlist('images')
+        os.makedirs((directory_path / directory).resolve())
+        imgs = []
+        # saving images
+        for (i, image) in enumerate(images):
+            filename = werkzeug.utils.secure_filename(image.filename)
+            relp = directory + "/" + str(i) + "." + filename.split('.').pop()
+            file_path = directory_path / relp
+            image.save(file_path.resolve())
+            imgs.append(relp)
+        args[self.img_field] = imgs
