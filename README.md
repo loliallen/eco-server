@@ -21,7 +21,7 @@
   ```
 - запустить api
   ```bash
-  docker run --name eco_api -p 5000:5000 --env DB_URL=mongodb intsynko1/eco_api:{tag} 
+  docker run -d --name eco_api -p 5000:5000 --env DB_URL=mongodb intsynko1/eco_api:{tag} 
   ```
 - чтобы контейнеры могли общаться:
   ```bash

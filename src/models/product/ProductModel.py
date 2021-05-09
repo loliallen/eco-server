@@ -1,8 +1,8 @@
 import datetime
 
-from mongoengine import Document, IntField, StringField, ReferenceField, ListField
+from mongoengine import Document, IntField, StringField, ReferenceField, ListField, BooleanField
 
-from models.product.ProductItemModel import ProductItem
+from src.models.product.ProductItemModel import ProductItem
 from src.exceptions.Product import NotEnoughtCoins, ProductsIsOver
 from src.models.product.ProductItemTransactionModel import ProductItemTransaction
 from src.models.utils.BaseCrud import BaseCrud
@@ -11,6 +11,7 @@ from src.models.utils.BaseCrud import BaseCrud
 class Product(Document, BaseCrud):
     price = IntField()
     name = StringField()
+    is_active = BooleanField(default=True)
     items = ListField(ReferenceField('ProductItem'))
     transactions = ListField(ReferenceField('ProductItemTransaction'))
 

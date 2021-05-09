@@ -1,8 +1,8 @@
 from mongoengine import Document, StringField, ReferenceField, BooleanField
 
-from models.user.UserModel import User
-from models.utils.Atomic import Atomic
-from models.utils.BaseCrud import BaseCrud
+from src.models.user.UserModel import User
+from src.models.utils.Atomic import Atomic
+from src.models.utils.BaseCrud import BaseCrud
 
 
 class ProductItem(Document, BaseCrud, Atomic):

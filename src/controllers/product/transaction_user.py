@@ -1,13 +1,14 @@
 from flask_restful import reqparse, fields, Resource, marshal
+from flask_restful_swagger_3 import swagger, Schema
 
 from src.exceptions.Product import NotEnoughtCoins, ProductsIsOver
-from models.product.ProductModel import Product
-from models.user.UserModel import User
+from src.models.product.ProductModel import Product
+from src.models.user.UserModel import User
 
 parser = reqparse.RequestParser()
-parser.add_argument('product', type=str, required=True, location='form')
+parser.add_argument('product', type=str, required=True)
 # TODO: validate user from token
-parser.add_argument('user', type=str, required=True, location='form')
+parser.add_argument('user', type=str, required=True)
 
 resource_fields_ = {
     'id': fields.String,
@@ -20,8 +21,24 @@ resource_fields_ = {
 }
 
 
+class TransactionItemResponseModel(Schema):
+    properties = {
+        'id': {'type': 'string'},
+        'product': {'type': 'string'},
+        'item': {'type': 'string'},
+        'content': {'type': 'string'},
+        'amount': {'type': 'integer'},
+        'bill_rest': {'type': 'integer'},
+        'date': {'type': 'datetime'}
+    }
+
+
 class TransactionController(Resource):
 
+    @swagger.tags('Transactions')
+    @swagger.response(response_code=201, schema=TransactionItemResponseModel,
+                      summary='Создать новый экземпляр продукта (купон)', description='-')
+    @swagger.reqparser(name='TransactionCreateModel', parser=parser)
     def post(self):
         args = parser.parse_args()
         product = Product.find_by_id_(args['product'])

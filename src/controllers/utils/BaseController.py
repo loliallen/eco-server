@@ -1,13 +1,15 @@
-import json
 import os
 import uuid
 from ast import literal_eval
 
 import werkzeug
 from flask import request
-from flask_restful import Resource, marshal
+from flask_restful import marshal
+from flask_restful_swagger_3 import Resource
 from mongoengine import NotUniqueError
 from pymongo.errors import DuplicateKeyError
+
+from src.exceptions.common import FieldError
 
 
 def not_found(name, id):
@@ -37,7 +39,9 @@ class BaseController(Resource):
 
     def put_(self, id):
         updates = self.parser.parse_args()
-        obj = self.model.update_(id, updates)
+        err, obj = self.update_obj(id, updates)
+        if err:
+            return err
         if not obj:
             return not_found(self.name, id)
 
@@ -48,6 +52,12 @@ class BaseController(Resource):
         if not bool(obj):
             return not_found(self.name, id)
         return marshal(obj, self.resource_fields)
+
+    def update_obj(self, id, updates):
+        try:
+            return None, self.model.update_(id, updates)
+        except FieldError as ex:
+            return ({'error': {ex.field: ex.info}}, 400), None
 
 
 class BaseListController(Resource):
@@ -79,13 +89,13 @@ class BaseListController(Resource):
         try:
             obj = self.model.create_(**args)
         except DuplicateKeyError as ex:
-            return None, {"message": handle_duplicate_error(ex)}, 400
+            return None, ({"message": handle_duplicate_error(ex)}, 400)
         except NotUniqueError as ex:
-            return None, {"message": handle_unique_error(ex)}, 400
+            return None, ({"message": handle_unique_error(ex)}, 400)
         return obj, None
 
     def save_img(self, args):
-        file = args['image']
+        file = args.get('image')
         if file:
             filename = werkzeug.utils.secure_filename(file.filename)
             path = self.img_path / filename

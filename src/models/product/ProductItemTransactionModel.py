@@ -1,6 +1,6 @@
 from mongoengine import Document, ReferenceField, StringField, DateTimeField, IntField
 
-from models.utils.BaseCrud import BaseCrud
+from src.models.utils.BaseCrud import BaseCrud
 
 
 class ProductItemTransaction(Document, BaseCrud):

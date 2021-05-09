@@ -1,14 +1,10 @@
 from pathlib import Path
-from typing import List
 
 from mongoengine import Document, StringField, ListField, ReferenceField, DictField, BooleanField, PointField, QuerySet
 
-from models.partner.PartnerModel import Partner
-from models.utils.BaseCrud import BaseCrud
 from src.models.filter.FilterModel import Filter
-
-REL_PATH = "/statics/recpoints"
-files_storage = Path('./src'+REL_PATH)
+from src.models.partner.PartnerModel import Partner
+from src.models.utils.BaseCrud import BaseCrud
 
 
 class RecPoint(Document, BaseCrud):
@@ -54,6 +50,7 @@ class RecPoint(Document, BaseCrud):
         if payback_type:
             rec_points = rec_points.filter(payback_type=payback_type)
         if coords:
+            coords = list(coords)
             coords.append(coords[0])  # замыкаем полигон
             rec_points = rec_points.filter(coords__geo_within=[coords])
         return rec_points

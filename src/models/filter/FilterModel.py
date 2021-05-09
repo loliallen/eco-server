@@ -3,15 +3,15 @@ from pathlib import Path
 
 from mongoengine import Document, StringField, ListField, FloatField
 
-from BaseCrud import BaseCrud
+from src.models.utils.BaseCrud import BaseCrud
 
 REL_PATH = "/statics/filters"
 files_storage = Path('./src'+REL_PATH)
 
 
 class Filter(Document, BaseCrud):
-    name = StringField(required=True, comment='Имя')
-    var_name = StringField(required=True, comment='Код фильтра')
+    name = StringField(required=True, unique=True, comment='Имя')
+    var_name = StringField(required=True, unique=True, comment='Код фильтра')
     image = StringField(comment='Картинка ресурса')
     key_words = ListField(StringField(), comment='Список слов-ассоциаций для поиска')
     bad_words = ListField(StringField(), comment='Стоп список слов для поиска')

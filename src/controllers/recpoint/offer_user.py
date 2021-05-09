@@ -2,8 +2,8 @@ from ast import literal_eval
 
 from flask_restful import reqparse, fields
 
-from controllers.utils import fields as custom_fields
-from controllers.utils.BaseController import BaseListController, BaseController
+from src.controllers.utils import fields as custom_fields
+from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.recpoint.RecPointOfferModel import RecPointOffer
 
 post_parser = reqparse.RequestParser()

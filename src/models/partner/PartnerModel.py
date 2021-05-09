@@ -2,7 +2,7 @@ from pathlib import Path
 
 from mongoengine import Document, StringField, ListField, ReferenceField
 
-from models.utils.BaseCrud import BaseCrud
+from src.models.utils.BaseCrud import BaseCrud
 
 REL_PATH = "/statics/recpoints"
 files_storage = Path('./src'+REL_PATH)

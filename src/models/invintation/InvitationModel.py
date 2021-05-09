@@ -1,12 +1,12 @@
 from mongoengine import Document, ReferenceField, IntField, BooleanField
 
 from src.utils.generator import generate_code
-from .UserModel import find_user_by_id
+from src.models.user.UserModel import User
 
 class Invitation(Document):
     sender = ReferenceField('User')
     code = IntField(default=generate_code)
-    is_active  = BooleanField(default=True)
+    is_active = BooleanField(default=True)
 
     ammount = IntField(default=20)
 
@@ -27,10 +27,10 @@ def use_invitation_code(code):
     return iv
 
 def create(sender_id):
-    user = find_user_by_id(sender_id)
+    user = User.find_by_id_(sender_id)
 
     iv = Invitation()
-    iv.sender = user;
+    iv.sender = user
 
     iv.save()
     return iv
