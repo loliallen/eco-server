@@ -43,7 +43,7 @@
 ### Обновление
 - Собрать новый контейнер:
   ```bash
-  sudo docker build ./ -t eco_api
+  docker build ./ -t eco_api
   ```
 - Запушить собранный билд:
   ```bash

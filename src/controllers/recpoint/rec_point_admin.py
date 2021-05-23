@@ -75,7 +75,7 @@ class RecPointListController(BaseListController):
     img_field_type = list
     img_path = Path('./src/statics/recpoints')
 
-    @swagger.tags('RecPoints')
+    @swagger.tags('Filters and Recycle Points')
     @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Список пунктов приема',
                       description='-')
     @swagger.parameter(_in='query', name='coords', description='Ограничивающий полгион',
@@ -89,7 +89,7 @@ class RecPointListController(BaseListController):
         points = RecPoint.read_(**args)
         return marshal(list(points), resource_fields_)
 
-    @swagger.tags('RecPoints')
+    @swagger.tags('Filters and Recycle Points')
     @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Создать новый пункт приема',
                       description='-')
     @swagger.reqparser(name='RecPointCreateModel', parser=post_parser)
@@ -103,20 +103,20 @@ class RecPointController(BaseController):
     name = 'RecPoint'
     parser = post_parser
 
-    @swagger.tags('RecPoints')
+    @swagger.tags('Filters and Recycle Points')
     @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Пункт приема',
                       description='-')
     def get(self, rec_point_id):
         return super().get_(rec_point_id)
 
-    @swagger.tags('RecPoints')
+    @swagger.tags('Filters and Recycle Points')
     @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Обновить пункт приема',
                       description='-')
     @swagger.reqparser(name='RecPointPutModel', parser=post_parser)
     def put(self, rec_point_id):
         return super().put_(rec_point_id)
 
-    @swagger.tags('RecPoints')
+    @swagger.tags('Filters and Recycle Points')
     @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Удалить пункт приема',
                       description='-')
     def delete(self, rec_point_id):

@@ -36,13 +36,13 @@ class ProductItemListController(BaseListController):
     name = 'ProductItem'
     parser = parser
 
-    @swagger.tags('Product Items')
+    @swagger.tags('Products')
     @swagger.response(response_code=200, summary='Список экземпляров продуктов (купонов)', description='-',
                       schema=ProductItemResponseModel)
     def get(self):
         return super().get_()
 
-    @swagger.tags('Product Items')
+    @swagger.tags('Products')
     @swagger.response(response_code=201, schema=ProductItemResponseModel,
                       summary='Создать новый экземпляр продукта (купон)', description='-')
     @swagger.reqparser(name='ProductItemCreateModel', parser=parser)
@@ -56,13 +56,13 @@ class ProductItemController(BaseController):
     name = 'ProductItem'
     parser = parser
 
-    @swagger.tags('Product Items')
+    @swagger.tags('Products')
     @swagger.response(response_code=200, summary='Экземпляр продукта (купона)', description='-',
                       schema=ProductItemResponseModel)
     def get(self, product_item_id):
         return super().get_(product_item_id)
 
-    @swagger.tags('Product Items')
+    @swagger.tags('Products')
     @swagger.response(response_code=200, summary='Обнвоить экземпляр продукта (купона)', description='-',
                       schema=ProductItemResponseModel)
     @swagger.reqparser(name='ProductItemPutModel', parser=parser)

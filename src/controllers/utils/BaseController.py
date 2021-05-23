@@ -31,15 +31,15 @@ class BaseController(Resource):
     name = 'Resource'
     parser = None
 
-    def get_(self, id):
-        obj = self.model.find_by_id_(id)
+    def get_(self, id, **kwargs):
+        obj = self.model.find_by_id_(id, **kwargs)
         if not obj:
             return not_found(self.name, id)
         return marshal(obj, self.resource_fields)
 
-    def put_(self, id):
+    def put_(self, id, **kwargs):
         updates = self.parser.parse_args()
-        err, obj = self.update_obj(id, updates)
+        err, obj = self.update_obj(id, updates, **kwargs)
         if err:
             return err
         if not obj:
@@ -47,15 +47,15 @@ class BaseController(Resource):
 
         return marshal(obj, self.resource_fields)
 
-    def delete_(self, id):
-        obj = self.model.delete_(id)
+    def delete_(self, id, **kwargs):
+        obj = self.model.delete_(id, **kwargs)
         if not bool(obj):
             return not_found(self.name, id)
         return marshal(obj, self.resource_fields)
 
-    def update_obj(self, id, updates):
+    def update_obj(self, id, updates, **kwargs):
         try:
-            return None, self.model.update_(id, updates)
+            return None, self.model.update_(id, updates, **kwargs)
         except FieldError as ex:
             return ({'error': {ex.field: ex.info}}, 400), None
 
@@ -69,25 +69,25 @@ class BaseListController(Resource):
     img_field_type = str
     img_path = None
 
-    def get_(self):
-        objs = self.model.read_()
+    def get_(self, **kwargs):
+        objs = self.model.read_(**kwargs)
         return marshal(list(objs), self.resource_fields)
 
-    def post_(self):
-        obj, error = self._create_obj()
+    def post_(self, **kwargs):
+        args = self.parser.parse_args()
+        obj, error = self._create_obj(**args, **kwargs)
         if error:
             return error
         return marshal(obj, self.resource_fields)
 
-    def _create_obj(self):
-        args = self.parser.parse_args()
+    def _create_obj(self, **kwargs):
         if self.img_field and self.img_path:
             if self.img_field_type is str:
-                self.save_img(args)
+                self.save_img(kwargs)
             if self.img_field_type is list:
-                self.save_imgs(args)
+                self.save_imgs(kwargs)
         try:
-            obj = self.model.create_(**args)
+            obj = self.model.create_(**kwargs)
         except DuplicateKeyError as ex:
             return None, ({"message": handle_duplicate_error(ex)}, 400)
         except NotUniqueError as ex:

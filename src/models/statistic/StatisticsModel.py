@@ -1,7 +1,7 @@
 from mongoengine import Document, DateTimeField, StringField, ReferenceField
-from src.models.UserModel import User
-from src.models.PartnerModel import Partner
-from src.models.RecPointModel import RecPoint
+from src.models.user.UserModel import User
+from src.models.partner.PartnerModel import Partner
+from src.models.recpoint.RecPointModel import RecPoint
 from datetime import datetime
 from src.utils.JsonEncoder import JSONEncoder
 from bson import json_util

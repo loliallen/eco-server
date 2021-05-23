@@ -5,17 +5,17 @@ from src.controllers.utils.BaseController import BaseListController, BaseControl
 from src.models.product.ProductModel import Product
 
 parser = reqparse.RequestParser()
-parser.add_argument('name', type=str, required=True)
-parser.add_argument('price', type=int, required=True)
-parser.add_argument('is_active', type=bool, required=True)
+parser.add_argument('name', type=str, required=True, help='Название продукта')
+parser.add_argument('price', type=int, required=True, help='Стоимость продукта')
+parser.add_argument('is_active', type=bool, required=True, help='Активность продукта (можно ли его купить)')
 
 
 class ProductResponseModel(Schema):
     properties = {
-        'id': {'type': 'string'},
-        'name': {'type': 'string'},
-        'price': {'type': 'integer'},
-        'is_active': {'type': 'boolean'}
+        'id': {'type': 'string', 'description': 'Id продукта'},
+        'name': {'type': 'string', 'description': 'Название продукта'},
+        'price': {'type': 'integer', 'description': 'Стоимость продукта'},
+        'is_active': {'type': 'boolean', 'description': 'Активность продукта (можно ли его купить)'}
     }
 
 

@@ -16,7 +16,7 @@ post_parser.add_argument('key_words', type=str, action='append', required=True,
                          help='Список слов, используемых для поиска этого фильтра')
 post_parser.add_argument('bad_words', type=str, action='append', required=True,
                          help='Спиок слов, не используемых для поиска этого фильтра')
-post_parser.add_argument('coins_per_unit', type=int)
+post_parser.add_argument('coins_per_unit', type=int, help='Количество коинов за единицу сданного типа ресурса')
 
 parser_img = post_parser.copy()
 parser_img.add_argument('image', type=werkzeug.datastructures.FileStorage, location='files')
@@ -24,12 +24,15 @@ parser_img.add_argument('image', type=werkzeug.datastructures.FileStorage, locat
 
 class FilterResponseModel(Schema):
     properties = {
-        'id': {'type': 'string'},
-        'name': {'type': 'string'},
-        'var_name': {'type': 'string'},
-        'key_words': {'type': 'array', 'items': {'type': 'string'}},
-        'bad_words': {'type': 'array', 'items': {'type': 'string'}},
-        'coins_per_unit': {'type': 'integer'}
+        'id': {'type': 'string', 'description': 'Id фильтра'},
+        'name': {'type': 'string', 'description': 'Название фильтра'},
+        'var_name': {'type': 'string', 'description': 'Код фильтра'},
+        'key_words': {'type': 'array', 'items': {'type': 'string'},
+                      'description': 'Список слов, используемых для поиска этого фильтра'},
+        'bad_words': {'type': 'array', 'items': {'type': 'string'},
+                      'description': 'Список слов, не используемых для поиска этого фильтра'},
+        'coins_per_unit': {'type': 'integer',
+                           'description': 'Количество коинов за единицу сданного типа ресурса'}
     }
 
 
@@ -51,12 +54,12 @@ class FilterControllerList(BaseListController):
     img_field = 'image'
     img_path = Path('./src/statics/filters')
 
-    @swagger.tags('Filters')
+    @swagger.tags('Filters and Recycle Points')
     @swagger.response(response_code=200, summary='Список фильтров', description='-', schema=FilterResponseModel)
     def get(self):
         return super().get_()
 
-    @swagger.tags('Filters')
+    @swagger.tags('Filters and Recycle Points')
     @swagger.response(response_code=201, schema=FilterResponseModel, summary='Создать новый фильтр')
     @swagger.reqparser(name='FilterCreateModel', parser=post_parser)
     def post(self):
@@ -70,18 +73,18 @@ class FilterController(BaseController):
     name = 'Filter'
     parser = post_parser
 
-    @swagger.tags('Filters')
+    @swagger.tags('Filters and Recycle Points')
     @swagger.response(response_code=200, summary='Фильтр', description='-', schema=FilterResponseModel)
     def get(self, filter_id):
         return super().get_(filter_id)
 
-    @swagger.tags('Filters')
+    @swagger.tags('Filters and Recycle Points')
     @swagger.response(response_code=204, summary='Обновить Фильтр', description='-', schema=FilterResponseModel)
     @swagger.reqparser(name='FilterPutModel', parser=post_parser)
     def put(self, filter_id):
         return super().put_(filter_id)
 
-    @swagger.tags('Filters')
+    @swagger.tags('Filters and Recycle Points')
     @swagger.response(response_code=204, summary='Удалить фильтр', description='-', schema=FilterResponseModel)
     def delete(self, filter_id):
         return super().delete_(filter_id)

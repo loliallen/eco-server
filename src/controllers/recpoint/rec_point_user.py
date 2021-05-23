@@ -2,6 +2,7 @@ from ast import literal_eval
 from pathlib import Path
 
 from bson import ObjectId
+from flask_jwt_extended import jwt_required
 from flask_restful import reqparse, fields, marshal
 from flask_restful_swagger_3 import swagger, Schema
 
@@ -17,17 +18,18 @@ get_parser.add_argument('payback_type', type=str, required=False, location='args
 
 class RecPointResponseModel(Schema):
     properties = {
-        'id': {'type': 'string'},
-        'name': {'type': 'string'},
-        'partner': {'type': 'string'},
-        'partner_name': {'type': 'string'},
-        'payback_type': {'type': 'string'},
-        'work_time': {'type': 'object'},
-        'contacts': {'type': 'array', 'items': {'type': 'string'}},
-        'accept_types': {'type': 'array', 'items': {'type': 'string'}},
-        'coords': {'type': 'array', 'items': {'type': 'float'}},
-        'description': {'type': 'string'},
-        'getBonus': {'type': 'boolean'},
+        'id': {'type': 'string', 'description': 'Id пункта приема'},
+        'name': {'type': 'string', 'description': 'Название приема'},
+        'partner': {'type': 'string', 'description': 'Id партнера'},
+        'partner_name': {'type': 'string', 'description': 'Название партнера'},
+        'payback_type': {'type': 'string', 'description': 'Тип оплаты'},
+        'work_time': {'type': 'object', 'description': 'Время работы приема'},
+        'contacts': {'type': 'array', 'items': {'type': 'string'}, 'description': 'Список контактов'},
+        'accept_types': {'type': 'array', 'items': {'type': 'string'},
+                         'description': 'Список принимаемых фильтров (типов ресурса)'},
+        'coords': {'type': 'array', 'items': {'type': 'float'}, 'description': 'Координаты пункта'},
+        'description': {'type': 'string', 'description': 'Описание пункта'},
+        'getBonus': {'type': 'boolean', 'description': 'Выплачивает ли пункт приема экокоины'},
     }
 
 
@@ -52,7 +54,9 @@ class RecPointListController(BaseListController):
     model = RecPoint
     name = 'RecPoint'
 
-    @swagger.tags('RecPoints')
+    @jwt_required()
+    @swagger.security(JWT=[])
+    @swagger.tags('Filters and Recycle Points')
     @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Список пунктов приема',
                       description='-')
     @swagger.parameter(_in='query', name='coords', description='Ограничивающий полгион',
@@ -72,7 +76,9 @@ class RecPointController(BaseController):
     model = RecPoint
     name = 'RecPoint'
 
-    @swagger.tags('RecPoints')
+    @jwt_required()
+    @swagger.security(JWT=[])
+    @swagger.tags('Filters and Recycle Points')
     @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Пункт приема',
                       description='-')
     def get(self, rec_point_id):

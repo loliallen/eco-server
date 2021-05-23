@@ -1,18 +1,15 @@
-import os
 from mongoengine import connect
 
-DB_URL = os.getenv("DB_URL") 
+from src.config import Configuration
 
-if DB_URL == None:
-    DB_URL = "mongodb://localhost:27017"
 
 def global_connect():
-    print("DB_URL", DB_URL)
+    print("DB_URL", Configuration.DB_URL)
     try:
         db = connect(
             alias="core",
             name="eco",
-            host=DB_URL
+            host=Configuration.DB_URL
         )
         print("[Database]: Connected")
     except ConnectionError:

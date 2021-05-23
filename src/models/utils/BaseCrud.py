@@ -9,8 +9,8 @@ from src.exceptions.common import FieldError
 class BaseCrud:
 
     @classmethod
-    def read_(cls) -> QuerySet:
-        return cls.objects.all()
+    def read_(cls, **kwargs) -> QuerySet:
+        return cls.objects.filter(**kwargs).all()
 
     @classmethod
     def create_(cls, **kwargs):
@@ -19,8 +19,8 @@ class BaseCrud:
         return obj
 
     @classmethod
-    def update_(cls, _id: str, updates: dict):
-        obj = cls.find_by_id_(_id)
+    def update_(cls, _id: str, updates: dict, **kwargs):
+        obj = cls.find_by_id_(_id, **kwargs)
         if not obj:
             return None
         ref_fields = [k for k, v in cls._fields.items() if isinstance(v, ReferenceField)]
@@ -44,13 +44,13 @@ class BaseCrud:
         return cls.find_by_id_(obj.id)
 
     @classmethod
-    def delete_(cls, _id: str):
-        obj = cls.find_by_id_(_id)
+    def delete_(cls, _id: str, **kwargs):
+        obj = cls.find_by_id_(_id, **kwargs)
         if not obj:
             return None
         obj.delete()
         return obj
 
     @classmethod
-    def find_by_id_(cls, _id: str):
-        return cls.objects(id=_id).first()
+    def find_by_id_(cls, _id: str, **kwargs):
+        return cls.objects(id=_id, **kwargs).first()
