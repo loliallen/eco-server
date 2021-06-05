@@ -16,6 +16,7 @@ post_parser = reqparse.RequestParser()
 post_parser.add_argument('name', type=str, required=True, help='Имя пользователя')
 post_parser.add_argument('username', type=str, required=True, help='Почта пользователя')
 post_parser.add_argument('password', type=str, required=True, help='Пароль пользователя')
+post_parser.add_argument('invite_code', type=str, required=False, help='Код приглашения')
 
 post_parser_img = post_parser.copy()
 post_parser_img.add_argument('image', type=werkzeug.datastructures.FileStorage, location='files')
@@ -54,6 +55,12 @@ class RegisterController(BaseListController):
     @swagger.reqparser(name='RegisterCreateModel', parser=post_parser)
     def post(self):
         args = post_parser_img.parse_args()
+        invite_code = args.pop('invite_code')
+        if invite_code:
+            invite_user = User.objects.filter(token=invite_code).first()
+            if invite_user is None:
+                return {'error': 'invite user not found'}, 400
+            args['invite_by_user'] = invite_user
         user, error = self._create_obj(**args)
         if error:
             return error

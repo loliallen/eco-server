@@ -8,7 +8,7 @@ from src.models.utils.BaseCrud import BaseCrud
 class ProductItem(Document, BaseCrud, Atomic):
     product = ReferenceField('Product')
     contents = StringField()
-    attached_file = StringField()
+    attached_file = StringField()  # TODO: проверить нужно ли это поле
     is_active = BooleanField(default=True)
     user = ReferenceField(User)
 

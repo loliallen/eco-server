@@ -14,11 +14,15 @@ class Configuration:
     MAIL_DEFAULT_SENDER = 'cronenbergclaw@gmail.com'  # и здесь
     MAIL_PASSWORD = 'eikbzcpodtroenca'
 
-    DB_URL = os.getenv("DB_URL", default="mongodb://localhost:27017")
+    DB_NAME = "eco"
+    DB_PASSWORD = "eCo1251kek"  # TODO при выходе в прод вынести
+    DB_URL = os.getenv("DB_URL", default=f"mongodb+srv://root:{DB_PASSWORD}@eco.y8cj7.mongodb.net/{DB_NAME}?retryWrites=true&w=majority")
     HOST = os.getenv("HOST", default="0.0.0.0")
 
     USER_SWAGGER_URL = '/api/docs'
-    USER_SCHEMA_URL = f'http://{HOST}:5000/api/doc/swagger.json'
+    USER_SCHEMA_URL = f'https://{HOST}:5000/api/doc/swagger.json'
 
     ADMIN_SWAGGER_URL = '/api/docs'
-    ADMIN_SCHEMA_URL = f'http://{HOST}:8000/api/doc/swagger.json'
+    ADMIN_SCHEMA_URL = f'https://{HOST}:8000/api/doc/swagger.json'
+
+    ECO_COINS_BY_INVITE = 15

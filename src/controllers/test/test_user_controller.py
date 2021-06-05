@@ -54,7 +54,7 @@ class TestController(BaseController):
 
     @jwt_required()
     @swagger.security(JWT=[])
-    @swagger.tags('Test')
+    @swagger.tags('Tests')
     @swagger.response(response_code=200, summary='Тест', description='-',
                       schema=TestResponseModel)
     def get(self, question_id):

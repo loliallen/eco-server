@@ -13,16 +13,17 @@ parser.add_argument('product', type=str, required=True)
 
 resource_fields_ = {
     'id': fields.String,
-    'product': fields.String,
-    'item': fields.String,
+    'product_id': fields.String(attribute='product.id'),
+    'product_name': fields.String(attribute='product.name'),
+    'item_id': fields.String(attribute='item.id'),
     'content': fields.String(attribute='item.contents'),
     'amount': fields.Integer,
     #'bill_rest': fields.Integer(attribute='user.eco_coins'),
-    'date': fields.DateTime
+    'date': fields.DateTime('iso8601')
 }
 
 
-class TransactionItemResponseModel(Schema):
+class BuyProductResponseModel(Schema):
     properties = {
         'id': {'type': 'string', 'description': 'Id транзакции'},
         'product': {'type': 'string', 'description': 'Id продукта'},
@@ -30,12 +31,11 @@ class TransactionItemResponseModel(Schema):
         'content': {'type': 'string', 'description': 'Содержимое купона'},
         'amount': {'type': 'integer', 'description': 'Стоимость купона'},
         #'bill_rest': {'type': 'integer', 'description': 'Остаток на счету'},
-        # TODO добавить количество оставшихся купонов
         'date': {'type': 'datetime', 'description': 'Дата транзакции'}
     }
 
 
-class TransactionController(BaseListController):
+class BuyProductController(BaseListController):
     resource_fields = resource_fields_
     model = ProductItemTransaction
     name = 'ProductItemTransaction'
@@ -43,8 +43,8 @@ class TransactionController(BaseListController):
     @jwt_required()
     @swagger.security(JWT=[])
     @swagger.tags('Products')
-    @swagger.response(response_code=200, summary='Список всех транзакций', description='-',
-                      schema=TransactionItemResponseModel)
+    @swagger.response(response_code=200, summary='Список всех купонов пользователя', description='-',
+                      schema=BuyProductResponseModel)
     def get(self):
         user = User.objects.filter(username=get_jwt_identity()).first()
         return super().get_(user=user.id)
@@ -52,7 +52,7 @@ class TransactionController(BaseListController):
     @jwt_required()
     @swagger.security(JWT=[])
     @swagger.tags('Products')
-    @swagger.response(response_code=201, schema=TransactionItemResponseModel,
+    @swagger.response(response_code=201, schema=BuyProductResponseModel,
                       summary='Купить продукт (купон)', description='-')
     @swagger.reqparser(name='TransactionCreateModel', parser=parser)
     def post(self):

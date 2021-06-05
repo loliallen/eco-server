@@ -44,3 +44,28 @@ class Product(Document, BaseCrud):
                 transaction.status = "success"
                 transaction.save()
         return transaction
+
+    @staticmethod
+    def get_product_with_count(**kwargs):
+        """Запрос на продукты с полем количество продукта данного типа"""
+        return Product.objects.filter(**kwargs).aggregate({
+            "$lookup": {
+                "from": "product_items",
+                "foreignField": "product",
+                "localField": "_id",
+                "as": "product_items",
+                'pipeline': {
+                    '$filter': {
+                        'user': {'$exists': False}
+                    }
+                }
+            }},
+            {
+                '$project': {
+                    '_id': 1,
+                    'name': 1,
+                    'price': 1,
+                    'count': {'$size': "$product_items"},
+                }
+            }
+        )

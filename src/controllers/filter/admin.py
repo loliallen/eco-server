@@ -54,12 +54,12 @@ class FilterControllerList(BaseListController):
     img_field = 'image'
     img_path = Path('./src/statics/filters')
 
-    @swagger.tags('Filters and Recycle Points')
+    @swagger.tags('Filters')
     @swagger.response(response_code=200, summary='Список фильтров', description='-', schema=FilterResponseModel)
     def get(self):
         return super().get_()
 
-    @swagger.tags('Filters and Recycle Points')
+    @swagger.tags('Filters')
     @swagger.response(response_code=201, schema=FilterResponseModel, summary='Создать новый фильтр')
     @swagger.reqparser(name='FilterCreateModel', parser=post_parser)
     def post(self):
@@ -73,18 +73,18 @@ class FilterController(BaseController):
     name = 'Filter'
     parser = post_parser
 
-    @swagger.tags('Filters and Recycle Points')
+    @swagger.tags('Filters')
     @swagger.response(response_code=200, summary='Фильтр', description='-', schema=FilterResponseModel)
     def get(self, filter_id):
         return super().get_(filter_id)
 
-    @swagger.tags('Filters and Recycle Points')
+    @swagger.tags('Filters')
     @swagger.response(response_code=204, summary='Обновить Фильтр', description='-', schema=FilterResponseModel)
     @swagger.reqparser(name='FilterPutModel', parser=post_parser)
     def put(self, filter_id):
         return super().put_(filter_id)
 
-    @swagger.tags('Filters and Recycle Points')
+    @swagger.tags('Filters')
     @swagger.response(response_code=204, summary='Удалить фильтр', description='-', schema=FilterResponseModel)
     def delete(self, filter_id):
         return super().delete_(filter_id)

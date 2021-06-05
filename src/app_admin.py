@@ -3,23 +3,20 @@ from flask_cors import CORS
 from flask_restful_swagger_3 import Api
 from flask_swagger_ui import get_swaggerui_blueprint
 
-import src.login as login
 import src.services.Database as Database
 from src.config import Configuration
 from src.controllers.filter.admin import FilterController, FilterControllerList
 from src.controllers.partner.admin import PartnerController, PartnerListController
 from src.controllers.product.product_admin import ProductController, ProductListController
 from src.controllers.product.product_item_admin import ProductItemController, ProductItemListController
-from src.controllers.product.transactions_admin import TransactionController, TransactionListController
+from src.controllers.product.buy_product_admin import BuyProductController, BuyProductListController
 from src.controllers.recpoint.rec_point_admin import RecPointController, RecPointListController
 from src.controllers.test.attempts_admin_controller import AdminAttemptsListController, AdminAttemptsController
-from src.controllers.test.attempts_user_controller import UserAttemptsListController, UserAttemptsController
 from src.controllers.test.question_admin_controller import QuestionListController, QuestionController
 from src.controllers.test.test_admin_controller import TestListController, TestController
-from src.controllers.user.confirm import ConfirmController
-from src.controllers.user.register import RegisterController
 from src.middleware.collect_statistics import Collector
 from src.send_email import mail
+
 
 app = Flask(__name__, static_url_path="/statics", static_folder='statics')
 app.config.from_object(Configuration)
@@ -29,7 +26,6 @@ api = Api(app, title='EcoApi for Admins')
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 mail.init_app(app)
-login.login_manager.init_app(app)
 
 # Filters and Recycle Points
 api.add_resource(FilterControllerList, '/admin/filters')
@@ -45,8 +41,8 @@ api.add_resource(ProductListController, '/admin/products')
 api.add_resource(ProductController, '/admin/products/<product_id>')
 api.add_resource(ProductItemListController, '/admin/product_items')
 api.add_resource(ProductItemController, '/admin/product_items/<product_item_id>')
-api.add_resource(TransactionListController, '/admin/transaction')
-api.add_resource(TransactionController, '/admin/transaction/<transaction_id>')
+api.add_resource(BuyProductListController, '/admin/buy_product')
+api.add_resource(BuyProductController, '/admin/buy_product/<transaction_id>')
 
 # Tests
 api.add_resource(TestListController, '/admin/tests')

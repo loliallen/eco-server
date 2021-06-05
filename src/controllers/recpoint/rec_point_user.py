@@ -23,7 +23,8 @@ class RecPointResponseModel(Schema):
         'partner': {'type': 'string', 'description': 'Id партнера'},
         'partner_name': {'type': 'string', 'description': 'Название партнера'},
         'payback_type': {'type': 'string', 'description': 'Тип оплаты'},
-        'work_time': {'type': 'object', 'description': 'Время работы приема'},
+        'work_time': {'type': 'string', 'description': 'Время работы пункта приема'},
+        'address': {'type': 'string', 'description': 'Адрес пункта приема'},
         'contacts': {'type': 'array', 'items': {'type': 'string'}, 'description': 'Список контактов'},
         'accept_types': {'type': 'array', 'items': {'type': 'string'},
                          'description': 'Список принимаемых фильтров (типов ресурса)'},
@@ -41,6 +42,7 @@ resource_fields_ = {
     'payback_type': fields.String,
     'reception_type': fields.String,
     'work_time': custom_fields.Dict,
+    'address': fields.String,
     'contacts': fields.List(fields.String),
     'accept_types': fields.List(fields.String(attribute='name')),
     'coords': fields.List(fields.Float, attribute='coords.coordinates'),
@@ -54,8 +56,6 @@ class RecPointListController(BaseListController):
     model = RecPoint
     name = 'RecPoint'
 
-    @jwt_required()
-    @swagger.security(JWT=[])
     @swagger.tags('Filters and Recycle Points')
     @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Список пунктов приема',
                       description='-')
@@ -76,11 +76,8 @@ class RecPointController(BaseController):
     model = RecPoint
     name = 'RecPoint'
 
-    @jwt_required()
-    @swagger.security(JWT=[])
     @swagger.tags('Filters and Recycle Points')
     @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Пункт приема',
                       description='-')
     def get(self, rec_point_id):
         return super().get_(rec_point_id)
-

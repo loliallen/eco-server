@@ -1,4 +1,5 @@
-from mongoengine import Document, StringField, BooleanField, DateTimeField, IntField
+from flask_jwt_extended import get_jwt_identity
+from mongoengine import Document, StringField, BooleanField, DateTimeField, IntField, ReferenceField
 from pathlib import Path
 from flask_login import UserMixin
 
@@ -18,12 +19,14 @@ class User(Document, UserMixin, BaseCrud, Atomic):
     image = StringField()
     confirmed = BooleanField(default=False)
     confirmed_on = DateTimeField()
-    eco_coins = IntField(default=0)
-    eco_coins_is_avalible = BooleanField(default=False)
-    code = IntField(default=generate_code)
-    qrcode = StringField()
+    eco_coins = IntField(default=0)  # экокоины, на которые можно покупать товары
+    freeze_eco_coins = IntField(default=0)  # замороженные экокоины
+    eco_coins_is_avalible = BooleanField(default=False)  # TODO: проверить, используется ли
+    code = IntField(default=generate_code)  # код проверки, который отправляется на почту
+    qrcode = StringField()  # адрес хранения qrcode изображения
+    invite_by_user = ReferenceField('User')
 
-    token = StringField(default=random_string)
+    token = StringField(default=random_string)  # токен, через который совершаются покупки
 
     meta = {
         "db_alias": "core",
@@ -33,3 +36,7 @@ class User(Document, UserMixin, BaseCrud, Atomic):
     def refresh_token(self):
         self.token = random_string()
         self.save()
+
+    @staticmethod
+    def get_user_from_request():
+        return User.objects.filter(username=get_jwt_identity()).first()

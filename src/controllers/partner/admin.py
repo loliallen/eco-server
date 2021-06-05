@@ -32,12 +32,12 @@ class PartnerListController(BaseListController):
     name = 'Partner'
     parser = post_parser
 
-    @swagger.tags('Filters and Recycle Points')
+    @swagger.tags('Partners')
     @swagger.response(response_code=200, summary='Список партнеров', description='-', schema=PartnerResponseModel)
     def get(self):
         return super().get_()
 
-    @swagger.tags('Filters and Recycle Points')
+    @swagger.tags('Partners')
     @swagger.response(response_code=201, schema=PartnerResponseModel, summary='Создать нового партнера',
                       description='-')
     @swagger.reqparser(name='PartnerCreateModel', parser=post_parser)
@@ -51,17 +51,17 @@ class PartnerController(BaseController):
     name = 'Partner'
     post_parser = post_parser
 
-    @swagger.tags('Filters and Recycle Points')
+    @swagger.tags('Partners')
     @swagger.response(response_code=200, summary='Партнер', description='-', schema=PartnerResponseModel)
     def get(self, partner_id):
         return super().get_(partner_id)
 
-    @swagger.tags('Filters and Recycle Points')
+    @swagger.tags('Partners')
     @swagger.response(response_code=200, summary='Обноваить партнера', description='-', schema=PartnerResponseModel)
     def put(self, partner_id):
         return super().put_(partner_id)
 
-    @swagger.tags('Filters and Recycle Points')
+    @swagger.tags('Partners')
     @swagger.response(response_code=200, summary='Удалить партнера', description='-', schema=PartnerResponseModel)
     def delete(self, partner_id):
         super().delete_(partner_id)

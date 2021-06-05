@@ -21,7 +21,7 @@
   ```
 - запустить api
   ```bash
-  docker run -d --name eco_api -p 5000:5000 --env DB_URL=mongodb intsynko1/eco_api:{tag} 
+  docker run -d --name eco_api -p 5000:5000  intsynko1/eco_api:{tag} 
   ```
 - чтобы контейнеры могли общаться:
   ```bash
@@ -51,4 +51,12 @@
   docker push intsynko1/eco_api:{tag}
   ```
 - Выполнить шаги "Развернуть локально/на сервере", "Запуск" на сервере
+
+
+## SSL серитификат
+
+- Создать сертификат:
+```bash
+openssl req -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out certificate.pem
+```
 

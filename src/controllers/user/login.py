@@ -31,9 +31,9 @@ class LoginController(Resource):
         user = User.objects.filter(username=args['username']).first()
         if not user:
             return {'error': 'user not found'}, 404
-        if user.password != args['password']:
-            return {'error': 'wrong password'}, 403
         if not user.confirmed:
             return {'error': 'user not confirmed'}, 403
+        if user.password != args['password']:
+            return {'error': 'wrong password'}, 403
         access_token = create_access_token(identity=args['username'])
         return marshal({'access_token': access_token}, resource_fields_)

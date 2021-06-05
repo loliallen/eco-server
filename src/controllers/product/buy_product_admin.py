@@ -12,11 +12,11 @@ resource_fields_ = {
     'product_name': fields.String(attribute='product.name'),
     'item_id': fields.String(attribute='item.id'),
     'price': fields.Integer(attribute='amount'),
-    'date': fields.DateTime
+    'date': fields.DateTime('iso8601')
 }
 
 
-class TransactionItemResponseModel(Schema):
+class BuyProductResponseModel(Schema):
     properties = {
         'id': {'type': 'string', 'description': 'Id транзакции'},
         'user_id': {'type': 'string', 'description': 'Id пользователя'},
@@ -29,25 +29,25 @@ class TransactionItemResponseModel(Schema):
     }
 
 
-class TransactionListController(BaseListController):
+class BuyProductListController(BaseListController):
     resource_fields = resource_fields_
     model = ProductItemTransaction
     name = 'ProductItemTransaction'
 
     @swagger.tags('Products')
-    @swagger.response(response_code=200, summary='Список всех транзакций', description='-',
-                      schema=TransactionItemResponseModel)
+    @swagger.response(response_code=200, summary='Список всех покупок (Транзакций)', description='-',
+                      schema=BuyProductResponseModel)
     def get(self):
         return super().get_()
 
 
-class TransactionController(BaseController):
+class BuyProductController(BaseController):
     resource_fields = resource_fields_
     model = ProductItemTransaction
     name = 'ProductItemTransaction'
 
     @swagger.tags('Products')
     @swagger.response(response_code=200, summary='Транзакция', description='-',
-                      schema=TransactionItemResponseModel)
+                      schema=BuyProductResponseModel)
     def get(self, transaction_id):
         return super().get_(transaction_id)

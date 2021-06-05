@@ -102,6 +102,8 @@ class UserAttemptsController(BaseController):
     model = UserAttempts
     name = 'UserAttempt'
 
+    @jwt_required()
+    @swagger.security(JWT=[])
     @swagger.tags('Tests')
     @swagger.response(response_code=200, summary='Попытка', description='-',
                       schema=UserAttemptResponseModel)

@@ -1,21 +1,20 @@
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from flask_restful import reqparse, fields, marshal
+from flask_restful import fields, marshal
 from flask_restful_swagger_3 import swagger, Schema, Resource
 
 from src.models.user.UserModel import User
 
-post_parser = reqparse.RequestParser()
-post_parser.add_argument('username', type=str, required=True, help='Почта пользователя')
-post_parser.add_argument('password', type=str, required=True, help='Пароль пользователя')
-
 
 class UserInfoResponseModel(Schema):
     properties = {
-        'id': {'type': 'string'},
-        'username': {'type': 'string'},
-        'name': {'type': 'string'},
-        'confirmed': {'type': 'boolean'},
-        'eco_coins': {'type': 'integer'},
+        'id': {'type': 'string', 'description': 'Id пользователя'},
+        'username': {'type': 'string', 'description': 'Почта пользователя'},
+        'name': {'type': 'string', 'description': 'Имя пользователя'},
+        'confirmed': {'type': 'boolean', 'description': 'Статус подтверждения'},
+        'eco_coins': {'type': 'integer', 'description': 'Количество эко-коинов'},
+        'freeze_eco_coins': {'type': 'integer', 'description': 'Количество замороженных эко-коинов'},
+        'token': {'type': 'string', 'description': 'Уникальный токен для генерации QR кода'},
+        'invite_code': {'type': 'string', 'description': 'Код для приглашения друга'},
     }
 
 
@@ -24,7 +23,10 @@ resource_fields_ = {
     'username': fields.String,
     'name': fields.String,
     'confirmed': fields.Boolean,
-    'eco_coins': fields.Integer
+    'eco_coins': fields.Integer,
+    'freeze_eco_coins': fields.Integer,
+    'token': fields.String,
+    'invite_code': fields.String(attribute='token')
 }
 
 
