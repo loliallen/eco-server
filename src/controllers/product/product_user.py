@@ -15,7 +15,7 @@ class ProductResponseModel(Schema):
         'price': {'type': 'integer', 'description': 'Стоимость продукта'},
         'date_from': {'type': 'string', 'format': 'date', 'description': 'Срок действия с'},
         'date_to': {'type': 'string', 'format': 'date', 'description': 'Срок действия по'},
-        'date_rest': {'type': 'integer', 'description': 'Количество оставшихся дней действия продукта'},
+        'days_rest': {'type': 'integer', 'description': 'Количество оставшихся дней действия продукта'},
         'count': {'type': 'integer', 'description': 'Количество оставшегося продукта'},
         # TODO добавить количество оставшихся купонов
     }
@@ -28,7 +28,7 @@ resource_fields_ = {
     'count': fields.Integer,
     'date_from': fields.DateTime('iso8601'),
     'date_to': fields.DateTime('iso8601'),
-    'date_rest': fields.Integer(attribute=lambda x: (x['date_to'].date() - datetime.datetime.now().date()).days),
+    'days_rest': fields.Integer(attribute=lambda x: (x['date_to'].date() - datetime.datetime.now().date()).days),
 }
 
 

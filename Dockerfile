@@ -19,4 +19,4 @@ RUN python3 -m pip install --upgrade Pillow
 
 EXPOSE 5000
 
-CMD gunicorn -b 0.0.0.0:5000 --certfile certificate.pem --keyfile key.pem  src.app_user:app
+CMD gunicorn -b 0.0.0.0:5000 --certfile certificate.pem --keyfile key.pem  -w 3 src.app_user:app

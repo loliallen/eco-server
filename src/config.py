@@ -6,6 +6,7 @@ class Configuration:
     SECRET_KEY = 'a really really really really long secret key'
     JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(hours=2)
     JWT_TOKEN_LOCATION = 'headers'
+    PROPAGATE_EXCEPTIONS = True
 
     MAIL_SERVER = 'smtp.googlemail.com'
     MAIL_PORT = 587

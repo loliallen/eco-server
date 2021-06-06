@@ -20,11 +20,10 @@ resource_fields_ = {
     'item_id': fields.String(attribute='item.id'),
     'content': fields.String(attribute='item.contents'),
     'amount': fields.Integer,
-    'date_rest': fields.Integer(attribute=lambda x: (x.product.date_to - datetime.datetime.now().date()).days),
+    'days_rest': fields.Integer(attribute=lambda x: (x.product.date_to - datetime.datetime.now().date()).days),
     'date_from':  fields.DateTime(dt_format='iso8601', attribute='product.date_from'),
     'date_to':  fields.DateTime(dt_format='iso8601', attribute='product.date_to'),
-    #'bill_rest': fields.Integer(attribute='user.eco_coins'),
-    'date': fields.DateTime('iso8601')
+    'buy_date': fields.DateTime('iso8601')
 }
 
 
@@ -35,8 +34,10 @@ class BuyProductResponseModel(Schema):
         'item': {'type': 'string', 'description': 'Id  экземпляра купона'},
         'content': {'type': 'string', 'description': 'Содержимое купона'},
         'amount': {'type': 'integer', 'description': 'Стоимость купона'},
-        #'bill_rest': {'type': 'integer', 'description': 'Остаток на счету'},
-        'date': {'type': 'datetime', 'description': 'Дата транзакции'}
+        'date_from': {'type': 'string', 'format': 'date', 'description': 'Срок действия с'},
+        'date_to': {'type': 'string', 'format': 'date', 'description': 'Срок действия по'},
+        'days_rest': {'type': 'integer', 'description': 'Количество оставшихся дней действия продукта'},
+        'buy_date': {'type': 'datetime', 'description': 'Дата транзакции'}
     }
 
 
