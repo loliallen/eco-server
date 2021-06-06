@@ -1,3 +1,5 @@
+import datetime
+
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_restful import reqparse, fields, marshal
 from flask_restful_swagger_3 import swagger, Schema
@@ -18,6 +20,9 @@ resource_fields_ = {
     'item_id': fields.String(attribute='item.id'),
     'content': fields.String(attribute='item.contents'),
     'amount': fields.Integer,
+    'date_rest': fields.Integer(attribute=lambda x: (x.product.date_to - datetime.datetime.now().date()).days),
+    'date_from':  fields.DateTime(dt_format='iso8601', attribute='product.date_from'),
+    'date_to':  fields.DateTime(dt_format='iso8601', attribute='product.date_to'),
     #'bill_rest': fields.Integer(attribute='user.eco_coins'),
     'date': fields.DateTime('iso8601')
 }

@@ -1,12 +1,21 @@
+import datetime
+
 from flask_restful import reqparse, fields
 from flask_restful_swagger_3 import swagger, Schema
 
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.product.ProductModel import Product
 
+
+Date = lambda x: datetime.datetime.strptime(x, "%d-%m-%Y").date()
+Date.swagger_type = 'string'
+
+
 parser = reqparse.RequestParser()
 parser.add_argument('name', type=str, required=True, help='Название продукта')
 parser.add_argument('price', type=int, required=True, help='Стоимость продукта')
+parser.add_argument('date_from', type=Date, required=True, help='Срок действия с')
+parser.add_argument('date_to', type=Date, required=True, help='Срок действия по')
 parser.add_argument('is_active', type=bool, required=True, help='Активность продукта (можно ли его купить)')
 
 
@@ -15,6 +24,8 @@ class ProductResponseModel(Schema):
         'id': {'type': 'string', 'description': 'Id продукта'},
         'name': {'type': 'string', 'description': 'Название продукта'},
         'price': {'type': 'integer', 'description': 'Стоимость продукта'},
+        'date_from': {'type': 'string', 'format': 'date', 'description': 'Срок действия с'},
+        'date_to': {'type': 'string', 'format': 'date',  'description': 'Срок действия по'},
         'is_active': {'type': 'boolean', 'description': 'Активность продукта (можно ли его купить)'}
     }
 
@@ -23,7 +34,9 @@ resource_fields_ = {
     'id': fields.String,
     'name': fields.String,
     'price': fields.Integer,
-    'is_active': fields.Boolean
+    'date_from': fields.DateTime('iso8601'),
+    'date_to': fields.DateTime('iso8601'),
+    'is_active': fields.Boolean,
 }
 
 

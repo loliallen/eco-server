@@ -1,6 +1,6 @@
 import datetime
 
-from mongoengine import Document, IntField, StringField, ReferenceField, ListField, BooleanField
+from mongoengine import Document, IntField, StringField, ReferenceField, ListField, BooleanField, DateField
 
 from src.models.product.ProductItemModel import ProductItem
 from src.exceptions.Product import NotEnoughtCoins, ProductsIsOver
@@ -11,6 +11,8 @@ from src.models.utils.BaseCrud import BaseCrud
 class Product(Document, BaseCrud):
     price = IntField()
     name = StringField()
+    date_from = DateField()
+    date_to = DateField()
     is_active = BooleanField(default=True)
     items = ListField(ReferenceField('ProductItem'))
     transactions = ListField(ReferenceField('ProductItemTransaction'))
@@ -54,17 +56,19 @@ class Product(Document, BaseCrud):
                 "foreignField": "product",
                 "localField": "_id",
                 "as": "product_items",
-                'pipeline': {
-                    '$filter': {
-                        'user': {'$exists': False}
-                    }
-                }
+                # 'pipeline': {
+                #     '$filter': {
+                #         'user': {'$exists': False}
+                #     }
+                # }
             }},
             {
                 '$project': {
                     '_id': 1,
                     'name': 1,
                     'price': 1,
+                    'date_from': 1,
+                    'date_to': 1,
                     'count': {'$size': "$product_items"},
                 }
             }

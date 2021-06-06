@@ -1,3 +1,5 @@
+import datetime
+
 from flask_jwt_extended import jwt_required
 from flask_restful import reqparse, fields, marshal
 from flask_restful_swagger_3 import swagger, Schema
@@ -11,6 +13,9 @@ class ProductResponseModel(Schema):
         'id': {'type': 'string', 'description': 'Id продукта'},
         'name': {'type': 'string', 'description': 'Название продукта'},
         'price': {'type': 'integer', 'description': 'Стоимость продукта'},
+        'date_from': {'type': 'string', 'format': 'date', 'description': 'Срок действия с'},
+        'date_to': {'type': 'string', 'format': 'date', 'description': 'Срок действия по'},
+        'date_rest': {'type': 'integer', 'description': 'Количество оставшихся дней действия продукта'},
         'count': {'type': 'integer', 'description': 'Количество оставшегося продукта'},
         # TODO добавить количество оставшихся купонов
     }
@@ -20,7 +25,10 @@ resource_fields_ = {
     'id': fields.String(attribute='_id'),
     'name': fields.String,
     'price': fields.Integer,
-    'count': fields.Integer
+    'count': fields.Integer,
+    'date_from': fields.DateTime('iso8601'),
+    'date_to': fields.DateTime('iso8601'),
+    'date_rest': fields.Integer(attribute=lambda x: (x['date_to'].date() - datetime.datetime.now().date()).days),
 }
 
 
