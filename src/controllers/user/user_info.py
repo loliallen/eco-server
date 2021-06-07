@@ -15,6 +15,8 @@ class UserInfoResponseModel(Schema):
         'freeze_eco_coins': {'type': 'integer', 'description': 'Количество замороженных эко-коинов'},
         'token': {'type': 'string', 'description': 'Уникальный токен для генерации QR кода'},
         'invite_code': {'type': 'string', 'description': 'Код для приглашения друга'},
+        'role': {'type': 'string', 'description': 'Роль'},
+        'attached_rec_point_id': {'type': 'string', 'description': 'Прикрепленный пункт приема (только для админов ПП)'},
     }
 
 
@@ -26,7 +28,9 @@ resource_fields_ = {
     'eco_coins': fields.Integer,
     'freeze_eco_coins': fields.Integer,
     'token': fields.String,
-    'invite_code': fields.String(attribute='token')
+    'invite_code': fields.String(attribute='token'),
+    'role': fields.String,
+    'attached_rec_point_id': fields.String(attribute='attached_rec_point.id')
 }
 
 

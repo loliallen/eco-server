@@ -7,11 +7,10 @@ from src.models.filter.FilterModel import Filter
 from src.models.recycle.RecycleTransaction import RecycleTransaction
 from src.models.transaction.AdmissionTransaction import AdmissionTransaction
 from src.models.user.UserModel import User
+from src.utils.roles import role_need, Roles
 
 post_parser = reqparse.RequestParser()
 post_parser.add_argument('user_token', type=str, required=True, help='qr код пользователя')
-# TODO выпилить, тк в дальнейшем за одним админом ПП закрепляется один пункт приема
-post_parser.add_argument('rec_point_id', dest='to_', type=str, required=True, help='id пункта приема')
 post_parser.add_argument('filter_type', type=str, required=True, help='тип сдаваемого отхода (фильтра)')
 post_parser.add_argument('amount', type=int, required=True, help='количество отхода')
 
@@ -58,6 +57,7 @@ class RecycleTransactionListController(BaseListController):
         return super().get_(from_=User.get_user_from_request())
 
     @jwt_required()
+    @role_need([Roles.admin_pp])
     @swagger.security(JWT=[])
     @swagger.tags('Recycle')
     @swagger.response(response_code=201, schema=RecycleTransactionResponseModel,
@@ -66,8 +66,8 @@ class RecycleTransactionListController(BaseListController):
     @swagger.reqparser(name='RecycleTransactionCreateModel', parser=post_parser)
     def post(self):
         args = self.parser.parse_args()
-        # TODO: get to_ rec_point from pp_admin
-        # pp_admin = User.get_user_from_request()
+        pp_admin = User.get_user_from_request()
+        args['to_'] = pp_admin.attached_rec_point
         user = User.objects.filter(token=args.pop('user_token')).first()
         if not user:
             return {'error': 'user by token not found'}, 400

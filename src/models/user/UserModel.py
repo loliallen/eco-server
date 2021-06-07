@@ -25,6 +25,8 @@ class User(Document, UserMixin, BaseCrud, Atomic):
     code = IntField(default=generate_code)  # код проверки, который отправляется на почту
     qrcode = StringField()  # адрес хранения qrcode изображения
     invite_by_user = ReferenceField('User')
+    role = StringField()
+    attached_rec_point = ReferenceField('RecPoint')
 
     token = StringField(default=random_string)  # токен, через который совершаются покупки
 

@@ -52,7 +52,7 @@ class BuyProductController(BaseListController):
     @swagger.response(response_code=200, summary='Список всех купонов пользователя', description='-',
                       schema=BuyProductResponseModel)
     def get(self):
-        user = User.objects.filter(username=get_jwt_identity()).first()
+        user = User.get_user_from_request()
         return super().get_(user=user.id)
 
     @jwt_required()
