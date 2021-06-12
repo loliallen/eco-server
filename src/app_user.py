@@ -12,9 +12,9 @@ from src.controllers.product.buy_product_user import BuyProductController
 from src.controllers.recpoint.rec_point_user import RecPointController, RecPointListController
 from src.controllers.recycle.recycle_transaction_user import RecycleTransactionListController, \
     RecycleTransactionController
-from src.controllers.test.attempts_user_controller import UserAttemptsListController, UserAttemptsController
-from src.controllers.test.question_user_controller import QuestionListController, QuestionController
-from src.controllers.test.test_user_controller import TestListController, TestController
+from src.controllers.test.user.answere_user_controller import UserAnswerController
+from src.controllers.test.user.attempts_user_controller import UserAttemptsListController, UserAttemptsController
+from src.controllers.test.user.test_user_controller import TestListController, TestController
 from src.controllers.transaction.transaction_user import AdmissionTransactionListController, \
     AdmissionTransactionTransactionController
 from src.controllers.user.confirm import ConfirmController
@@ -62,10 +62,11 @@ api.add_resource(BuyProductController, '/api/buy_product')
 # Tests
 api.add_resource(TestListController, '/api/tests')
 api.add_resource(TestController, '/api/tests/<tests_id>')
-api.add_resource(QuestionListController, '/api/tests/<test_id>/questions')
-api.add_resource(QuestionController, '/api/tests/<test_id>/questions/<question_id>')
+
 api.add_resource(UserAttemptsListController, '/api/tests/<test_id>/attempts')
 api.add_resource(UserAttemptsController, '/api/tests/<test_id>/attempts/<attempt_id>')
+
+api.add_resource(UserAnswerController, '/api/tests/<test_id>/attempts/<attempt_id>/answer')
 
 # swagger
 swagger_ui_blueprint = get_swaggerui_blueprint(

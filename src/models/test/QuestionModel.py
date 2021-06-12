@@ -11,6 +11,7 @@ class Question(Document, BaseCrud):
     question_type = StringField()
     answers_variants = ListField(StringField())
     correct_answer = StringField()
+    description = StringField()
     point_for_answer = IntField()
 
     meta = {

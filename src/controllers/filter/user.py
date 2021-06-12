@@ -41,8 +41,6 @@ class FilterControllerList(BaseListController):
     img_field = 'image'
     img_path = Path('./src/statics/filters')
 
-    @jwt_required()
-    @swagger.security(JWT=[])
     @swagger.tags('Filters and Recycle Points')
     @swagger.response(response_code=200, summary='Список фильтров (Типов ресурса)',
                       description='-', schema=FilterResponseModel)
@@ -55,8 +53,6 @@ class FilterController(BaseController):
     model = Filter
     name = 'Filter'
 
-    @jwt_required()
-    @swagger.security(JWT=[])
     @swagger.tags('Filters and Recycle Points')
     @swagger.response(response_code=200, summary='Фильтр (Тип ресурса)',
                       description='-', schema=FilterResponseModel)

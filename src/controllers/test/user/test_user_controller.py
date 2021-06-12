@@ -5,12 +5,6 @@ from flask_restful_swagger_3 import swagger, Schema
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.test.Test import Test
 
-parser = reqparse.RequestParser()
-parser.add_argument('test_name', type=str, required=True, help='Название теста')
-parser.add_argument('description', type=str, required=True, help='Описание')
-parser.add_argument('coins_to_unlock', type=int, required=True, help='Количество коинов, которые разблокирует тест')
-parser.add_argument('points_to_success', type=int, required=True, help='Количество баллов для успешного прохождения')
-
 
 resource_fields_ = {
     'id': fields.String,
@@ -23,11 +17,11 @@ resource_fields_ = {
 
 class TestResponseModel(Schema):
     properties = {
-        'id': {'type': 'string'},
-        'test_name': {'type': 'string'},
-        'description': {'type': 'string'},
-        'coins_to_unlock': {'type': 'integer'},
-        'points_to_success': {'type': 'integer'}
+        'id': {'type': 'string', 'description': 'id теста'},
+        'test_name': {'type': 'string', 'description': 'Имя теста'},
+        'description': {'type': 'string', 'description': 'Описание теста'},
+        'coins_to_unlock': {'type': 'integer', 'description': 'Кол-во разблокируемых экокоинов'},
+        'points_to_success': {'type': 'integer', 'description': 'Кол-во баллов для успешного прохождения'}
     }
 
 
@@ -35,7 +29,6 @@ class TestListController(BaseListController):
     resource_fields = resource_fields_
     model = Test
     name = 'Test'
-    parser = parser
 
     @jwt_required()
     @swagger.security(JWT=[])
@@ -50,7 +43,6 @@ class TestController(BaseController):
     resource_fields = resource_fields_
     model = Test
     name = 'Test'
-    parser = parser
 
     @jwt_required()
     @swagger.security(JWT=[])

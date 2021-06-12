@@ -27,3 +27,5 @@ class Configuration:
     ADMIN_SCHEMA_URL = f'https://{HOST}:8000/api/doc/swagger.json'
 
     ECO_COINS_BY_INVITE = 15
+    WEIGHT_RECYCLE_TO_NEED_APPROVE = 10
+    TEST_FREEZE_TIME = datetime.timedelta(days=15)

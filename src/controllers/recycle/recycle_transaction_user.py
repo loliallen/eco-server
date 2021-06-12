@@ -2,6 +2,7 @@ from flask_jwt_extended import jwt_required
 from flask_restful import reqparse, fields, marshal
 from flask_restful_swagger_3 import swagger, Schema
 
+from src.config import Configuration
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.filter.FilterModel import Filter
 from src.models.recycle.RecycleTransaction import RecycleTransaction
@@ -83,7 +84,7 @@ class RecycleTransactionListController(BaseListController):
                                       status='i' if args['amount'] > 10 else 'c')
         if error:
             return error
-        if args['amount'] <= 10:
+        if args['amount'] <= Configuration.WEIGHT_RECYCLE_TO_NEED_APPROVE:
             # создаем транзакцию на зачисление экокоинов
             AdmissionTransaction.create_and_pay_for_user(
                 action_type='r',

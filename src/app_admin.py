@@ -11,9 +11,9 @@ from src.controllers.product.product_admin import ProductController, ProductList
 from src.controllers.product.product_item_admin import ProductItemController, ProductItemListController
 from src.controllers.product.buy_product_admin import BuyProductController, BuyProductListController
 from src.controllers.recpoint.rec_point_admin import RecPointController, RecPointListController
-from src.controllers.test.attempts_admin_controller import AdminAttemptsListController, AdminAttemptsController
-from src.controllers.test.question_admin_controller import QuestionListController, QuestionController
-from src.controllers.test.test_admin_controller import TestListController, TestController
+from src.controllers.test.admin.attempts_admin_controller import AdminAttemptsListController, AdminAttemptsController
+from src.controllers.test.admin.question_admin_controller import QuestionListController, QuestionController
+from src.controllers.test.admin.test_admin_controller import TestListController, TestController
 from src.middleware.collect_statistics import Collector
 from src.send_email import mail
 

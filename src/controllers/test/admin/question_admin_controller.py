@@ -9,6 +9,7 @@ parser.add_argument('question', type=str, required=True, help='название 
 parser.add_argument('question_type', type=str, required=True, choices=('open', 'choices'), help='Тип вопроса')
 parser.add_argument('answers_variants', type=str, action='append', required=True, help='Варианты ответа')
 parser.add_argument('correct_answer', type=str, required=True, help='Правильный ответ')
+parser.add_argument('description', type=str, required=True, help='Пояснение')
 parser.add_argument('point_for_answer', type=int, help='Количество баллов за ответ')
 
 
@@ -19,6 +20,7 @@ resource_fields_ = {
     'question_type': fields.String,
     'answers_variants': fields.List(fields.String),
     'correct_answer': fields.String,
+    'description': fields.String,
     'point_for_answer': fields.Integer
 }
 
@@ -31,6 +33,7 @@ class QuestionResponseModel(Schema):
         'question_type': {'type': 'string'},
         'answers_variants': {'type': 'array', 'items': {'type': 'string'}},
         'correct_answer': {'type': 'string'},
+        'description':  {'type': 'string'},
         'point_for_answer': {'type': 'integer'}
     }
 
