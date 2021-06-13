@@ -23,7 +23,7 @@ class RecycleTransaction(Document, BaseCrud):
     filter_type = ReferenceField('Filter')
     admin_pp = ReferenceField('User')
     image = StringField()
-    # amount = FloatField(default=0.0)  # Количество сданного материала
+    amount = FloatField(default=0.0)  # Количество сданного материала
     reward = IntField(default=0)  # Количество коинов-вознаграждения
     status = StringField(choices=status_choices, default='i')  # статус подтверждения
     date = DateTimeField(default=datetime.now)
