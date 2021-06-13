@@ -42,3 +42,7 @@ class User(Document, UserMixin, BaseCrud, Atomic):
     @staticmethod
     def get_user_from_request():
         return User.objects.filter(username=get_jwt_identity()).first()
+
+    def add_freeze_coins(self, coins):
+        with self.lock() as user:
+            user.update(inc__freeze_eco_coins=coins)

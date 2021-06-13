@@ -6,7 +6,7 @@ from src.config import Configuration
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.filter.FilterModel import Filter
 from src.models.recycle.RecycleTransaction import RecycleTransaction
-from src.models.transaction.AdmissionTransaction import AdmissionTransaction
+from src.models.transaction.AdmissionTransaction import AdmissionTransaction, Status
 from src.models.user.UserModel import User
 from src.utils.roles import role_need, Roles
 
@@ -76,23 +76,29 @@ class RecycleTransactionListController(BaseListController):
         if not user:
             return {'error': 'user by token not found'}, 400
         args['from_'] = user.id
+        # если больше 10 кг, то оставляем на проверку (статус idle), иначе confirmed
+        status = Status.idle if args['amount'] > Configuration.WEIGHT_RECYCLE_TO_NEED_APPROVE else Status.confirmed
         # создаем транзакцию на сдачу отходов
-        obj, error = self._create_obj(**args,
-                                      reward=filter.coins_per_unit * args['amount'],
-                                      # если больше 10 кг, то оставляем на проверку (статус idle),
-                                      # иначе confirmed
-                                      status='i' if args['amount'] > 10 else 'c')
+        rec_transaction, error = self._create_obj(
+            **args,
+            admin_pp=pp_admin,
+            reward=filter.coins_per_unit * args['amount'],
+            status=status.value
+        )
         if error:
             return error
-        if args['amount'] <= Configuration.WEIGHT_RECYCLE_TO_NEED_APPROVE:
-            # создаем транзакцию на зачисление экокоинов
-            AdmissionTransaction.create_and_pay_for_user(
-                action_type='r',
-                action=obj,
-                user=user.id,
-                eco_coins=obj.reward
-            )
-        return marshal(obj, self.resource_fields)
+        # создаем транзакцию на зачисление экокоинов
+        AdmissionTransaction.create_(
+            action_type='r',  # recycle
+            action=rec_transaction,
+            status=status.value,
+            user=user.id,
+            eco_coins=rec_transaction.reward
+        )
+        # если статус подтверждена - то сразу зачисляем замороженные экокоины
+        if status == Status.confirmed:
+            user.add_freeze_coins(rec_transaction.reward)
+        return marshal(rec_transaction, self.resource_fields)
 
 
 class RecycleTransactionController(BaseController):

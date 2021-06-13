@@ -1,3 +1,4 @@
+from enum import Enum
 from datetime import datetime
 
 from mongoengine import Document, ReferenceField, FloatField, StringField, IntField, GenericReferenceField, \
@@ -6,11 +7,25 @@ from mongoengine import Document, ReferenceField, FloatField, StringField, IntFi
 from src.models.user.UserModel import User
 from src.models.utils.BaseCrud import BaseCrud
 
+
+class ActionType(Enum):
+    recycle = 'r'
+    invite = 'i'
+    feedback = 'f'
+
+
 action_type_choices = (
     ('r', 'recycle'),
     ('i', 'invite'),
     ('f', 'feedback')
 )
+
+
+class Status(Enum):
+    idle = 'i'
+    confirmed = 'c'
+    dismissed = 'd'
+
 
 status_choices = (
     ('i', 'idle'),
@@ -37,7 +52,7 @@ class AdmissionTransaction(Document, BaseCrud):
     @classmethod
     def create_and_pay_for_user(cls, **kwargs):
         super().create_(**kwargs)
-        User.find_by_id_(_id=kwargs['user']).update(inc__freeze_eco_coins=kwargs['eco_coins'])
+        User.find_by_id_(_id=kwargs['user']).add_freeze_coins(kwargs['eco_coins'])
 
     def unlock(self):
         with self.user.lock() as user:
