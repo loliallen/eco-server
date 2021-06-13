@@ -3,6 +3,7 @@ from datetime import datetime
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_restful import reqparse, fields, marshal
 from flask_restful_swagger_3 import swagger, Schema
+from flask import request
 
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.test.QuestionModel import Question
@@ -57,6 +58,28 @@ class QuestionResponseModel(Schema):
     }
 
 
+# TODO удалить после перехода на новую схему
+class UserAttemptCreateModel(Schema):
+    properties = {
+        'answers': {
+            'type': 'array',
+            'items': {
+                'type': 'object',
+                'properties': {
+                    'question_id': {
+                        'type': 'string',
+                        'description': 'Id вопроса'
+                    },
+                    'answer': {
+                        'type': 'string',
+                        'description': 'Ответ на вопрос'
+                    }
+                }
+            }
+        }
+    }
+
+
 class AttemptCreateResponseModel(Schema):
     properties = {
         **UserAttemptResponseModel.properties,
@@ -86,11 +109,15 @@ class UserAttemptsListController(BaseListController):
                           summary='Создать новую попытку',
                           description='Если попытка уже была создана и не завершена - '
                                       'вернется старая попытка с оставшимися вопросами')
+    @swagger.expected(UserAttemptCreateModel, required=True)
     def post(self, test_id):
         test = Test.find_by_id_(_id=test_id)
         if test is None:
             return {"error": "Test not found"}, 404
         user = User.objects.filter(username=get_jwt_identity()).first()
+        if user.freeze_eco_coins < test.coins_to_unlock:
+            return {'error': 'yours freeze ecocoins less than test unlock'}, 400
+
         latest_attempt = UserAttempts.objects.filter(user=user.id).order_by('-datetime_opened').first()
         if latest_attempt:
             # если имеется незаконченная попытка  другого теста, то не начинаем новую
@@ -111,14 +138,43 @@ class UserAttemptsListController(BaseListController):
                 if datetime.now() < latest_attempt.datetime_opened + Configuration.TEST_FREEZE_TIME:
                     return {'error': 'not enough time has passed since the last attempt'}, 400
 
-        if user.freeze_eco_coins < test.coins_to_unlock:
-            return {'error': 'yours freeze ecocoins less than test unlock'}, 400
+        if request.json:
+            args = post_parser.parse_args()
+            return self.old_post(test_id, args)
+
         attempt = UserAttempts.create_(user=user.id, test=test_id, datetime_opened=datetime.now())
         tests_questions = Question.objects.filter(test=test_id).all()
         return {
             **marshal(attempt, resource_attempt_fields),
             'questions': marshal(list(tests_questions), resource_questions_fields)
         }
+
+    def old_post(self, test_id, args):
+        #args = post_parser.parse_args()
+        answers = {i['question_id']: i['answer'] for i in args['answers']}
+        test = Test.find_by_id_(_id=test_id)
+        questions = Question.objects(test=test_id).all()
+        points = 0
+        for question in questions:
+            if answers.get(str(question.id)) is None:
+                return {'error': 'не на все вопросы даны ответы'}, 400
+            if answers[str(question.id)] == question.correct_answer:
+                points += question.point_for_answer
+        user = User.objects.filter(username=get_jwt_identity()).first()
+        attempt, error = self._create_obj(test=test_id, user=user,
+                                      points=points,
+                                      already_answered=questions,
+                                      is_success=points >= test.points_to_success,
+                                      is_closed=True,
+                                      datetime_opened=datetime.now(),
+                                      datetime_closed=datetime.now())
+        if error:
+            return error
+        if attempt.is_success:
+            # разблокируем пользователю экокоины
+            with user.lock() as user:
+                user.update(inc__freeze_eco_coins=-test.coins_to_unlock, inc__eco_coins=test.coins_to_unlock)
+        return marshal(attempt, self.resource_fields)
 
 
 class UserAttemptsController(BaseController):

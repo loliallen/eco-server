@@ -23,7 +23,7 @@ resource_fields_ = {
     'days_rest': fields.Integer(attribute=lambda x: (x.product.date_to - datetime.datetime.now().date()).days),
     'date_from':  fields.DateTime(dt_format='iso8601', attribute='product.date_from'),
     'date_to':  fields.DateTime(dt_format='iso8601', attribute='product.date_to'),
-    'buy_date': fields.DateTime('iso8601')
+    'buy_date': fields.DateTime('iso8601', attribute='date')
 }
 
 

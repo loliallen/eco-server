@@ -68,9 +68,10 @@ class UserAnswerController(BaseListController):
             attempt.is_closed = True
             attempt.is_success = bool(attempt.points >= test.points_to_success)
             attempt.datetime_closed = datetime.now()
-            # разблокируем пользователю экокоины
-            with user.lock() as user:
-                user.update(inc__freeze_eco_coins=-test.coins_to_unlock, inc__eco_coins=test.coins_to_unlock)
+            if attempt.is_success:
+                # разблокируем пользователю экокоины
+                with user.lock() as user:
+                    user.update(inc__freeze_eco_coins=-test.coins_to_unlock, inc__eco_coins=test.coins_to_unlock)
         attempt.save()
         answer = {
             "answer_status": answer_is_right,

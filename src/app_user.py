@@ -14,6 +14,7 @@ from src.controllers.recycle.recycle_transaction_user import RecycleTransactionL
     RecycleTransactionController
 from src.controllers.test.user.answere_user_controller import UserAnswerController
 from src.controllers.test.user.attempts_user_controller import UserAttemptsListController, UserAttemptsController
+from src.controllers.test.user.question_user_controller import QuestionListController, QuestionController
 from src.controllers.test.user.test_user_controller import TestListController, TestController
 from src.controllers.transaction.transaction_user import AdmissionTransactionListController, \
     AdmissionTransactionTransactionController
@@ -62,11 +63,12 @@ api.add_resource(BuyProductController, '/api/buy_product')
 # Tests
 api.add_resource(TestListController, '/api/tests')
 api.add_resource(TestController, '/api/tests/<tests_id>')
-
 api.add_resource(UserAttemptsListController, '/api/tests/<test_id>/attempts')
 api.add_resource(UserAttemptsController, '/api/tests/<test_id>/attempts/<attempt_id>')
-
 api.add_resource(UserAnswerController, '/api/tests/<test_id>/attempts/<attempt_id>/answer')
+# Временные роуты, удалить после перехода фронта на новую версию
+api.add_resource(QuestionListController, '/api/tests/<test_id>/questions')
+api.add_resource(QuestionController, '/api/tests/<test_id>/questions/<question_id>')
 
 # swagger
 swagger_ui_blueprint = get_swaggerui_blueprint(
