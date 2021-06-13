@@ -32,7 +32,8 @@ class User(Document, UserMixin, BaseCrud, Atomic):
 
     meta = {
         "db_alias": "core",
-        "collection": "users"
+        "collection": "users",
+        "strict": False
     }
 
     def refresh_token(self):

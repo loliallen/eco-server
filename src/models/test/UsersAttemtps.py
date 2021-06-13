@@ -17,5 +17,6 @@ class UserAttempts(Document, BaseCrud):
 
     meta = {
         "db_alias": "core",
-        "collection": "user_attempts"
+        "collection": "user_attempts",
+        "strict": False
     }

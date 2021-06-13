@@ -14,5 +14,6 @@ class Partner(Document, BaseCrud):
     products = ListField(ReferenceField('Product'))
     meta = {
         "db_alias": "core",
-        "collection": "partners"
+        "collection": "partners",
+        "strict": False
     }

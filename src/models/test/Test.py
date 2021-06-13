@@ -11,5 +11,6 @@ class Test(Document, BaseCrud):
 
     meta = {
         "db_alias": "core",
-        "collection": "test"
+        "collection": "test",
+        "strict": False
     }

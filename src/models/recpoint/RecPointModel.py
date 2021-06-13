@@ -25,7 +25,8 @@ class RecPoint(Document, BaseCrud):
     meta = {
         "db_alias": "core",
         "collection": "rec_points",
-        "indexes": [[("coords", "2dsphere")]]
+        "indexes": [[("coords", "2dsphere")]],
+        "strict": False,
     }
 
     @classmethod

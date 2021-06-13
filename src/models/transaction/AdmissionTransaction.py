@@ -46,7 +46,8 @@ class AdmissionTransaction(Document, BaseCrud):
 
     meta = {
         "db_alias": "core",
-        "collection": "admission_transacrion"
+        "collection": "admission_transacrion",
+        "strict": False
     }
 
     @classmethod

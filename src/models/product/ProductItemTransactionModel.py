@@ -14,5 +14,6 @@ class ProductItemTransaction(Document, BaseCrud):
 
     meta = {
         "db_alias": "core",
-        "collection": "product_item_transactions"
+        "collection": "product_item_transactions",
+        "strict": False,
     }

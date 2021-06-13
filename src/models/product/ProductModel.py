@@ -19,7 +19,8 @@ class Product(Document, BaseCrud):
 
     meta = {
         "db_alias": "core",
-        "collection": "products"
+        "collection": "products",
+        "strict": False,
     }
 
     def buy(self, user):

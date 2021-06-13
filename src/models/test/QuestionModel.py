@@ -16,5 +16,6 @@ class Question(Document, BaseCrud):
 
     meta = {
         "db_alias": "core",
-        "collection": "question"
+        "collection": "question",
+        "strict": False,
     }

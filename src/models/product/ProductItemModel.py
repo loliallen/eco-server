@@ -14,5 +14,6 @@ class ProductItem(Document, BaseCrud, Atomic):
 
     meta = {
         "db_alias": "core",
-        "collection": "product_items"
+        "collection": "product_items",
+        "strict": False,
     }
