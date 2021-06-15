@@ -20,6 +20,9 @@ from src.controllers.transaction.transaction_user import AdmissionTransactionLis
     AdmissionTransactionTransactionController
 from src.controllers.user.confirm import ConfirmController
 from src.controllers.user.login import LoginController
+from src.controllers.user.recovery_password.chage_password import ChangePasswordController
+from src.controllers.user.recovery_password.get_recovery_token import RecoveryTokenController
+from src.controllers.user.recovery_password.send_check_code import RecoverySendCheckCodeController
 from src.controllers.user.register import RegisterController
 from src.controllers.user.user_info import UserInfoController
 from src.middleware.collect_statistics import Collector
@@ -40,6 +43,9 @@ api.add_resource(RegisterController, '/api/register')
 api.add_resource(ConfirmController, '/api/confirm')
 api.add_resource(LoginController, '/api/login')
 api.add_resource(UserInfoController, '/api/user_info')
+api.add_resource(RecoverySendCheckCodeController, '/api/send_check_code')
+api.add_resource(RecoveryTokenController, '/api/get_recovery_token')
+api.add_resource(ChangePasswordController, '/api/change_password')
 
 # Filters and Rec Points
 api.add_resource(FilterControllerList, '/api/filters')

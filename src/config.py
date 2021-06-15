@@ -8,6 +8,8 @@ class Configuration:
     JWT_TOKEN_LOCATION = 'headers'
     PROPAGATE_EXCEPTIONS = True
 
+    RECOVERY_TOKEN_EXPIRES = datetime.timedelta(seconds=120)
+
     MAIL_SERVER = 'smtp.googlemail.com'
     MAIL_PORT = 587
     MAIL_USE_TLS = True
