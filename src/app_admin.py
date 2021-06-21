@@ -6,6 +6,7 @@ from flask_swagger_ui import get_swaggerui_blueprint
 import src.services.Database as Database
 from src.config import Configuration
 from src.controllers.filter.admin import FilterController, FilterControllerList
+from src.controllers.news.news_admin import NewsListController, NewsController
 from src.controllers.partner.admin import PartnerController, PartnerListController
 from src.controllers.product.product_admin import ProductController, ProductListController
 from src.controllers.product.product_item_admin import ProductItemController, ProductItemListController
@@ -51,6 +52,10 @@ api.add_resource(QuestionListController, '/admin/tests/<test_id>/questions')
 api.add_resource(QuestionController, '/admin/tests/<test_id>/questions/<question_id>')
 api.add_resource(AdminAttemptsListController, '/admin/tests/<test_id>/attempts')
 api.add_resource(AdminAttemptsController, '/admin/tests/<test_id>/attempts/<attempt_id>')
+
+# News
+api.add_resource(NewsListController, '/api/news')
+api.add_resource(NewsController, '/api/news/<news_id>')
 
 # swagger
 swagger_ui_blueprint = get_swaggerui_blueprint(

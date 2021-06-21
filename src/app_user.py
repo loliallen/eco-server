@@ -7,6 +7,7 @@ from flask_swagger_ui import get_swaggerui_blueprint
 import src.services.Database as Database
 from src.config import Configuration
 from src.controllers.filter.user import FilterController, FilterControllerList
+from src.controllers.news.news_user import NewsListController, NewsController
 from src.controllers.product.product_user import ProductController, ProductListController
 from src.controllers.product.buy_product_user import BuyProductController
 from src.controllers.recpoint.rec_point_user import RecPointController, RecPointListController
@@ -75,6 +76,10 @@ api.add_resource(UserAnswerController, '/api/tests/<test_id>/attempts/<attempt_i
 # Временные роуты, удалить после перехода фронта на новую версию
 api.add_resource(QuestionListController, '/api/tests/<test_id>/questions')
 api.add_resource(QuestionController, '/api/tests/<test_id>/questions/<question_id>')
+
+# News
+api.add_resource(NewsListController, '/api/news')
+api.add_resource(NewsController, '/api/news/<news_id>')
 
 # swagger
 swagger_ui_blueprint = get_swaggerui_blueprint(
