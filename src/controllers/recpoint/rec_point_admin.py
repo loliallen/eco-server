@@ -6,7 +6,7 @@ from flask_restful_swagger_3 import swagger, Schema
 
 from src.controllers.utils import fields as custom_fields
 from src.controllers.utils.BaseController import BaseListController, BaseController
-from src.models.recpoint.RecPointModel import RecPoint
+from src.models.recpoint.RecPointModel import RecPoint, PAYBACK_TYPE_CHOICES, RECEPTION_TYPE_CHOICES
 
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('coords', type=literal_eval, required=False, location='args')
@@ -19,9 +19,9 @@ post_parser.add_argument('name', type=str, required=True)
 post_parser.add_argument('address', type=str, required=True)
 post_parser.add_argument('partner', type=str, required=True)
 post_parser.add_argument('payback_type', type=str, required=True,
-                         choices=('free', 'paid', 'partner'))
+                         choices=PAYBACK_TYPE_CHOICES)
 post_parser.add_argument('reception_type', type=str, required=True,
-                         choices=('recycle', 'utilisation', 'charity'))
+                         choices=RECEPTION_TYPE_CHOICES)
 post_parser.add_argument('contacts', type=str, action='append', required=False)
 post_parser.add_argument('work_time', type=dict, required=True)
 post_parser.add_argument('accept_types', type=str, action='append', required=False)

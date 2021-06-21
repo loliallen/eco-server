@@ -8,7 +8,7 @@ from src.config import Configuration
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.filter.FilterModel import Filter
 from src.models.recycle.RecycleTransaction import RecycleTransaction, RecycleTransactionItem
-from src.models.transaction.AdmissionTransaction import AdmissionTransaction, Status
+from src.models.transaction.AdmissionTransaction import AdmissionTransaction, Status, ActionType
 from src.models.user.UserModel import User
 from src.utils.roles import role_need, Roles
 
@@ -50,13 +50,19 @@ class RecycleTransactionCreateModel(Schema):
     }
 
 
+class RecycleTransactionItemResponseModel(Schema):
+    properties = {
+        'filter_id': {'type': 'string', 'description': 'Id фильтра'},
+        'filter_name': {'type': 'string', 'description': 'Имя фильтра'},
+        'amount': {'type': 'float', 'description': 'Количество сданного ресурса'},
+    }
+
+
 class RecycleTransactionResponseModel(Schema):
     properties = {
         'id': {'type': 'string', 'description': 'Id транзакции'},
         'rec_point_id': {'type': 'string', 'description': 'Id пункта приема'},
-        'filter_id': {'type': 'string', 'description': 'Id фильтра'},
-        'filter_name': {'type': 'string', 'description': 'Имя фильтра'},
-        'amount': {'type': 'float', 'description': 'Количество сданного ресурса'},
+        'items': {'type': 'array', 'items': RecycleTransactionItemResponseModel, 'description': 'Сданные ресурсы'},
         'reward': {'type': 'integer', 'description': 'Количество коинов-вознаграждения'},
         'status': {'type': 'string', 'description': 'Статус транзакции'},
         'date': {'type': 'datetime', 'description': 'Дата транзакции'}
@@ -140,7 +146,7 @@ class RecycleTransactionListController(BaseListController):
             return error
         # создаем транзакцию на зачисление экокоинов
         AdmissionTransaction.create_(
-            action_type='r',  # recycle
+            action_type=ActionType.recycle.value,
             action=rec_transaction,
             status=status.value,
             user=user.id,
@@ -174,7 +180,7 @@ class RecycleTransactionListController(BaseListController):
             return error
         # создаем транзакцию на зачисление экокоинов
         AdmissionTransaction.create_(
-            action_type='r',  # recycle
+            action_type=ActionType.recycle.value,
             action=rec_transaction,
             status=status.value,
             user=user.id,

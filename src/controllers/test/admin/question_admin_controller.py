@@ -2,11 +2,11 @@ from flask_restful import reqparse, fields, marshal
 from flask_restful_swagger_3 import swagger, Schema
 
 from src.controllers.utils.BaseController import BaseListController, BaseController
-from src.models.test.QuestionModel import Question
+from src.models.test.QuestionModel import Question, QUESTION_TYPE_CHOICES
 
 parser = reqparse.RequestParser()
 parser.add_argument('question', type=str, required=True, help='название вопроса')
-parser.add_argument('question_type', type=str, required=True, choices=('open', 'choices'), help='Тип вопроса')
+parser.add_argument('question_type', type=str, required=True, choices=QUESTION_TYPE_CHOICES, help='Тип вопроса')
 parser.add_argument('answers_variants', type=str, action='append', required=True, help='Варианты ответа')
 parser.add_argument('correct_answer', type=str, required=True, help='Правильный ответ')
 parser.add_argument('description', type=str, required=True, help='Пояснение')
@@ -30,7 +30,7 @@ class QuestionResponseModel(Schema):
         'id': {'type': 'string'},
         'test': {'type': 'string'},
         'question': {'type': 'string'},
-        'question_type': {'type': 'string'},
+        'question_type': {'type': 'string', 'choices': QUESTION_TYPE_CHOICES},
         'answers_variants': {'type': 'array', 'items': {'type': 'string'}},
         'correct_answer': {'type': 'string'},
         'description':  {'type': 'string'},

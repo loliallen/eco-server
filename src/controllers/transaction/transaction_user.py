@@ -3,14 +3,14 @@ from flask_restful import fields
 from flask_restful_swagger_3 import swagger, Schema
 
 from src.controllers.utils.BaseController import BaseListController, BaseController
-from src.models.transaction.AdmissionTransaction import AdmissionTransaction
+from src.models.transaction.AdmissionTransaction import AdmissionTransaction, ACTION_TYPE_CHOICES
 from src.models.user.UserModel import User
 
 
 class AdmissionTransactionResponseModel(Schema):
     properties = {
         'id': {'type': 'string', 'description': 'Id транзакции'},
-        'action_type': {'type': 'string', 'description': 'Тип действия'},
+        'action_type': {'type': 'string', 'description': 'Тип действия', 'choices': ACTION_TYPE_CHOICES},
         'action_id': {'type': 'string', 'description': 'Id действия'},
         'eco_coins': {'type': 'string', 'description': 'Количество экокоинов'},
         'status': {'type': 'string', 'description': 'Статус'},

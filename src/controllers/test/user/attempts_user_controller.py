@@ -6,7 +6,7 @@ from flask_restful_swagger_3 import swagger, Schema
 from flask import request
 
 from src.controllers.utils.BaseController import BaseListController, BaseController
-from src.models.test.QuestionModel import Question
+from src.models.test.QuestionModel import Question, QUESTION_TYPE_CHOICES
 from src.models.test.Test import Test
 from src.models.test.UsersAttemtps import UserAttempts
 from src.models.user.UserModel import User
@@ -52,7 +52,7 @@ class QuestionResponseModel(Schema):
     properties = {
         'question_id': {'type': 'string', 'description': 'id вопроса'},
         'question': {'type': 'string', 'description': 'Вопрос'},
-        'question_type': {'type': 'string', 'description': 'Тип вопроса'},
+        'question_type': {'type': 'string', 'description': 'Тип вопроса', 'choices': QUESTION_TYPE_CHOICES},
         'answers_variants': {'type': 'array', 'items': {'type': 'string'}, 'description': 'Варианты ответа'},
         'point_for_answer': {'type': 'integer', 'description': 'Количество баллов за ответ'}
     }

@@ -8,7 +8,7 @@ from flask_restful_swagger_3 import swagger, Schema
 
 from src.controllers.utils import fields as custom_fields
 from src.controllers.utils.BaseController import BaseListController, BaseController
-from src.models.recpoint.RecPointModel import RecPoint
+from src.models.recpoint.RecPointModel import RecPoint, RECEPTION_TYPE_CHOICES, PAYBACK_TYPE_CHOICES
 
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('coords', type=literal_eval, required=False, location='args')
@@ -22,7 +22,8 @@ class RecPointResponseModel(Schema):
         'name': {'type': 'string', 'description': 'Название приема'},
         'partner': {'type': 'string', 'description': 'Id партнера'},
         'partner_name': {'type': 'string', 'description': 'Название партнера'},
-        'payback_type': {'type': 'string', 'description': 'Тип оплаты'},
+        'payback_type': {'type': 'string', 'description': 'Тип оплаты', 'choices': PAYBACK_TYPE_CHOICES},
+        'reception_type': {'type': 'string', 'description': 'Тип ', 'choices': RECEPTION_TYPE_CHOICES},
         'work_time': {'type': 'string', 'description': 'Время работы пункта приема'},
         'address': {'type': 'string', 'description': 'Адрес пункта приема'},
         'contacts': {'type': 'array', 'items': {'type': 'string'}, 'description': 'Список контактов'},

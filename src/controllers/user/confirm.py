@@ -43,7 +43,7 @@ class ConfirmController(Resource):
         if user.invite_by_user is not None:
             # добавляем экокоины пользователю за приглашение
             AdmissionTransaction.create_and_pay_for_user(
-                action_type='i',  # invite
+                action_type=ActionType.invite.value,  # invite
                 action=user,  # id действия в данном случае это id пользователя, который зарегался
                 status=Status.confirmed.value,
                 user=user.invite_by_user.id,  # это действие должно отображаться у пригласившего

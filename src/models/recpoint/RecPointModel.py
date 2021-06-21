@@ -7,6 +7,10 @@ from src.models.partner.PartnerModel import Partner
 from src.models.utils.BaseCrud import BaseCrud
 
 
+RECEPTION_TYPE_CHOICES = ('recycle', 'utilisation', 'charity')
+PAYBACK_TYPE_CHOICES = ('free', 'paid', 'partner')
+
+
 class RecPoint(Document, BaseCrud):
     """Точка переработки"""
 
@@ -16,8 +20,8 @@ class RecPoint(Document, BaseCrud):
     getBonus = BooleanField()
     address = StringField(requrend=True)
     partner = ReferenceField(Partner, required=False)
-    reception_type = StringField()
-    payback_type = StringField()
+    reception_type = StringField(choices=RECEPTION_TYPE_CHOICES)
+    payback_type = StringField(choices=PAYBACK_TYPE_CHOICES)
     contacts = ListField()
     coords = PointField(auto_index=False, reqired=True)
     accept_types = ListField(ReferenceField(Filter), required=False)

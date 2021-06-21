@@ -5,7 +5,7 @@ from mongoengine import (
     IntField, DateTimeField, ListField, EmbeddedDocumentField
 )
 
-from src.models.transaction.AdmissionTransaction import status_choices
+from src.models.transaction.AdmissionTransaction import STATUS_CHOICES, Status
 from src.models.utils.BaseCrud import BaseCrud
 
 
@@ -25,7 +25,7 @@ class RecycleTransaction(Document, BaseCrud):
     image = StringField()
     amount = FloatField(default=0.0)  # Количество сданного материала
     reward = IntField(default=0)  # Количество коинов-вознаграждения
-    status = StringField(choices=status_choices, default='i')  # статус подтверждения
+    status = StringField(choices=STATUS_CHOICES, default=Status.idle.value)  # статус подтверждения
     date = DateTimeField(default=datetime.now)
 
     meta = {
