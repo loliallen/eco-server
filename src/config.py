@@ -20,10 +20,12 @@ class Configuration:
     DB_NAME = "eco"
     DB_PASSWORD = "eCo1251kek"  # TODO при выходе в прод вынести
     DB_URL = os.getenv("DB_URL", default=f"mongodb+srv://root:{DB_PASSWORD}@eco.y8cj7.mongodb.net/{DB_NAME}?retryWrites=true&w=majority")
+
     HOST = os.getenv("HOST", default="0.0.0.0")
+    PORT = os.getenv("PORT", default=5000)
 
     USER_SWAGGER_URL = '/api/docs'
-    USER_SCHEMA_URL = f'https://{HOST}:5000/api/doc/swagger.json'
+    USER_SCHEMA_URL = f'https://{HOST}:{PORT}/api/doc/swagger.json'
 
     ADMIN_SWAGGER_URL = '/api/docs'
     ADMIN_SCHEMA_URL = f'https://{HOST}:8000/api/doc/swagger.json'
