@@ -53,7 +53,7 @@
 ### Обновление
 - Собрать новый контейнер:
   ```bash
-  docker build ./ -t eco_api
+  docker build -t eco_api -f <абсолютный путь до проекта>/deployment/api/prod/Docker ./
   ```
 - Запушить собранный билд:
   ```bash
