@@ -14,24 +14,20 @@ from src.utils.roles import role_need, Roles
 
 
 def validate_item(value):
-    SCHEMA = {
+    schema = {
         'filter_type': {'type': 'string', 'required': True},
         'amount': {'type': 'float', 'required': True},
     }
-    v = Validator(SCHEMA)
+    v = Validator(schema)
     if v.validate(value):
         return value
     else:
         raise ValueError(v.errors)
 
+
 post_parser = reqparse.RequestParser()
 post_parser.add_argument('user_token', type=str, required=True, help='qr код пользователя')
 post_parser.add_argument('items', type=validate_item, required=True, action='append')
-
-old_post_parser = reqparse.RequestParser()
-old_post_parser.add_argument('user_token', type=str, required=True, help='qr код пользователя')
-old_post_parser.add_argument('filter_type', type=str, required=True, help='тип сдаваемого отхода (фильтра)')
-old_post_parser.add_argument('amount', type=int, required=True, help='количество отхода')
 
 
 class RecycleTransactionItemCreateModel(Schema):
@@ -72,9 +68,6 @@ class RecycleTransactionResponseModel(Schema):
 resource_fields_ = {
     'id': fields.String,
     'rec_point_id': fields.String(attribute='to_.id'),
-    'filter_id': fields.String(attribute='filter_type.id'),  # old
-    'filter_name': fields.String(attribute='filter_type.name'),  # old
-    'amount': fields.Float,  # old
     'items': fields.List(fields.Nested({
         'filter_id': fields.String(attribute='filter.id'),
         'filter_name': fields.String(attribute='filter.name'),
@@ -110,9 +103,6 @@ class RecycleTransactionListController(BaseListController):
                       description='-')
     @swagger.expected(RecycleTransactionCreateModel, required=True)
     def post(self):
-        if request.json and request.json.get('items') is None:
-            args = old_post_parser.parse_args()
-            return self.old_post(args)
         args = self.parser.parse_args()
         pp_admin = User.get_user_from_request()
         user = User.objects.filter(token=args.pop('user_token')).first()
@@ -140,40 +130,6 @@ class RecycleTransactionListController(BaseListController):
             admin_pp=pp_admin,
             items=items,
             reward=reward,
-            status=status.value
-        )
-        if error:
-            return error
-        # создаем транзакцию на зачисление экокоинов
-        AdmissionTransaction.create_(
-            action_type=ActionType.recycle.value,
-            action=rec_transaction,
-            status=status.value,
-            user=user.id,
-            eco_coins=rec_transaction.reward
-        )
-        # если статус подтверждена - то сразу зачисляем замороженные экокоины
-        if status == Status.confirmed:
-            user.add_freeze_coins(rec_transaction.reward)
-        return marshal(rec_transaction, self.resource_fields)
-
-    def old_post(self, args):
-        pp_admin = User.get_user_from_request()
-        args['to_'] = pp_admin.attached_rec_point
-        user = User.objects.filter(token=args.pop('user_token')).first()
-        if not user:
-            return {'error': 'user by token not found'}, 400
-        filter = Filter.find_by_id_(_id=args['filter_type'])
-        if not user:
-            return {'error': 'user by token not found'}, 400
-        args['from_'] = user.id
-        # если больше 10 кг, то оставляем на проверку (статус idle), иначе confirmed
-        status = Status.idle if args['amount'] > Configuration.WEIGHT_RECYCLE_TO_NEED_APPROVE else Status.confirmed
-        # создаем транзакцию на сдачу отходов
-        rec_transaction, error = self._create_obj(
-            **args,
-            admin_pp=pp_admin,
-            reward=filter.coins_per_unit * args['amount'],
             status=status.value
         )
         if error:
