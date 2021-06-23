@@ -24,11 +24,14 @@ class Configuration:
     HOST = os.getenv("HOST", default="0.0.0.0")
     PORT = os.getenv("PORT", default=5000)
 
+    DEBUG = os.getenv("DEBUG", 'True') == 'True'
+    PROTOCOL = "http" if DEBUG else "https"
+
     USER_SWAGGER_URL = '/api/docs'
-    USER_SCHEMA_URL = f'https://{HOST}:{PORT}/api/doc/swagger.json'
+    USER_SCHEMA_URL = f'{PROTOCOL}://{HOST}:{PORT}/api/doc/swagger.json'
 
     ADMIN_SWAGGER_URL = '/api/docs'
-    ADMIN_SCHEMA_URL = f'https://{HOST}:8000/api/doc/swagger.json'
+    ADMIN_SCHEMA_URL = f'{PROTOCOL}://{HOST}:8000/api/doc/swagger.json'
 
     ECO_COINS_BY_INVITE = 15
     WEIGHT_RECYCLE_TO_NEED_APPROVE = 10
