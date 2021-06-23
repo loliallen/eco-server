@@ -13,7 +13,7 @@ get_parser = reqparse.RequestParser()
 get_parser.add_argument('only_advice', dest='is_advice', type=bool, required=False, location='args')
 
 
-class NewsAdminResponseModel(Schema):
+class NewsResponseModel(Schema):
     properties = {
         'id': {'type': 'string'},
         'title': {'type': 'string'},
@@ -39,7 +39,7 @@ class NewsListController(BaseListController):
     parser = post_parser
 
     @swagger.tags('News')
-    @swagger.response(response_code=200, schema=NewsAdminResponseModel, summary='Список новостей',
+    @swagger.response(response_code=200, schema=NewsResponseModel, summary='Список новостей',
                       description='-')
     @swagger.parameter(_in='query', name='only_advice', description='Только советы', schema={'type': 'boolean'})
     def get(self):
@@ -47,7 +47,7 @@ class NewsListController(BaseListController):
         return super().get_(**args)
 
     @swagger.tags('News')
-    @swagger.response(response_code=201, schema=NewsAdminResponseModel, summary='Создать новость',
+    @swagger.response(response_code=201, schema=NewsResponseModel, summary='Создать новость',
                       description='-')
     @swagger.reqparser(name='NewsCreateModel', parser=post_parser)
     def post(self):
@@ -61,20 +61,20 @@ class NewsController(BaseController):
     parser = post_parser
 
     @swagger.tags('News')
-    @swagger.response(response_code=201, schema=NewsAdminResponseModel, summary='Новость',
+    @swagger.response(response_code=201, schema=NewsResponseModel, summary='Новость',
                       description='-')
     def get(self, news_id):
         return super().get_(news_id)
 
     @swagger.tags('News')
-    @swagger.response(response_code=201, schema=NewsAdminResponseModel, summary='Обновить новость',
+    @swagger.response(response_code=201, schema=NewsResponseModel, summary='Обновить новость',
                       description='-')
     @swagger.reqparser(name='NewsPutModel', parser=post_parser)
     def put(self, news_id):
         return super().put_(news_id)
 
     @swagger.tags('News')
-    @swagger.response(response_code=201, schema=NewsAdminResponseModel, summary='Удалить новость',
+    @swagger.response(response_code=201, schema=NewsResponseModel, summary='Удалить новость',
                       description='-')
     def delete(self, news_id):
         super().delete_(news_id)
