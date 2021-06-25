@@ -1,5 +1,6 @@
 import datetime
 import os
+import pathlib
 
 
 class Configuration:
@@ -22,7 +23,7 @@ class Configuration:
     DB_URL = os.getenv("DB_URL", default=f"mongodb+srv://root:{DB_PASSWORD}@eco.y8cj7.mongodb.net/{DB_NAME}?retryWrites=true&w=majority")
 
     HOST = os.getenv("HOST", default="0.0.0.0")
-    PORT = os.getenv("PORT", default=5000)
+    PORT = os.getenv("PORT", default=8000)
 
     DEBUG = os.getenv("DEBUG", 'True') == 'True'
     PROTOCOL = "http" if DEBUG else "https"
@@ -36,3 +37,10 @@ class Configuration:
     ECO_COINS_BY_INVITE = 15
     WEIGHT_RECYCLE_TO_NEED_APPROVE = 10
     TEST_FREEZE_TIME = datetime.timedelta(days=15)
+
+    STATIC_FOLDER = os.getenv("STATIC_FOLDER", str(pathlib.Path(__file__).parent.absolute() / "statics"))
+    STATIC_URL_PATH = '/statics'
+
+    STATIC_URL = f"{PROTOCOL}://{HOST}:{PORT}{STATIC_URL_PATH}/"
+    if not os.path.exists(STATIC_FOLDER):
+        os.mkdir(STATIC_FOLDER)

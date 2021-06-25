@@ -1,9 +1,9 @@
 from pathlib import Path
 
-from flask_jwt_extended import jwt_required
 from flask_restful import fields
 from flask_restful_swagger_3 import swagger, Schema
 
+from src.config import Configuration
 from src.controllers.utils.BaseController import (
     BaseListController, BaseController
 )
@@ -20,7 +20,9 @@ class FilterResponseModel(Schema):
         'bad_words': {'type': 'array', 'items': {'type': 'string'},
                       'description': 'Список слов, не используемых для поиска этого фильтра'},
         'coins_per_unit': {'type': 'integer',
-                           'description': 'Количество коинов за единицу сданного типа ресурса'}
+                           'description': 'Количество коинов за единицу сданного типа ресурса'},
+        'image': {'type': 'string',
+                  'description': 'Ссылка на изображение'}
     }
 
 
@@ -30,7 +32,8 @@ resource_fields_ = {
     'var_name': fields.String,
     'key_words': fields.List(fields.String),
     'bad_words': fields.List(fields.String),
-    "coins_per_unit": fields.Float
+    "coins_per_unit": fields.Float,
+    "image": fields.String(attribute=lambda x: f'{Configuration.STATIC_URL}{x.image}' if x.image else None),
 }
 
 

@@ -5,7 +5,8 @@ from flask_swagger_ui import get_swaggerui_blueprint
 
 import src.services.Database as Database
 from src.config import Configuration
-from src.controllers.filter.admin import FilterController, FilterControllerList
+from src.controllers.filter.filter_admin import FilterController, FilterControllerList
+from src.controllers.filter.filter_admin_image_update import FilterImageUploaderController
 from src.controllers.news.news_admin import NewsListController, NewsController
 from src.controllers.partner.admin import PartnerController, PartnerListController
 from src.controllers.product.product_admin import ProductController, ProductListController
@@ -17,19 +18,22 @@ from src.controllers.test.admin.question_admin_controller import QuestionListCon
 from src.controllers.test.admin.test_admin_controller import TestListController, TestController
 from src.middleware.collect_statistics import Collector
 from src.send_email import mail
+from src.utils.custom_swagger import CustomApi
 
-
-app = Flask(__name__, static_url_path="/statics", static_folder='statics')
+app = Flask(__name__,
+            static_url_path=Configuration.STATIC_URL_PATH,
+            static_folder=Configuration.STATIC_FOLDER)
 app.config.from_object(Configuration)
 app.wsgi_app = Collector(app.wsgi_app)
 Database.global_connect()
-api = Api(app, title='EcoApi for Admins')
+api = CustomApi(app, title='EcoApi for Admins')
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 mail.init_app(app)
 
 # Filters and Recycle Points
 api.add_resource(FilterControllerList, '/admin/filters')
+api.add_resource(FilterImageUploaderController, '/admin/filters/<filter_id>/images')
 api.add_resource(FilterController, '/admin/filters/<filter_id>')
 api.add_resource(PartnerListController, '/admin/partners')
 api.add_resource(PartnerController, '/admin/partners/<partner_id>')

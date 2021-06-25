@@ -1,9 +1,9 @@
 from pathlib import Path
 
-import werkzeug
 from flask_restful import reqparse, fields
 from flask_restful_swagger_3 import swagger, Schema
 
+from src.config import Configuration
 from src.controllers.utils.BaseController import (
     BaseListController, BaseController
 )
@@ -17,9 +17,6 @@ post_parser.add_argument('key_words', type=str, action='append', required=True,
 post_parser.add_argument('bad_words', type=str, action='append', required=True,
                          help='Спиок слов, не используемых для поиска этого фильтра')
 post_parser.add_argument('coins_per_unit', type=int, help='Количество коинов за единицу сданного типа ресурса')
-
-parser_img = post_parser.copy()
-parser_img.add_argument('image', type=werkzeug.datastructures.FileStorage, location='files')
 
 
 class FilterResponseModel(Schema):
@@ -42,7 +39,8 @@ resource_fields_ = {
     'var_name': fields.String,
     'key_words': fields.List(fields.String),
     'bad_words': fields.List(fields.String),
-    "coins_per_unit": fields.Float
+    "coins_per_unit": fields.Float,
+    "image": fields.String(attribute=lambda x: f'{Configuration.STATIC_URL}{x.image}' if x.image else None),
 }
 
 

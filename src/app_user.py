@@ -6,7 +6,7 @@ from flask_swagger_ui import get_swaggerui_blueprint
 
 import src.services.Database as Database
 from src.config import Configuration
-from src.controllers.filter.user import FilterController, FilterControllerList
+from src.controllers.filter.filter_user import FilterController, FilterControllerList
 from src.controllers.news.news_user import NewsListController, NewsController
 from src.controllers.product.product_user import ProductController, ProductListController
 from src.controllers.product.buy_product_user import BuyProductController
@@ -28,7 +28,9 @@ from src.controllers.user.user_info import UserInfoController
 from src.middleware.collect_statistics import Collector
 from src.send_email import mail
 
-app = Flask(__name__, static_url_path="/statics", static_folder='statics')
+app = Flask(__name__,
+            static_url_path=Configuration.STATIC_URL_PATH,
+            static_folder=Configuration.STATIC_FOLDER)
 app.config.from_object(Configuration)
 app.wsgi_app = Collector(app.wsgi_app)
 jwt = JWTManager(app)

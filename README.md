@@ -6,7 +6,7 @@
    Поднимается на 5000 порту.
 2) eco_api_stage - пользовательское апи. Используется для демонстрации
    нового функционала, который может сломать механизм работы со старым апи.
-   Поднимается на 700 порту. 
+   Поднимается на 7000 порту. 
 3) eco_api_admin - админское апи. Используется на проде. Поднимается на
    8000 порту.
 
@@ -25,30 +25,12 @@
     ```
 
 #### Запуск
-- запуск mongo
-  ```bash
-  docker run -d -p 27017-27019:27017-27019 --name mongodb mongo
-  ```
+
 - запустить api
   ```bash
-  docker run -d --name eco_api -p 5000:5000  intsynko1/eco_api:{tag} 
+  docker run -d --name eco_api -p 5000:5000 -v ~/<путь до папки статики на сервере>/statics:/statics --env HOST='<host сервера>' --env STATIC_FOLDER='/statics'  intsynko1/eco_api:{tag} 
   ```
-- чтобы контейнеры могли общаться:
-  ```bash
-  docker network create eco-net
-  docker network connect eco-net mongodb
-  docker network connect eco-net eco_api
-  ```
-  Так же можно было заранее создать сеть и при развертывании контейнера 
-  прописать её в параметрах: `--net eco-net`
-- посмотреть настройки сети
-  ```bash
-  docker network inspect eco-net
-  ```
-- проверить доступ с контейнера eco_api до mongodb
-  ```bash
-  docker exec -ti eco_api ping mongodb
-  ```
+
 
 ### Обновление
 - Собрать новый контейнер:
