@@ -1,8 +1,5 @@
 from ast import literal_eval
-from pathlib import Path
 
-from bson import ObjectId
-from flask_jwt_extended import jwt_required
 from flask_restful import reqparse, fields, marshal
 from flask_restful_swagger_3 import swagger, Schema
 
@@ -32,6 +29,7 @@ class RecPointResponseModel(Schema):
         'coords': {'type': 'array', 'items': {'type': 'float'}, 'description': 'Координаты пункта'},
         'description': {'type': 'string', 'description': 'Описание пункта'},
         'getBonus': {'type': 'boolean', 'description': 'Выплачивает ли пункт приема экокоины'},
+        'images': {'type': 'string', 'description': 'Ссылки на изображения'},
     }
 
 
@@ -49,6 +47,7 @@ resource_fields_ = {
     'coords': fields.List(fields.Float, attribute='coords.coordinates'),
     'description': fields.String,
     'getBonus': fields.Boolean(attribute=lambda x: getattr(x, 'getBonus', False)),
+    "images": fields.List(custom_fields.ImageLink),
 }
 
 
