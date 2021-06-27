@@ -15,4 +15,7 @@ class Dict(fields.Raw):
 
 class ImageLink(fields.String):
     def format(self, value):
-        return (Configuration.STATIC_URL + str(value)) if value is not None else None
+        if value:
+            if str(value).startswith('http'):
+                return str(value)
+            return Configuration.STATIC_URL + str(value)

@@ -1,5 +1,4 @@
 from ast import literal_eval
-from pathlib import Path
 
 from flask_restful import reqparse, fields, marshal
 from flask_restful_swagger_3 import swagger, Schema
@@ -12,6 +11,9 @@ get_parser = reqparse.RequestParser()
 get_parser.add_argument('coords', type=literal_eval, required=False, location='args')
 get_parser.add_argument('filters', type=literal_eval, required=False, location='args')
 get_parser.add_argument('payback_type', type=str, required=False, location='args')
+# TODO Сделать параметры обязательными
+get_parser.add_argument('position', type=literal_eval, location='args')
+get_parser.add_argument('radius', type=int, location='args')
 
 
 post_parser = reqparse.RequestParser()
@@ -28,6 +30,7 @@ post_parser.add_argument('accept_types', type=str, action='append', required=Fal
 post_parser.add_argument('coords', type=float, action='append', required=False)
 post_parser.add_argument('description', type=str, required=False)
 post_parser.add_argument('getBonus', type=bool, required=False)
+post_parser.add_argument('external_images', type=str, required=False)
 
 
 class RecPointResponseModel(Schema):
@@ -64,7 +67,7 @@ resource_fields_ = {
     'coords': fields.List(fields.Float, attribute='coords.coordinates'),
     'description': fields.String,
     'getBonus': fields.Boolean(attribute=lambda x: getattr(x, 'getBonus', False)),
-    "images": fields.List(custom_fields.ImageLink),
+    "images": fields.List(custom_fields.ImageLink, attribute=lambda x: x.images if x.images else x.external_images),
 }
 
 
@@ -73,21 +76,30 @@ class RecPointListController(BaseListController):
     model = RecPoint
     name = 'RecPoint'
     parser = post_parser
-    img_field = 'images'
-    img_field_type = list
-    img_path = Path('./src/statics/recpoints')
 
     @swagger.tags('Recycle Points')
     @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Список пунктов приема',
                       description='-')
-    @swagger.parameter(_in='query', name='coords', description='Ограничивающий полгион',
+    # TODO: удалить параметр
+    @swagger.parameter(_in='query', name='coords', description='Ограничивающий полгион', deprecated=True,
                        example='[12, 23], [34, 34], [34, 45]', schema={'type': 'string'})
     @swagger.parameter(_in='query', name='filters', description='Тип принимаемого фильтра (вида отхода)',
                        schema={'type': 'string'})
     @swagger.parameter(_in='query', name='payback_type', description='Тип оплаты',
                        example='free', schema={'type': 'string'})
+    @swagger.parameter(_in='query', name='position', description='Координаты, относительно которых будут искаться ПП',
+                       example='[55.799779, 49.1319283]', required=True, schema={'type': 'string'})
+    @swagger.parameter(_in='query', name='radius', description='Радиус внутри которого будут искаться ПП',
+                       example=10, required=True, schema={'type': 'integer'})
     def get(self):
         args = get_parser.parse_args()
+        if args.get('position') is None:
+            args['position'] = [55.79856, 49.1035273]
+        if args.get('radius') is None:
+            args['radius'] = 10
+        else:
+            if args.get('radius') > 20:
+                return {'error': 'too long radius'}, 400
         points = RecPoint.read_(**args)
         return marshal(list(points), resource_fields_)
 
@@ -96,7 +108,7 @@ class RecPointListController(BaseListController):
                       description='-')
     @swagger.reqparser(name='RecPointCreateModel', parser=post_parser)
     def post(self):
-        return super().post_(external_images=["sds"])
+        return super().post_()
 
 
 class RecPointController(BaseController):

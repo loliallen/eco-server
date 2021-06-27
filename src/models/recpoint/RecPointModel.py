@@ -23,6 +23,8 @@ class RecPoint(Document, BaseCrud):
     coords = PointField(auto_index=False, reqired=True)
     accept_types = ListField(ReferenceField(Filter), required=False)
     work_time = DictField(required=True)
+    is_approved = BooleanField()
+    author = ReferenceField('User')
 
     meta = {
         "db_alias": "core",
@@ -32,7 +34,7 @@ class RecPoint(Document, BaseCrud):
     }
 
     @classmethod
-    def read_(cls, coords: list = None, filters: list = None, rec_type: str = None,
+    def read_(cls, position: list, radius: int, coords: list = None, filters: list = None, rec_type: str = None,
               payback_type: str = None) -> QuerySet:
         """
         Custom read for RecPoints with filters
@@ -57,6 +59,11 @@ class RecPoint(Document, BaseCrud):
             coords = list(coords)
             coords.append(coords[0])  # замыкаем полигон
             rec_points = rec_points.filter(coords__geo_within=[coords])
+
+        radian = (radius * 10) / 6378.1
+        rec_points = rec_points.filter(coords__geo_within_center=[position, radian])
+        rec_points = rec_points.filter(is_approved=True)
+
         return rec_points
 
     @classmethod
