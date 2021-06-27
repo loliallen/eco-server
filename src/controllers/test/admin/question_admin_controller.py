@@ -1,6 +1,7 @@
-from flask_restful import reqparse, fields, marshal
+from flask_restful import reqparse, fields
 from flask_restful_swagger_3 import swagger, Schema
 
+from src.controllers.utils import fields as custom_fields
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.test.QuestionModel import Question, QUESTION_TYPE_CHOICES
 
@@ -21,7 +22,8 @@ resource_fields_ = {
     'answers_variants': fields.List(fields.String),
     'correct_answer': fields.String,
     'description': fields.String,
-    'point_for_answer': fields.Integer
+    'point_for_answer': fields.Integer,
+    'image': custom_fields.ImageLink,
 }
 
 
@@ -34,7 +36,8 @@ class QuestionResponseModel(Schema):
         'answers_variants': {'type': 'array', 'items': {'type': 'string'}},
         'correct_answer': {'type': 'string'},
         'description':  {'type': 'string'},
-        'point_for_answer': {'type': 'integer'}
+        'point_for_answer': {'type': 'integer'},
+        'image': {'type': 'string'},
     }
 
 

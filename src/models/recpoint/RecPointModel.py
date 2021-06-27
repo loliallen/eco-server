@@ -1,11 +1,7 @@
-from pathlib import Path
-
 from mongoengine import Document, StringField, ListField, ReferenceField, DictField, BooleanField, PointField, QuerySet
 
 from src.models.filter.FilterModel import Filter
-from src.models.partner.PartnerModel import Partner
 from src.models.utils.BaseCrud import BaseCrud
-
 
 RECEPTION_TYPE_CHOICES = ('recycle', 'utilisation', 'charity')
 PAYBACK_TYPE_CHOICES = ('free', 'paid', 'partner')
@@ -17,15 +13,17 @@ class RecPoint(Document, BaseCrud):
     name = StringField(required=True, default='Пункт приема')
     description = StringField()
     images = ListField(StringField())
+    external_images = ListField(StringField())
     getBonus = BooleanField()
     address = StringField(requrend=True)
-    partner = ReferenceField(Partner, required=False)
+    partner = ReferenceField('Partner', required=False)
     reception_type = StringField(choices=RECEPTION_TYPE_CHOICES)
     payback_type = StringField(choices=PAYBACK_TYPE_CHOICES)
     contacts = ListField()
     coords = PointField(auto_index=False, reqired=True)
     accept_types = ListField(ReferenceField(Filter), required=False)
     work_time = DictField(required=True)
+
     meta = {
         "db_alias": "core",
         "collection": "rec_points",
@@ -34,7 +32,8 @@ class RecPoint(Document, BaseCrud):
     }
 
     @classmethod
-    def read_(cls, coords: list = None, filters: list = None, rec_type: str = None, payback_type: str = None) -> QuerySet:
+    def read_(cls, coords: list = None, filters: list = None, rec_type: str = None,
+              payback_type: str = None) -> QuerySet:
         """
         Custom read for RecPoints with filters
 

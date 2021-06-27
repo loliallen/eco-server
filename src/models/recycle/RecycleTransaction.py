@@ -22,7 +22,7 @@ class RecycleTransaction(Document, BaseCrud):
     items = ListField(EmbeddedDocumentField(RecycleTransactionItem))
     filter_type = ReferenceField('Filter')
     admin_pp = ReferenceField('User')
-    image = StringField()
+    images = ListField(StringField())
     amount = FloatField(default=0.0)  # Количество сданного материала
     reward = IntField(default=0)  # Количество коинов-вознаграждения
     status = StringField(choices=STATUS_CHOICES, default=Status.idle.value)  # статус подтверждения

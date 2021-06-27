@@ -1,6 +1,7 @@
 from flask_restful import reqparse, fields
 from flask_restful_swagger_3 import swagger, Schema
 
+from src.controllers.utils import fields as custom_fields
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.news.NewsModel import News
 
@@ -19,7 +20,8 @@ class NewsResponseModel(Schema):
         'title': {'type': 'string'},
         'text': {'type': 'string'},
         'pub_date': {'type': 'string'},
-        'is_advice': {'type': 'boolean'}
+        'is_advice': {'type': 'boolean'},
+        'image': {'type': 'string'},
     }
 
 
@@ -29,6 +31,7 @@ resource_fields_ = {
     'text': fields.String,
     'pub_date': fields.DateTime('iso8601'),
     'is_advice': fields.Boolean,
+    'image': custom_fields.ImageLink
  }
 
 
@@ -44,6 +47,7 @@ class NewsListController(BaseListController):
     @swagger.parameter(_in='query', name='only_advice', description='Только советы', schema={'type': 'boolean'})
     def get(self):
         args = get_parser.parse_args()
+        args = {k: v for k, v in args.items() if v is not None}
         return super().get_(**args)
 
     @swagger.tags('News')

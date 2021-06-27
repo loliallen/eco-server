@@ -6,6 +6,7 @@ from flask_restful_swagger_3 import swagger, Schema
 
 from src.config import Configuration
 from src.controllers.utils.BaseController import BaseListController, BaseController
+import src.controllers.utils.fields as custom_fields
 from src.models.filter.FilterModel import Filter
 from src.models.recycle.RecycleTransaction import RecycleTransaction, RecycleTransactionItem
 from src.models.transaction.AdmissionTransaction import AdmissionTransaction, Status, ActionType
@@ -75,7 +76,9 @@ resource_fields_ = {
     })),
     'reward': fields.Integer,
     'status': fields.String,
-    'date': fields.DateTime('iso8601')
+    'date': fields.DateTime('iso8601'),
+    'images': fields.List(custom_fields.ImageLink),
+
 }
 
 
@@ -92,7 +95,11 @@ class RecycleTransactionListController(BaseListController):
                       summary='Список транзакций сдачи отходов',
                       description='-')
     def get(self):
-        return super().get_(from_=User.get_user_from_request())
+        user = User.get_user_from_request()
+        if user.role == "user":
+            return super().get_(from_=user)
+        else:
+            return super().get_(admin_pp=user)
 
     @jwt_required()
     @role_need([Roles.admin_pp])
@@ -108,6 +115,8 @@ class RecycleTransactionListController(BaseListController):
         user = User.objects.filter(token=args.pop('user_token')).first()
         if not user:
             return {'error': 'user by token not found'}, 400
+        if not user.role == "user":
+            return {'error': 'admin_pp cant to recycle'}, 403
 
         items = {i['filter_type']: i['amount'] for i in args['items']}
         filters_ids = list(items.keys())

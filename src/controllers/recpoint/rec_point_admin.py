@@ -45,6 +45,7 @@ class RecPointResponseModel(Schema):
         'coords': {'type': 'array', 'items': {'type': 'float'}},
         'description': {'type': 'string'},
         'getBonus': {'type': 'boolean'},
+        'images': {'type': 'string', 'description': 'Ссылки на изображения'}
     }
 
 
@@ -63,6 +64,7 @@ resource_fields_ = {
     'coords': fields.List(fields.Float, attribute='coords.coordinates'),
     'description': fields.String,
     'getBonus': fields.Boolean(attribute=lambda x: getattr(x, 'getBonus', False)),
+    "images": fields.List(custom_fields.ImageLink),
 }
 
 
@@ -94,7 +96,7 @@ class RecPointListController(BaseListController):
                       description='-')
     @swagger.reqparser(name='RecPointCreateModel', parser=post_parser)
     def post(self):
-        return super().post_()
+        return super().post_(external_images=["sds"])
 
 
 class RecPointController(BaseController):

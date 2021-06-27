@@ -1,16 +1,16 @@
 from datetime import datetime
 
 from flask_jwt_extended import get_jwt_identity, jwt_required
-from flask_restful import reqparse, fields, marshal
+from flask_restful import fields, marshal
 from flask_restful_swagger_3 import swagger, Schema
-from flask import request
 
+from src.controllers.utils import fields as custom_fields
+from src.config import Configuration
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.test.QuestionModel import Question, QUESTION_TYPE_CHOICES
 from src.models.test.Test import Test
 from src.models.test.UsersAttemtps import UserAttempts
 from src.models.user.UserModel import User
-from src.config import Configuration
 
 resource_attempt_fields = {
     'id': fields.String,
@@ -32,7 +32,8 @@ class UserAttemptResponseModel(Schema):
         'test_name': {'type': 'string', 'description': 'Имя теста'},
         'points': {'type': 'integer', 'description': 'Количество набранных баллов'},
         'points_threshold': {'type': 'integer', 'description': 'Количество баллов для успешного прохождения'},
-        'is_success': {'type': 'boolean', 'description': 'Успешность попытки'}
+        'is_success': {'type': 'boolean', 'description': 'Успешность попытки'},
+        'image': {'type': 'string', 'description': 'Ссылка на изображение'}
     }
 
 
@@ -42,6 +43,7 @@ resource_questions_fields = {
     'question_type': fields.String,
     'answers_variants': fields.List(fields.String),
     'point_for_answer': fields.Integer,
+    'image': custom_fields.ImageLink,
 }
 
 

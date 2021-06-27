@@ -21,11 +21,10 @@ class User(Document, UserMixin, BaseCrud, Atomic):
     confirmed_on = DateTimeField()
     eco_coins = IntField(default=0)  # экокоины, на которые можно покупать товары
     freeze_eco_coins = IntField(default=0)  # замороженные экокоины
-    eco_coins_is_avalible = BooleanField(default=False)  # TODO: проверить, используется ли
     code = IntField(default=generate_code)  # код проверки, который отправляется на почту
     qrcode = StringField()  # адрес хранения qrcode изображения
     invite_by_user = ReferenceField('User')
-    role = StringField()
+    role = StringField(default="user")  # TODO: сделать энамом
     attached_rec_point = ReferenceField('RecPoint')
 
     token = StringField(default=random_string)  # токен, через который совершаются покупки

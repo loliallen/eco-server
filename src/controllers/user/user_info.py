@@ -2,6 +2,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_restful import fields, marshal
 from flask_restful_swagger_3 import swagger, Schema, Resource
 
+from src.controllers.utils import fields as custom_fields
 from src.models.user.UserModel import User
 
 
@@ -17,6 +18,7 @@ class UserInfoResponseModel(Schema):
         'invite_code': {'type': 'string', 'description': 'Код для приглашения друга'},
         'role': {'type': 'string', 'description': 'Роль'},
         'attached_rec_point_id': {'type': 'string', 'description': 'Прикрепленный пункт приема (только для админов ПП)'},
+        'image': {'type': 'string', 'description': 'Ссылка на изображение'},
     }
 
 
@@ -30,7 +32,8 @@ resource_fields_ = {
     'token': fields.String,
     'invite_code': fields.String(attribute='token'),
     'role': fields.String,
-    'attached_rec_point_id': fields.String(attribute='attached_rec_point.id')
+    'attached_rec_point_id': fields.String(attribute='attached_rec_point.id'),
+    'image': custom_fields.ImageLink,
 }
 
 

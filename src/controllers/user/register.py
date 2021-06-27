@@ -46,8 +46,6 @@ class RegisterController(BaseListController):
     model = User
     name = 'User'
     parser = post_parser_img
-    img_field = 'image'
-    img_path = Path('./src/statics/users')
 
     @swagger.tags('User')
     @swagger.response(response_code=201, schema=RegisterResponseModel, summary='Зарегистрироваться',

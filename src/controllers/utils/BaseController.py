@@ -1,9 +1,5 @@
-import os
-import uuid
 from ast import literal_eval
 
-import werkzeug
-from flask import request
 from flask_restful import marshal
 from flask_restful_swagger_3 import Resource
 from mongoengine import NotUniqueError
@@ -65,9 +61,6 @@ class BaseListController(Resource):
     model = None
     name = 'Resource'
     parser = None
-    img_field = None
-    img_field_type = str
-    img_path = None
 
     def get_(self, **kwargs):
         objs = self.model.read_(**kwargs)
@@ -81,11 +74,6 @@ class BaseListController(Resource):
         return marshal(obj, self.resource_fields)
 
     def _create_obj(self, **kwargs):
-        if self.img_field and self.img_path:
-            if self.img_field_type is str:
-                self.save_img(kwargs)
-            if self.img_field_type is list:
-                self.save_imgs(kwargs)
         try:
             obj = self.model.create_(**kwargs)
         except DuplicateKeyError as ex:
@@ -93,27 +81,3 @@ class BaseListController(Resource):
         except NotUniqueError as ex:
             return None, ({"message": handle_unique_error(ex)}, 400)
         return obj, None
-
-    def save_img(self, args):
-        file = args.get('image')
-        if file:
-            filename = werkzeug.utils.secure_filename(file.filename)
-            path = self.img_path / filename
-            file.save(path.resolve())
-            args[self.img_field] = filename
-
-    def save_imgs(self, args):
-        directory = str(uuid.uuid1())
-        directory_path = self.img_path
-        images = request.files.getlist('images')
-        os.makedirs((directory_path / directory).resolve())
-        imgs = []
-        # saving images
-        for (i, image) in enumerate(images):
-            filename = werkzeug.utils.secure_filename(image.filename)
-            relp = directory + "/" + str(i) + "." + filename.split('.').pop()
-            file_path = directory_path / relp
-            image.save(file_path.resolve())
-            imgs.append(relp)
-        if len(imgs) > 0:
-            args[self.img_field] = imgs

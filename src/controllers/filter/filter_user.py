@@ -3,7 +3,7 @@ from pathlib import Path
 from flask_restful import fields
 from flask_restful_swagger_3 import swagger, Schema
 
-from src.config import Configuration
+import src.controllers.utils.fields as custom_fields
 from src.controllers.utils.BaseController import (
     BaseListController, BaseController
 )
@@ -33,7 +33,7 @@ resource_fields_ = {
     'key_words': fields.List(fields.String),
     'bad_words': fields.List(fields.String),
     "coins_per_unit": fields.Float,
-    "image": fields.String(attribute=lambda x: f'{Configuration.STATIC_URL}{x.image}' if x.image else None),
+    "image": custom_fields.ImageLink,
 }
 
 

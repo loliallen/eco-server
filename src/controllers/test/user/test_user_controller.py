@@ -49,5 +49,5 @@ class TestController(BaseController):
     @swagger.tags('Tests')
     @swagger.response(response_code=200, summary='Тест', description='-',
                       schema=TestResponseModel)
-    def get(self, question_id):
-        return super().get_(question_id)
+    def get(self, test_id):
+        return super().get_(test_id)
