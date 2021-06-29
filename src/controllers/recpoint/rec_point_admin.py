@@ -3,17 +3,19 @@ from ast import literal_eval
 from flask_restful import reqparse, fields, marshal
 from flask_restful_swagger_3 import swagger, Schema
 
+from src.config import Configuration
 from src.controllers.utils import fields as custom_fields
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.recpoint.RecPointModel import RecPoint, PAYBACK_TYPE_CHOICES, RECEPTION_TYPE_CHOICES
+from src.models.utils.enums import STATUS_CHOICES
 
 get_parser = reqparse.RequestParser()
-get_parser.add_argument('coords', type=literal_eval, required=False, location='args')
 get_parser.add_argument('filters', type=literal_eval, required=False, location='args')
 get_parser.add_argument('payback_type', type=str, required=False, location='args')
-# TODO Сделать параметры обязательными
-get_parser.add_argument('position', type=literal_eval, location='args')
-get_parser.add_argument('radius', type=int, location='args')
+get_parser.add_argument('reception_type', type=str, required=False, location='args')
+get_parser.add_argument('position', type=literal_eval, required=True, location='args')
+get_parser.add_argument('radius', type=int, required=True, location='args')
+get_parser.add_argument('status', type=str, required=False, location='args')
 
 
 post_parser = reqparse.RequestParser()
@@ -30,7 +32,7 @@ post_parser.add_argument('accept_types', type=str, action='append', required=Fal
 post_parser.add_argument('coords', type=float, action='append', required=False)
 post_parser.add_argument('description', type=str, required=False)
 post_parser.add_argument('getBonus', type=bool, required=False)
-post_parser.add_argument('external_images', type=str, required=False)
+post_parser.add_argument('external_images', type=str, action='append', required=False)
 
 
 class RecPointResponseModel(Schema):
@@ -68,6 +70,7 @@ resource_fields_ = {
     'description': fields.String,
     'getBonus': fields.Boolean(attribute=lambda x: getattr(x, 'getBonus', False)),
     "images": fields.List(custom_fields.ImageLink, attribute=lambda x: x.images if x.images else x.external_images),
+    "approve_status": fields.String,
 }
 
 
@@ -80,27 +83,23 @@ class RecPointListController(BaseListController):
     @swagger.tags('Recycle Points')
     @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Список пунктов приема',
                       description='-')
-    # TODO: удалить параметр
-    @swagger.parameter(_in='query', name='coords', description='Ограничивающий полгион', deprecated=True,
-                       example='[12, 23], [34, 34], [34, 45]', schema={'type': 'string'})
     @swagger.parameter(_in='query', name='filters', description='Тип принимаемого фильтра (вида отхода)',
                        schema={'type': 'string'})
     @swagger.parameter(_in='query', name='payback_type', description='Тип оплаты',
-                       example='free', schema={'type': 'string'})
+                       example='free', schema={'type': 'string', 'enum': PAYBACK_TYPE_CHOICES})
+    @swagger.parameter(_in='query', name='reception_type', description='Тип переработки',
+                       example='free', schema={'type': 'string', 'enum': RECEPTION_TYPE_CHOICES})
     @swagger.parameter(_in='query', name='position', description='Координаты, относительно которых будут искаться ПП',
                        example='[55.799779, 49.1319283]', required=True, schema={'type': 'string'})
     @swagger.parameter(_in='query', name='radius', description='Радиус внутри которого будут искаться ПП',
                        example=10, required=True, schema={'type': 'integer'})
+    @swagger.parameter(_in='query', name='status', description='Статус подтверждения',
+                       required=False, schema={'type': 'string', 'enum': STATUS_CHOICES})
     def get(self):
         args = get_parser.parse_args()
-        if args.get('position') is None:
-            args['position'] = [55.79856, 49.1035273]
-        if args.get('radius') is None:
-            args['radius'] = 10
-        else:
-            if args.get('radius') > 20:
-                return {'error': 'too long radius'}, 400
-        points = RecPoint.read_(**args)
+        # if args.get('radius') > Configuration.MAX_RADIUS_REC_POINTS_SHOW:
+        #     return {'error': 'too long radius'}, 400
+        points = RecPoint.read(**args)
         return marshal(list(points), resource_fields_)
 
     @swagger.tags('Recycle Points')
@@ -108,6 +107,7 @@ class RecPointListController(BaseListController):
                       description='-')
     @swagger.reqparser(name='RecPointCreateModel', parser=post_parser)
     def post(self):
+        # TODO: добавить автора
         return super().post_()
 
 

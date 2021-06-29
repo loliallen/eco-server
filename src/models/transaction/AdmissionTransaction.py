@@ -4,8 +4,10 @@ from datetime import datetime
 from mongoengine import Document, ReferenceField, FloatField, StringField, IntField, GenericReferenceField, \
     DateTimeField
 
+from src.models.recpoint.RecPointModel import STATUS_CHOICES
 from src.models.user.UserModel import User
 from src.models.utils.BaseCrud import BaseCrud
+from src.models.utils.enums import Status
 
 
 class ActionType(Enum):
@@ -14,14 +16,7 @@ class ActionType(Enum):
     feedback = 'feedback'
 
 
-class Status(Enum):
-    idle = 'idle'
-    confirmed = 'confimed'
-    dismissed = 'dismissed'
-
-
 ACTION_TYPE_CHOICES = ('recycle', 'invite', 'feedback')
-STATUS_CHOICES = ('idle', 'confimed', 'dismissed')
 
 
 class AdmissionTransaction(Document, BaseCrud):

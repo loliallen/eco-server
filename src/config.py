@@ -37,6 +37,7 @@ class Configuration:
     ECO_COINS_BY_INVITE = 15
     WEIGHT_RECYCLE_TO_NEED_APPROVE = 10
     TEST_FREEZE_TIME = datetime.timedelta(days=15)
+    MAX_RADIUS_REC_POINTS_SHOW = 50
 
     STATIC_FOLDER = os.getenv("STATIC_FOLDER", str(pathlib.Path(__file__).parent.absolute() / "statics"))
     STATIC_URL_PATH = '/statics'

@@ -2,6 +2,8 @@ from mongoengine import Document, StringField, ListField, ReferenceField, DictFi
 
 from src.models.filter.FilterModel import Filter
 from src.models.utils.BaseCrud import BaseCrud
+from src.models.utils.enums import STATUS_CHOICES, Status
+
 
 RECEPTION_TYPE_CHOICES = ('recycle', 'utilisation', 'charity')
 PAYBACK_TYPE_CHOICES = ('free', 'paid', 'partner')
@@ -23,7 +25,7 @@ class RecPoint(Document, BaseCrud):
     coords = PointField(auto_index=False, reqired=True)
     accept_types = ListField(ReferenceField(Filter), required=False)
     work_time = DictField(required=True)
-    is_approved = BooleanField()
+    approve_status = StringField(choices=STATUS_CHOICES, default=Status.idle.value)
     author = ReferenceField('User')
 
     meta = {
@@ -34,35 +36,23 @@ class RecPoint(Document, BaseCrud):
     }
 
     @classmethod
-    def read_(cls, position: list, radius: int, coords: list = None, filters: list = None, rec_type: str = None,
-              payback_type: str = None) -> QuerySet:
+    def read(cls, position: list, radius: int, filters: list = None, reception_type: str = None,
+             payback_type: str = None, status: str = True) -> QuerySet:
         """
         Custom read for RecPoints with filters
-
-        Args:
-            coords: list of points [[0, 0], [12, 23], ...] is polygon
-            filters: list of filters ids
-            rec_type: rec_type name
-            payback_type: payback_type name
-
-        Returns: list of RecPoints in json
         """
-        print(filters, coords)
         rec_points = RecPoint.objects
         if filters:
             rec_points = rec_points.filter(accept_types=filters)
-        if rec_type:
-            rec_points = rec_points.filter(reception_type=rec_type)
+        if reception_type:
+            rec_points = rec_points.filter(reception_type=reception_type)
         if payback_type:
             rec_points = rec_points.filter(payback_type=payback_type)
-        if coords:
-            coords = list(coords)
-            coords.append(coords[0])  # замыкаем полигон
-            rec_points = rec_points.filter(coords__geo_within=[coords])
 
         radian = (radius * 10) / 6378.1
         rec_points = rec_points.filter(coords__geo_within_center=[position, radian])
-        rec_points = rec_points.filter(is_approved=True)
+        if status:
+            rec_points = rec_points.filter(approve_status=status)
 
         return rec_points
 
