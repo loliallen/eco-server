@@ -33,6 +33,7 @@ post_parser.add_argument('coords', type=float, action='append', required=False)
 post_parser.add_argument('description', type=str, required=False)
 post_parser.add_argument('getBonus', type=bool, required=False)
 post_parser.add_argument('external_images', type=str, action='append', required=False)
+post_parser.add_argument('approve_status', type=str, required=False)
 
 
 class RecPointResponseModel(Schema):
@@ -69,7 +70,8 @@ resource_fields_ = {
     'coords': fields.List(fields.Float, attribute='coords.coordinates'),
     'description': fields.String,
     'getBonus': fields.Boolean(attribute=lambda x: getattr(x, 'getBonus', False)),
-    "images": fields.List(custom_fields.ImageLink, attribute=lambda x: x.images if x.images else x.external_images),
+    "images": fields.List(custom_fields.ImageLink),
+    "external_images": fields.List(custom_fields.ImageLink),
     "approve_status": fields.String,
 }
 
@@ -89,6 +91,7 @@ class RecPointListController(BaseListController):
                        example='free', schema={'type': 'string', 'enum': PAYBACK_TYPE_CHOICES})
     @swagger.parameter(_in='query', name='reception_type', description='Тип переработки',
                        example='free', schema={'type': 'string', 'enum': RECEPTION_TYPE_CHOICES})
+    # TODO: переделать на пагинацию
     @swagger.parameter(_in='query', name='position', description='Координаты, относительно которых будут искаться ПП',
                        example='[55.799779, 49.1319283]', required=True, schema={'type': 'string'})
     @swagger.parameter(_in='query', name='radius', description='Радиус внутри которого будут искаться ПП',

@@ -3,8 +3,8 @@ from enum import Enum
 
 class Status(Enum):
     idle = 'idle'
-    confirmed = 'confimed'
+    confirmed = 'confirmed'
     dismissed = 'dismissed'
 
 
-STATUS_CHOICES = ('idle', 'confimed', 'dismissed')
+STATUS_CHOICES = ('idle', 'confirmed', 'dismissed')

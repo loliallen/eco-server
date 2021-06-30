@@ -1,58 +1,52 @@
-from ast import literal_eval
+from flask_jwt_extended import jwt_required
+from flask_restful import reqparse
+from flask_restful_swagger_3 import swagger
 
-from flask_restful import reqparse, fields
+from src.controllers.recpoint.rec_point_user import RecPointResponseModel
+from src.controllers.recpoint.rec_point_user import resource_fields_
+from src.controllers.utils.BaseController import BaseListController
+from src.models.recpoint.RecPointModel import RecPoint, RECEPTION_TYPE_CHOICES, PAYBACK_TYPE_CHOICES
+from src.models.user.UserModel import User
 
-from src.controllers.utils import fields as custom_fields
-from src.controllers.utils.BaseController import BaseListController, BaseController
-from src.models.recpoint.RecPointOfferModel import RecPointOffer
 
 post_parser = reqparse.RequestParser()
-post_parser.add_argument('address', type=str, required=True, location='form')
-post_parser.add_argument('partner', type=str, required=True, location='form')
-post_parser.add_argument('payback_type', type=str, required=True, location='form',
-                         choices=('free', 'paid', 'partner'))
-post_parser.add_argument('reception_type', type=str, required=True, location='form',
-                         choices=('recycle', 'utilisation', 'charity'))
-post_parser.add_argument('contacts', type=literal_eval, required=False, location='form')
-post_parser.add_argument('work_time', type=literal_eval, required=False, location='form')
-post_parser.add_argument('accept_types', type=literal_eval, required=False, location='form')
-post_parser.add_argument('coords', type=literal_eval, required=False, location='form')
-post_parser.add_argument('description', type=list, required=False, location='form')
-post_parser.add_argument('getBonus', type=bool, required=False, location='form')
+post_parser.add_argument('name', type=str, required=True)
+post_parser.add_argument('address', type=str, required=True)
+post_parser.add_argument('partner', type=str, required=True)
+post_parser.add_argument('payback_type', type=str, required=True,
+                         choices=PAYBACK_TYPE_CHOICES)
+post_parser.add_argument('reception_type', type=str, required=True,
+                         choices=RECEPTION_TYPE_CHOICES)
+post_parser.add_argument('contacts', type=str, action='append', required=False)
+post_parser.add_argument('work_time', type=dict, required=True)
+post_parser.add_argument('accept_types', type=str, action='append', required=False)
+post_parser.add_argument('coords', type=float, action='append', required=False)
+post_parser.add_argument('description', type=str, required=False)
+post_parser.add_argument('getBonus', type=bool, required=False)
+post_parser.add_argument('external_images', type=str, action='append', required=False)
 
 
-resource_fields_ = {
-    'id': fields.String,
-    'partner': fields.String,
-    'payback_type': fields.String,
-    'reception_type': fields.String,
-    'work_time': custom_fields.Dict,
-    'contacts': fields.List(fields.String),
-    'accept_types': fields.List(fields.String(attribute='name')),
-    'coords': fields.List(fields.Float(attribute='coords.coordinates')),
-    'description': fields.String,
-    'getBonus': fields.Boolean,
-}
-
-
-class RecPointListController(BaseListController):
+class RecOfferPointController(BaseListController):
     resource_fields = resource_fields_
-    model = RecPointOffer
-    name = 'RecPointOffer'
-    post_parser = post_parser
+    model = RecPoint
+    name = 'RecPoint'
+    parser = post_parser
 
+    @jwt_required()
+    @swagger.security(JWT=[])
+    @swagger.tags('Filters and Recycle Points')
+    @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Список моих предложений пункта приема',
+                      description='-')
     def get(self):
-        return super().get_()
+        user = User.get_user_from_request()
+        return super().get_(author=user)
 
+    @jwt_required()
+    @swagger.security(JWT=[])
+    @swagger.tags('Filters and Recycle Points')
+    @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Предложить новый пункт приема',
+                      description='-')
+    @swagger.reqparser(name='RecPointCreateModel', parser=post_parser)
     def post(self):
-        return super().post_()
-
-
-class RecPointController(BaseController):
-    resource_fields = resource_fields_
-    model = RecPointOffer
-    name = 'RecPointOffer'
-    post_parser = post_parser
-
-    def get(self, rec_point_id):
-        return super().get_(rec_point_id)
+        user = User.get_user_from_request()
+        return super().post_(author=user)

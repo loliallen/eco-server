@@ -10,6 +10,7 @@ from src.controllers.news.news_img_upload import NewsUserImageUploaderController
 from src.controllers.news.news_user import NewsListController, NewsController
 from src.controllers.product.product_user import ProductController, ProductListController
 from src.controllers.product.buy_product_user import BuyProductController
+from src.controllers.recpoint.offer_user import RecOfferPointController
 from src.controllers.recpoint.rec_point_user import RecPointController, RecPointListController
 from src.controllers.recycle.recycle_transaction_user import RecycleTransactionListController, \
     RecycleTransactionController
@@ -58,6 +59,7 @@ api.add_resource(FilterControllerList, '/api/filters')
 api.add_resource(FilterController, '/api/filters/<filter_id>')
 api.add_resource(RecPointListController, '/api/rec_points')
 api.add_resource(RecPointController, '/api/rec_points/<rec_point_id>')
+api.add_resource(RecOfferPointController, '/api/rec_offer')
 
 # Recycle
 api.add_resource(RecycleTransactionListController, '/api/recycle')

@@ -14,10 +14,13 @@ from src.controllers.product.product_item_admin import ProductItemController, Pr
 from src.controllers.product.buy_product_admin import BuyProductController, BuyProductListController
 from src.controllers.recpoint.rec_point_admin import RecPointController, RecPointListController
 from src.controllers.recpoint.rec_point_admin_img_update import RecPointImageUploaderController
+from src.controllers.recycle.recycle_transaction_admin import RecycleTransactionListController, RecycleTransactionController
 from src.controllers.test.admin.attempts_admin_controller import AdminAttemptsListController, AdminAttemptsController
 from src.controllers.test.admin.question_admin_controller import QuestionListController, QuestionController
 from src.controllers.test.admin.question_admin_img_uploader import QuestionImageUploaderController
 from src.controllers.test.admin.test_admin_controller import TestListController, TestController
+from src.controllers.transaction.transaction_admin import AdmissionTransactionListController, \
+    AdmissionTransactionTransactionController
 from src.middleware.collect_statistics import Collector
 from src.send_email import mail
 from src.utils.custom_swagger import CustomApi
@@ -43,6 +46,14 @@ api.add_resource(RecPointListController, '/admin/rec_points')
 api.add_resource(RecPointController, '/admin/rec_points/<rec_point_id>')
 api.add_resource(RecPointImageUploaderController, '/admin/rec_points/<rec_point_id>/images')
 
+
+# Recycle
+api.add_resource(RecycleTransactionListController, '/admin/recycle')
+api.add_resource(RecycleTransactionController, '/admin/recycle/<recycle_id>')
+
+# Transactions
+api.add_resource(AdmissionTransactionListController, '/api/transactions')
+api.add_resource(AdmissionTransactionTransactionController, '/api/transactions/<transaction_id>')
 
 # Products
 api.add_resource(ProductListController, '/admin/products')
