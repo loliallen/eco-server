@@ -24,11 +24,16 @@ class BaseCrud:
         if not obj:
             return None
         ref_fields = [k for k, v in cls._fields.items() if isinstance(v, ReferenceField)]
+        def process_value(value):
+            if isinstance(value, dict):
+                value = value['$oid']
+            return ObjectId(value)
+
         for field_name in ref_fields:
             value = updates.get(field_name)
             if value:
                 try:
-                    updates[field_name] = ObjectId(value)
+                    updates[field_name] = process_value(value)
                 except bson.errors.InvalidId:
                     raise FieldError(field_name, 'bad format')
         ref_list_fields = [k for k, v in cls._fields.items() if isinstance(v, ListField) and isinstance(v.field, ReferenceField)]
@@ -36,7 +41,7 @@ class BaseCrud:
             values = updates.get(field_name)
             if values:
                 try:
-                    updates[field_name] = [ObjectId(value) for value in values]
+                    updates[field_name] = [process_value(value) for value in values]
                 except bson.errors.InvalidId:
                     raise FieldError(field_name, 'bad format')
         obj.update(**updates)

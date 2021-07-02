@@ -71,11 +71,11 @@ def mark_files_request(is_list=False):
 
 post_parser_with_files = reqparse.RequestParser()
 post_parser_with_files.add_argument('files', type=werkzeug.datastructures.FileStorage,
-                                    required=True, action='append', location='files')
+                                    required=False, action='append', location='files')
 
 post_parser_with_file = reqparse.RequestParser()
 post_parser_with_file.add_argument('file', type=werkzeug.datastructures.FileStorage,
-                                    required=True, action='append', location='files')
+                                    required=False, action='append', location='files')
 
 
 class OkSchema(Schema):

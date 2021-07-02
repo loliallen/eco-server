@@ -13,6 +13,7 @@ from src.controllers.product.product_admin import ProductController, ProductList
 from src.controllers.product.product_item_admin import ProductItemController, ProductItemListController
 from src.controllers.product.buy_product_admin import BuyProductController, BuyProductListController
 from src.controllers.recpoint.rec_point_admin import RecPointController, RecPointListController
+from src.controllers.recpoint.offer_admin import RecPointOfferApproveController
 from src.controllers.recpoint.rec_point_admin_img_update import RecPointImageUploaderController
 from src.controllers.recycle.recycle_transaction_admin import RecycleTransactionListController, RecycleTransactionController
 from src.controllers.test.admin.attempts_admin_controller import AdminAttemptsListController, AdminAttemptsController
@@ -45,6 +46,7 @@ api.add_resource(PartnerController, '/admin/partners/<partner_id>')
 api.add_resource(RecPointListController, '/admin/rec_points')
 api.add_resource(RecPointController, '/admin/rec_points/<rec_point_id>')
 api.add_resource(RecPointImageUploaderController, '/admin/rec_points/<rec_point_id>/images')
+api.add_resource(RecPointOfferApproveController, '/admin/rec_offer/<rec_point_id>')
 
 
 # Recycle
@@ -52,8 +54,8 @@ api.add_resource(RecycleTransactionListController, '/admin/recycle')
 api.add_resource(RecycleTransactionController, '/admin/recycle/<recycle_id>')
 
 # Transactions
-api.add_resource(AdmissionTransactionListController, '/api/transactions')
-api.add_resource(AdmissionTransactionTransactionController, '/api/transactions/<transaction_id>')
+api.add_resource(AdmissionTransactionListController, '/admin/transactions')
+api.add_resource(AdmissionTransactionTransactionController, '/admin/transactions/<transaction_id>')
 
 # Products
 api.add_resource(ProductListController, '/admin/products')
@@ -73,9 +75,9 @@ api.add_resource(AdminAttemptsListController, '/admin/tests/<test_id>/attempts')
 api.add_resource(AdminAttemptsController, '/admin/tests/<test_id>/attempts/<attempt_id>')
 
 # News
-api.add_resource(NewsListController, '/api/news')
-api.add_resource(NewsController, '/api/news/<news_id>')
-api.add_resource(NewsAdminImageUploaderController, '/api/news/<news_id>/image')
+api.add_resource(NewsListController, '/admin/news')
+api.add_resource(NewsController, '/admin/news/<news_id>')
+api.add_resource(NewsAdminImageUploaderController, '/admin/news/<news_id>/image')
 
 # swagger
 swagger_ui_blueprint = get_swaggerui_blueprint(

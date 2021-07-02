@@ -27,6 +27,8 @@ class RecPoint(Document, BaseCrud):
     work_time = DictField(required=True)
     approve_status = StringField(choices=STATUS_CHOICES, default=Status.idle.value)
     author = ReferenceField('User')
+    # если это изменение - то здесь будет ссылка на изменяемый объект
+    change_by = ReferenceField('RecPoint')
 
     meta = {
         "db_alias": "core",

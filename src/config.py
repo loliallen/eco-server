@@ -35,6 +35,9 @@ class Configuration:
     ADMIN_SCHEMA_URL = f'{PROTOCOL}://{HOST}:8000/api/doc/swagger.json'
 
     ECO_COINS_BY_INVITE = 15
+    ECO_COINS_BY_OFFER_NEW_REC_POINT = 30
+    ECO_COINS_BY_OFFER_CHANGE_REC_POINT = 20
+
     WEIGHT_RECYCLE_TO_NEED_APPROVE = 10
     TEST_FREEZE_TIME = datetime.timedelta(days=15)
     MAX_RADIUS_REC_POINTS_SHOW = 50

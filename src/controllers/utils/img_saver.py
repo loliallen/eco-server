@@ -22,6 +22,9 @@ def save_img(obj, root, files_storage: pathlib.Path=None, field_name="id"):
     args = post_parser_with_file.parse_args()
 
     file = args.pop('file')[0]
+    if not file:
+        obj.update(set__image=None)
+        return
     filename = secure_filename(file.filename)
     obj_ident = str(getattr(obj, field_name))
     FILES_PATH = files_storage / root / obj_ident
@@ -44,6 +47,9 @@ def save_imgs(obj, root, files_storage: pathlib.Path=None, field_name="id"):
     args = post_parser_with_files.parse_args()
 
     files = args.pop('files')
+    if not files:
+        obj.update(set__images=[])
+        return
 
     if obj.images is not None:
         for image in obj.images:

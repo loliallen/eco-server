@@ -4,7 +4,7 @@ from flask_restful import reqparse, Resource, fields
 from flask_restful_swagger_3 import swagger, Schema
 
 from src.config import Configuration
-from src.models.transaction.AdmissionTransaction import AdmissionTransaction, Status
+from src.models.transaction.AdmissionTransaction import AdmissionTransaction, Status, ActionType
 from src.models.user.UserModel import User
 
 post_parser = reqparse.RequestParser()

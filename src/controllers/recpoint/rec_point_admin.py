@@ -33,7 +33,7 @@ post_parser.add_argument('coords', type=float, action='append', required=False)
 post_parser.add_argument('description', type=str, required=False)
 post_parser.add_argument('getBonus', type=bool, required=False)
 post_parser.add_argument('external_images', type=str, action='append', required=False)
-post_parser.add_argument('approve_status', type=str, required=False)
+post_parser.add_argument('approve_status', type=str, choices=STATUS_CHOICES, required=False)
 
 
 class RecPointResponseModel(Schema):
@@ -71,8 +71,10 @@ resource_fields_ = {
     'description': fields.String,
     'getBonus': fields.Boolean(attribute=lambda x: getattr(x, 'getBonus', False)),
     "images": fields.List(custom_fields.ImageLink),
-    "external_images": fields.List(custom_fields.ImageLink),
+    "external_images": fields.List(fields.String),
     "approve_status": fields.String,
+    "author": fields.String(attribute='author.id'),
+    "change_by": fields.String(attribute='change_by.id')
 }
 
 

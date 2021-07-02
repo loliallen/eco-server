@@ -14,9 +14,11 @@ class ActionType(Enum):
     recycle = 'recycle'
     invite = 'invite'
     feedback = 'feedback'
+    add_pp = 'add_pp'
+    update_pp = 'update_pp'
 
 
-ACTION_TYPE_CHOICES = ('recycle', 'invite', 'feedback')
+ACTION_TYPE_CHOICES = ('recycle', 'invite', 'feedback', 'add_pp', 'update_pp')
 
 
 class AdmissionTransaction(Document, BaseCrud):
@@ -27,6 +29,7 @@ class AdmissionTransaction(Document, BaseCrud):
     user = ReferenceField('User')
     eco_coins = IntField()
     status = StringField(choices=STATUS_CHOICES, default=Status.idle.value)  # статус подтверждения
+    description = StringField()
     date = DateTimeField(default=datetime.now)
 
     meta = {

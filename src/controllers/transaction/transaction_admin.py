@@ -16,6 +16,7 @@ class AdmissionTransactionResponseModel(Schema):
         'action_id': {'type': 'string', 'description': 'Id действия'},
         'eco_coins': {'type': 'string', 'description': 'Количество экокоинов'},
         'status': {'type': 'string', 'description': 'Статус', 'choices': STATUS_CHOICES},
+        'description': {'type': 'string', 'description': 'Пояснение к решению апрува'},
         'date': {'type': 'datetime', 'description': 'Дата транзакции'}
     }
 
@@ -28,6 +29,7 @@ resource_fields_ = {
     'action_id': fields.String(attribute='action.id'),
     'eco_coins': fields.Integer,
     'status': fields.String,
+    'description': fields.String,
     'date': fields.DateTime('iso8601')
 }
 

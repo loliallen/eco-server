@@ -107,4 +107,4 @@ class RecycleTransactionController(BaseController):
         args = post_parser.parse_args()
         rec_transaction.update(set__status=args['status'])
         admission_transaction.update(set__status=args['status'])
-        return {'result': 'ok'}, 201
+        return {'status': 'ok'}, 201

@@ -47,11 +47,13 @@ resource_fields_ = {
     'work_time': custom_fields.Dict,
     'address': fields.String,
     'contacts': fields.List(fields.String),
-    'accept_types': fields.List(fields.String(attribute='name')),
+    'accept_types_names': fields.List(fields.String(attribute='name'), attribute='accept_types'),
+    'accept_types': fields.List(fields.String(attribute='id')),
     'coords': fields.List(fields.Float, attribute='coords.coordinates'),
     'description': fields.String,
     'getBonus': fields.Boolean(attribute=lambda x: getattr(x, 'getBonus', False)),
-    "images": fields.List(custom_fields.ImageLink, attribute=lambda x: x.images if x.images else x.external_images),
+    "images": fields.List(custom_fields.ImageLink),
+    "external_images": fields.List(fields.String),
     "approve_status": fields.String,
 }
 
