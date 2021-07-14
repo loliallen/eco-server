@@ -1,14 +1,12 @@
 from datetime import datetime
 
-from flask_jwt_extended import get_jwt_identity, jwt_required
-from flask_restful import reqparse, fields, marshal
+from flask_jwt_extended import jwt_required
+from flask_restful import reqparse
 from flask_restful_swagger_3 import swagger, Schema
 
-from src.controllers.utils.BaseController import BaseListController, BaseController
+from src.controllers.utils.BaseController import BaseListController
 from src.models.test.QuestionModel import Question
-from src.models.test.Test import Test
 from src.models.test.UsersAttemtps import UserAttempts
-from src.models.transaction.AdmissionTransaction import AdmissionTransaction
 from src.models.user.UserModel import User
 
 post_parser = reqparse.RequestParser()
@@ -39,12 +37,8 @@ class UserAnswerController(BaseListController):
     @swagger.reqparser('UserAnswerModel', post_parser)
     @swagger.response(response_code=201, schema=UserAnswerResponseModel,
                       summary='Отправить ответ', description='Отправить ответы на вопрос')
-    def post(self, test_id, attempt_id):
-
-        test = Test.find_by_id_(_id=test_id)
-        if test is None:
-            return {'error': 'test not found'}, 404
-        attempt = UserAttempts.objects.filter(id=attempt_id, test=test).first()
+    def post(self, attempt_id):
+        attempt = UserAttempts.objects.filter(id=attempt_id).first()
         if not attempt:
             return {'error': 'attempt not found'}, 404
         user = User.get_user_from_request()
@@ -54,7 +48,7 @@ class UserAnswerController(BaseListController):
             return {'error': 'attempt is closed'}, 400
 
         args = post_parser.parse_args()
-        all_test_questions = Question.objects.filter(test=test).all()
+        all_test_questions = Question.objects.filter(test=attempt.test).all()
         if args['question_id'] not in [str(i.id) for i in all_test_questions]:
             return {'error': 'this question not in test'}, 400
         if args['question_id'] in attempt.already_answered:
@@ -66,12 +60,13 @@ class UserAnswerController(BaseListController):
             attempt.points += question.point_for_answer
         if len(attempt.already_answered) == len(all_test_questions):
             attempt.is_closed = True
-            attempt.is_success = bool(attempt.points >= test.points_to_success)
+            attempt.is_success = bool(attempt.points >= attempt.test.points_to_success)
             attempt.datetime_closed = datetime.now()
             if attempt.is_success:
                 # разблокируем пользователю экокоины
                 with user.lock() as user:
-                    user.update(inc__freeze_eco_coins=-test.coins_to_unlock, inc__eco_coins=test.coins_to_unlock)
+                    user.update(inc__freeze_eco_coins=-attempt.test.coins_to_unlock,
+                                inc__eco_coins=attempt.test.coins_to_unlock)
         attempt.save()
         answer = {
             "answer_status": answer_is_right,
@@ -82,7 +77,7 @@ class UserAnswerController(BaseListController):
         }
         if attempt.is_closed:
             answer.update({
-                "points_to_success": test.points_to_success,
+                "points_to_success": attempt.test.points_to_success,
                 "is_attempt_success": attempt.is_success
             })
         return answer

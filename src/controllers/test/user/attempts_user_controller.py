@@ -74,9 +74,9 @@ class UserAttemptsListController(BaseListController):
     @swagger.tags('Tests')
     @swagger.response(response_code=200, summary='Список попыток', description='-',
                       schema=UserAttemptResponseModel)
-    def get(self, test_id):
+    def get(self):
         user = User.objects.filter(username=get_jwt_identity()).first()
-        return super().get_(test=test_id, user=user.id)
+        return super().get_(user=user)
 
     @jwt_required()
     @swagger.security(JWT=[])
@@ -85,36 +85,34 @@ class UserAttemptsListController(BaseListController):
                           summary='Создать новую попытку',
                           description='Если попытка уже была создана и не завершена - '
                                       'вернется старая попытка с оставшимися вопросами')
-    def post(self, test_id):
-        test = Test.find_by_id_(_id=test_id)
-        if test is None:
-            return {"error": "Test not found"}, 404
+    def post(self):
         user = User.objects.filter(username=get_jwt_identity()).first()
-        if user.freeze_eco_coins < test.coins_to_unlock:
-            return {'error': 'yours freeze ecocoins less than test unlock'}, 400
 
-        latest_attempt = UserAttempts.objects.filter(user=user.id).order_by('-datetime_opened').first()
-        if latest_attempt:
-            # если имеется незаконченная попытка  другого теста, то не начинаем новую
-            if latest_attempt.test.id != test.id:
-                if not latest_attempt.is_closed:
-                    return {'error': 'yau can\'t to solve multiple test at the same time'}
-            else:
-                # если уже имеется незакрытая попытка этого же теста -
-                # то возвращаем оставшиеся вопросы этой попытки
-                if not latest_attempt.is_closed:
-                    already_answered_ids = [i.id for i in latest_attempt.already_answered]
-                    tests_questions = Question.objects.filter(test=test_id, id__nin=already_answered_ids).all()
-                    return {
-                        **marshal(latest_attempt, resource_attempt_fields),
-                        'questions': marshal(list(tests_questions), resource_questions_fields)
-                    }
+        active_attempt = UserAttempts.objects.filter(user=user, is_closed=False).first()
+        if active_attempt:
+            already_answered_ids = [i.id for i in active_attempt.already_answered]
+            tests_questions = Question.objects.filter(test=active_attempt.test,
+                                                      id__nin=already_answered_ids).all()
+            return {
+                **marshal(active_attempt, resource_attempt_fields),
+                'questions': marshal(list(tests_questions), resource_questions_fields)
+            }
 
-                if datetime.now() < latest_attempt.datetime_opened + Configuration.TEST_FREEZE_TIME:
-                    return {'error': 'not enough time has passed since the last attempt'}, 400
+        last_attempts = UserAttempts.objects.filter(
+            user=user,
+            datetime_closed__gt=datetime.utcnow() - Configuration.TEST_FREEZE_TIME
+        )
+        available_test = Test.objects.filter(
+            id__nin=[attempt.test.id for attempt in last_attempts],
+            coins_to_unlock__lte=user.freeze_eco_coins
+        ).first()
 
-        attempt = UserAttempts.create_(user=user.id, test=test_id, datetime_opened=datetime.now())
-        tests_questions = Question.objects.filter(test=test_id).all()
+        if available_test is None:
+            return {"error": "Available tests not found"}, 404
+
+        attempt = UserAttempts.create_(user=user.id, test=available_test,
+                                       datetime_opened=datetime.utcnow())
+        tests_questions = Question.objects.filter(test=available_test).all()
         return {
             **marshal(attempt, resource_attempt_fields),
             'questions': marshal(list(tests_questions), resource_questions_fields)
@@ -131,5 +129,5 @@ class UserAttemptsController(BaseController):
     @swagger.tags('Tests')
     @swagger.response(response_code=200, summary='Попытка', description='-',
                       schema=UserAttemptResponseModel)
-    def get(self, test_id, attempt_id):
-        return super().get_(attempt_id, test=test_id)
+    def get(self, attempt_id):
+        return super().get_(attempt_id)

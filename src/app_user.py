@@ -19,7 +19,6 @@ from src.controllers.recycle.recycle_transaction_user import RecycleTransactionL
 from src.controllers.recycle.recycle_transaction_user_img_update import RecycleImageUploaderController
 from src.controllers.test.user.answere_user_controller import UserAnswerController
 from src.controllers.test.user.attempts_user_controller import UserAttemptsListController, UserAttemptsController
-from src.controllers.test.user.test_user_controller import TestListController, TestController
 from src.controllers.transaction.transaction_user import AdmissionTransactionListController, \
     AdmissionTransactionTransactionController
 from src.controllers.user.confirm import ConfirmController
@@ -80,11 +79,9 @@ api.add_resource(ProductController, '/api/products/<product_id>')
 api.add_resource(BuyProductController, '/api/buy_product')
 
 # Tests
-api.add_resource(TestListController, '/api/tests')
-api.add_resource(TestController, '/api/tests/<test_id>')
-api.add_resource(UserAttemptsListController, '/api/tests/<test_id>/attempts')
-api.add_resource(UserAttemptsController, '/api/tests/<test_id>/attempts/<attempt_id>')
-api.add_resource(UserAnswerController, '/api/tests/<test_id>/attempts/<attempt_id>/answer')
+api.add_resource(UserAttemptsListController, '/api/test_attempts')
+api.add_resource(UserAttemptsController, '/api/test_attempts/<attempt_id>')
+api.add_resource(UserAnswerController, '/api/test_attempts/<attempt_id>/answer')
 
 # News
 api.add_resource(NewsListController, '/api/news')
