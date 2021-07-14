@@ -6,6 +6,7 @@ import pathlib
 class Configuration:
     SECRET_KEY = 'a really really really really long secret key'
     JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(hours=2)
+    JWT_ADMIN_ACCESS_TOKEN_EXPIRES = datetime.timedelta(hours=2)
     JWT_TOKEN_LOCATION = 'headers'
     PROPAGATE_EXCEPTIONS = True
 
@@ -40,7 +41,7 @@ class Configuration:
 
     WEIGHT_RECYCLE_TO_NEED_APPROVE = 10
     TEST_FREEZE_TIME = datetime.timedelta(days=15)
-    MAX_RADIUS_REC_POINTS_SHOW = 50
+    MAX_RADIUS_REC_POINTS_SHOW = 100
 
     STATIC_FOLDER = os.getenv("STATIC_FOLDER", str(pathlib.Path(__file__).parent.absolute() / "statics"))
     STATIC_URL_PATH = '/statics'

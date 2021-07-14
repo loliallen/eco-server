@@ -1,4 +1,4 @@
-from mongoengine import Document, StringField, IntField
+from mongoengine import Document, StringField, IntField, BooleanField
 
 from src.models.utils.BaseCrud import BaseCrud
 
@@ -8,6 +8,7 @@ class Test(Document, BaseCrud):
     coins_to_unlock = IntField()
     description = StringField()
     points_to_success = IntField()
+    is_active = BooleanField(default=False)
 
     meta = {
         "db_alias": "core",

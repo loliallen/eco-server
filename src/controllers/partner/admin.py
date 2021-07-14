@@ -4,6 +4,12 @@ from flask_restful_swagger_3 import swagger, Schema
 from src.controllers.utils import fields as custom_fields
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.partner.PartnerModel import Partner
+from src.utils.roles import jwt_reqired_backoffice
+
+get_parser = reqparse.RequestParser()
+get_parser.add_argument('page', type=int, required=False, location='args')
+get_parser.add_argument('size', type=int, required=False, location='args')
+
 
 post_parser = reqparse.RequestParser()
 post_parser.add_argument('name', type=str, required=True)
@@ -32,11 +38,17 @@ class PartnerListController(BaseListController):
     name = 'Partner'
     parser = post_parser
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Partners')
     @swagger.response(response_code=200, summary='Список партнеров', description='-', schema=PartnerResponseModel)
     def get(self):
-        return super().get_()
+        args = get_parser.parse_args()
+        args = {k: v for k, v in args.items() if v is not None}
+        return super().get_(paginate_=True, **args)
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Partners')
     @swagger.response(response_code=201, schema=PartnerResponseModel, summary='Создать нового партнера',
                       description='-')
@@ -51,16 +63,22 @@ class PartnerController(BaseController):
     name = 'Partner'
     post_parser = post_parser
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Partners')
     @swagger.response(response_code=200, summary='Партнер', description='-', schema=PartnerResponseModel)
     def get(self, partner_id):
         return super().get_(partner_id)
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Partners')
     @swagger.response(response_code=200, summary='Обноваить партнера', description='-', schema=PartnerResponseModel)
     def put(self, partner_id):
         return super().put_(partner_id)
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Partners')
     @swagger.response(response_code=200, summary='Удалить партнера', description='-', schema=PartnerResponseModel)
     def delete(self, partner_id):

@@ -13,7 +13,7 @@ class Product(Document, BaseCrud):
     name = StringField()
     date_from = DateField()
     date_to = DateField()
-    is_active = BooleanField(default=True)
+    is_active = BooleanField(default=False)
     items = ListField(ReferenceField('ProductItem'))
     transactions = ListField(ReferenceField('ProductItemTransaction'))
 

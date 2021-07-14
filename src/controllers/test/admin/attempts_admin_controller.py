@@ -1,8 +1,17 @@
-from flask_restful import fields
+from flask_restful import fields, reqparse
 from flask_restful_swagger_3 import swagger, Schema
 
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.test.UsersAttemtps import UserAttempts
+from src.utils.roles import jwt_reqired_backoffice
+
+
+get_parser = reqparse.RequestParser()
+get_parser.add_argument('page', type=int, required=False, location='args')
+get_parser.add_argument('size', type=int, required=False, location='args')
+get_parser.add_argument('test', type=str, required=False, location='args')
+get_parser.add_argument('user', type=str, required=False, location='args')
+
 
 resource_fields_ = {
     'id': fields.String,
@@ -12,7 +21,10 @@ resource_fields_ = {
     'test_name': fields.String(attribute='test.test_name'),
     'points': fields.Integer,
     'points_threshold': fields.Integer(attribute='test.points_to_success'),
+    'datetime_opened': fields.DateTime('iso8601'),
+    'datetime_closed': fields.DateTime('iso8601'),
     'is_success': fields.Boolean,
+    'is_closed': fields.Boolean,
 }
 
 
@@ -34,11 +46,15 @@ class AdminAttemptsListController(BaseListController):
     model = UserAttempts
     name = 'UserAttempt'
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Tests')
     @swagger.response(response_code=200, summary='Список попыток', description='-',
                       schema=AdminAttemptResponseModel)
-    def get(self, test_id):
-        return super().get_(test=test_id)
+    def get(self):
+        args = get_parser.parse_args()
+        args = {k:v for k,v in args.items() if v is not None}
+        return super().get_(paginate_=True, **args)
 
 
 class AdminAttemptsController(BaseController):
@@ -46,8 +62,18 @@ class AdminAttemptsController(BaseController):
     model = UserAttempts
     name = 'UserAttempt'
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Tests')
     @swagger.response(response_code=200, summary='Попытка', description='-',
                       schema=AdminAttemptResponseModel)
-    def get(self, test_id, attempt_id):
-        return super().get_(attempt_id, test=test_id)
+    def get(self, attempt_id):
+        return super().get_(attempt_id)
+
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
+    @swagger.tags('Tests')
+    @swagger.response(response_code=200, summary='Удалить попытку', description='-',
+                      schema=AdminAttemptResponseModel)
+    def delete(self, attempt_id):
+        return super().delete_(attempt_id)

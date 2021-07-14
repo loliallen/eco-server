@@ -1,13 +1,19 @@
-from pathlib import Path
+from ast import literal_eval
 
 from flask_restful import reqparse, fields
 from flask_restful_swagger_3 import swagger, Schema
 
+import src.controllers.utils.fields as custom_fields
 from src.controllers.utils.BaseController import (
     BaseListController, BaseController
 )
-import src.controllers.utils.fields as custom_fields
 from src.models.filter.FilterModel import Filter
+from src.utils.roles import jwt_reqired_backoffice
+
+get_parser = reqparse.RequestParser()
+get_parser.add_argument('page', type=int, required=False, location='args')
+get_parser.add_argument('size', type=int, required=False, location='args')
+get_parser.add_argument('id', dest='id__in', type=str, action='append', location='args')
 
 post_parser = reqparse.RequestParser()
 post_parser.add_argument('name', type=str, required=True, help='Название фильтра')
@@ -51,14 +57,27 @@ class FilterControllerList(BaseListController):
     model = Filter
     name = 'Filter'
     parser = post_parser
-    img_field = 'image'
-    img_path = Path('./src/statics/filters')
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Filters')
     @swagger.response(response_code=200, summary='Список фильтров', description='-', schema=FilterResponseModel)
+    @swagger.parameter(_in='query', name='page',
+                       description='Номер страницы',
+                       example=1, required=False, schema={'type': 'integer'})
+    @swagger.parameter(_in='query', name='size',
+                       description='Кол-во элементов на странице',
+                       example=10, required=False, schema={'type': 'integer'})
+    # @swagger.parameter(_in='query', name='id',
+    #                    description='Список id',
+    #                    example=10, required=False, schema={'type': 'array', 'items': {'type': 'string'}})
     def get(self):
-        return super().get_()
+        args = get_parser.parse_args()
+        args = {k: v for k, v in args.items() if v is not None}
+        return super().get_(paginate_=True, **args)
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Filters')
     @swagger.response(response_code=201, schema=FilterResponseModel, summary='Создать новый фильтр')
     @swagger.reqparser(name='FilterCreateModel', parser=post_parser)
@@ -73,17 +92,23 @@ class FilterController(BaseController):
     name = 'Filter'
     parser = post_parser
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Filters')
     @swagger.response(response_code=200, summary='Фильтр', description='-', schema=FilterResponseModel)
     def get(self, filter_id):
         return super().get_(filter_id)
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Filters')
     @swagger.response(response_code=204, summary='Обновить Фильтр', description='-', schema=FilterResponseModel)
     @swagger.reqparser(name='FilterPutModel', parser=post_parser)
     def put(self, filter_id):
         return super().put_(filter_id)
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Filters')
     @swagger.response(response_code=204, summary='Удалить фильтр', description='-', schema=FilterResponseModel)
     def delete(self, filter_id):

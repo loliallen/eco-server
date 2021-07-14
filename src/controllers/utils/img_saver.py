@@ -21,7 +21,9 @@ def save_img(obj, root, files_storage: pathlib.Path=None, field_name="id"):
 
     args = post_parser_with_file.parse_args()
 
-    file = args.pop('file')[0]
+    file = args.pop('file')
+    if isinstance(file, list):
+        file = file[0]
     if not file:
         obj.update(set__image=None)
         return
@@ -32,7 +34,9 @@ def save_img(obj, root, files_storage: pathlib.Path=None, field_name="id"):
         os.mkdir(FILES_PATH)
 
     if obj.image is not None:
-        os.remove((files_storage / obj.image).resolve())
+        img_path = (files_storage / obj.image).resolve()
+        if os.path.exists(img_path):
+            os.remove(img_path)
     FILES_PATH = FILES_PATH / filename
     file.save(FILES_PATH.resolve())
     obj.update(set__image=f'{root}/{obj_ident}/{filename}')

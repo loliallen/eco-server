@@ -6,13 +6,15 @@ from src.controllers.utils.img_saver import save_img
 from src.models.news.NewsModel import News
 from src.models.user.UserModel import User
 from src.utils import custom_swagger
-from src.utils.roles import role_need, Roles
+from src.utils.roles import role_need, Roles, jwt_reqired_backoffice
 
 root = "news"
 
 
 class NewsAdminImageUploaderController(BaseController):
-
+    
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('News')
     @swagger.response(response_code=201, schema=custom_swagger.OkSchema,
                       summary='Загрузить изображение новости', description='-')

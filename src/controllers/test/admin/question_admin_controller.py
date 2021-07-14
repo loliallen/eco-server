@@ -4,6 +4,12 @@ from flask_restful_swagger_3 import swagger, Schema
 from src.controllers.utils import fields as custom_fields
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.test.QuestionModel import Question, QUESTION_TYPE_CHOICES
+from src.utils.roles import jwt_reqired_backoffice
+
+get_parser = reqparse.RequestParser()
+get_parser.add_argument('test', type=str, required=False, location='args', help='Id теста')
+get_parser.add_argument('page', type=int, required=False, location='args')
+get_parser.add_argument('size', type=int, required=False, location='args')
 
 parser = reqparse.RequestParser()
 parser.add_argument('question', type=str, required=True, help='название вопроса')
@@ -47,21 +53,26 @@ class QuestionListController(BaseListController):
     name = 'Question'
     parser = parser
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Tests')
     @swagger.response(response_code=200, summary='Список вопросов', description='-',
                       schema=QuestionResponseModel)
-    def get(self, test_id):
-        return super().get_(test=test_id)
+    @swagger.parameter(_in='query', name='test_id', description='Фильтр по Id теста',
+                       schema={'type': 'string'})
+    def get(self):
+        args = get_parser.parse_args()
+        args = {k:v for k,v in args.items() if v is not None}
+        return super().get_(paginate_=True, **args)
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Tests')
     @swagger.response(response_code=201, schema=QuestionResponseModel,
                       summary='Создать новый вопрос', description='-')
     @swagger.reqparser(name='QuestionCreateModel', parser=parser)
-    def post(self, test_id):
-        return super().post_(test=test_id)
-
-    def get_fields(self):
-        return self.parser.parse_args()
+    def post(self):
+        return super().post_()
 
 
 class QuestionController(BaseController):
@@ -70,21 +81,27 @@ class QuestionController(BaseController):
     name = 'Question'
     parser = parser
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Tests')
     @swagger.response(response_code=200, summary='Вопрос', description='-',
                       schema=QuestionResponseModel)
-    def get(self, test_id, question_id):
-        return super().get_(question_id, test=test_id)
+    def get(self, question_id):
+        return super().get_(question_id)
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Tests')
     @swagger.response(response_code=200, summary='Обновить вопрос', description='-',
                       schema=QuestionResponseModel)
     @swagger.reqparser(name='QuestionPutModel', parser=parser)
-    def put(self, test_id, question_id):
-        return super().put_(question_id, test=test_id)
+    def put(self, question_id):
+        return super().put_(question_id)
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Tests')
     @swagger.response(response_code=200, summary='Удалить вопрос', description='-',
                       schema=QuestionResponseModel)
-    def delete(self, test_id, question_id):
-        return super().delete_(question_id, test=test_id)
+    def delete(self, question_id):
+        return super().delete_(question_id)

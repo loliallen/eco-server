@@ -6,12 +6,15 @@ from src.controllers.utils.BaseController import BaseListController, BaseControl
 from src.models.recycle.RecycleTransaction import RecycleTransaction
 from src.models.transaction.AdmissionTransaction import AdmissionTransaction
 from src.models.utils.enums import STATUS_CHOICES
+from src.utils.roles import jwt_reqired_backoffice
 
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('user', dest='from_', type=str, required=False, location='args')
 get_parser.add_argument('admin_pp', dest='admin_pp', type=str, required=False, location='args')
 get_parser.add_argument('rec_point', dest='to_', type=str, required=False, location='args')
 get_parser.add_argument('status', type=str, choices=STATUS_CHOICES, required=False, location='args')
+get_parser.add_argument('page', type=int, required=False, location='args')
+get_parser.add_argument('size', type=int, required=False, location='args')
 
 post_parser = reqparse.RequestParser()
 post_parser.add_argument('status', type=str, choices=STATUS_CHOICES, required=True)
@@ -63,6 +66,8 @@ class RecycleTransactionListController(BaseListController):
     model = RecycleTransaction
     name = 'RecycleTransaction'
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Recycle')
     @swagger.response(response_code=201, schema=RecycleTransactionResponseModel,
                       summary='Список транзакций сдачи отходов',
@@ -78,7 +83,7 @@ class RecycleTransactionListController(BaseListController):
     def get(self):
         args = get_parser.parse_args()
         args = {k:v for k,v in args.items() if v is not None}
-        return super().get_(**args)
+        return super().get_(paginate_=True, **args)
 
 
 class RecycleTransactionController(BaseController):
@@ -87,12 +92,16 @@ class RecycleTransactionController(BaseController):
     name = 'RecycleTransaction'
     parser = post_parser
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Recycle')
     @swagger.response(response_code=201, schema=RecycleTransactionResponseModel, summary='Транзакция сдачи отхода',
                       description='-')
     def get(self, recycle_id):
         return super().get_(recycle_id)
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Recycle')
     @swagger.response(response_code=201, schema=RecycleTransactionResponseModel, summary='Транзакция сдачи отхода',
                       description='-')

@@ -5,6 +5,7 @@ from flask_restful_swagger_3 import Resource
 from mongoengine import NotUniqueError
 from pymongo.errors import DuplicateKeyError
 
+from src.controllers.utils.pagination import paginate
 from src.exceptions.common import FieldError
 
 
@@ -62,8 +63,11 @@ class BaseListController(Resource):
     name = 'Resource'
     parser = None
 
-    def get_(self, **kwargs):
+    def get_(self, paginate_=False, page=1, size=10, select_related_depth=1, **kwargs):
         objs = self.model.read_(**kwargs)
+        if paginate_:
+            return paginate(objs, page, size, self.resource_fields,
+                            select_related_depth=select_related_depth)
         return marshal(list(objs), self.resource_fields)
 
     def post_(self, **kwargs):

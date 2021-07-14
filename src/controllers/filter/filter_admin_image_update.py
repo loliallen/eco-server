@@ -8,12 +8,15 @@ from src.controllers.utils.BaseController import BaseController
 from src.controllers.utils.img_saver import save_img
 from src.models.filter.FilterModel import Filter
 from src.utils import custom_swagger
+from src.utils.roles import jwt_reqired_backoffice
 
 root = "filters"
 
 
 class FilterImageUploaderController(BaseController):
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Filters')
     @swagger.response(response_code=201, schema=custom_swagger.OkSchema,
                       summary='Загрузить изображение фильтра', description='-')

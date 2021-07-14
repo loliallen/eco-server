@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
+from flask_jwt_extended import JWTManager
 from flask_swagger_ui import get_swaggerui_blueprint
 
 import src.services.Database as Database
@@ -20,8 +21,13 @@ from src.controllers.test.admin.attempts_admin_controller import AdminAttemptsLi
 from src.controllers.test.admin.question_admin_controller import QuestionListController, QuestionController
 from src.controllers.test.admin.question_admin_img_uploader import QuestionImageUploaderController
 from src.controllers.test.admin.test_admin_controller import TestListController, TestController
-from src.controllers.transaction.transaction_admin import AdmissionTransactionListController, \
+from src.controllers.transaction.transaction_admin import (
+    AdmissionTransactionListController,
     AdmissionTransactionTransactionController
+)
+from src.controllers.user.admin.login import LoginController
+from src.controllers.user.admin.users import UsersListController, UsersController
+from src.controllers.user.admin.users_img_upload import UserImageUploaderController
 from src.middleware.collect_statistics import Collector
 from src.send_email import mail
 from src.utils.custom_swagger import CustomApi
@@ -31,11 +37,21 @@ app = Flask(__name__,
             static_folder=Configuration.STATIC_FOLDER)
 app.config.from_object(Configuration)
 app.wsgi_app = Collector(app.wsgi_app)
+jwt = JWTManager(app)
 Database.global_connect()
-api = CustomApi(app, title='EcoApi for Admins')
-cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+api = CustomApi(app, title='EcoApi for Admins',
+                authorizations={"JWT": {"type": "http", "scheme": "bearer", "bearerFormat": "JWT"}})
+cors = CORS(app, resources={ "/admin/*": {"origins": "*"}, "/api/*": {"origins": "*"}})
 
 mail.init_app(app)
+
+# Auth
+api.add_resource(LoginController, '/admin/login')
+
+# Users
+api.add_resource(UsersListController, '/admin/users')
+api.add_resource(UsersController, '/admin/users/<user_id>')
+api.add_resource(UserImageUploaderController, '/admin/users/<user_id>/image')
 
 # Filters and Recycle Points
 api.add_resource(FilterControllerList, '/admin/filters')
@@ -67,12 +83,12 @@ api.add_resource(BuyProductController, '/admin/buy_product/<transaction_id>')
 
 # Tests
 api.add_resource(TestListController, '/admin/tests')
-api.add_resource(TestController, '/admin/tests/<tests_id>')
-api.add_resource(QuestionListController, '/admin/tests/<test_id>/questions')
-api.add_resource(QuestionController, '/admin/tests/<test_id>/questions/<question_id>')
-api.add_resource(QuestionImageUploaderController, '/admin/tests/<test_id>/questions/<question_id>/image')
-api.add_resource(AdminAttemptsListController, '/admin/tests/<test_id>/attempts')
-api.add_resource(AdminAttemptsController, '/admin/tests/<test_id>/attempts/<attempt_id>')
+api.add_resource(TestController, '/admin/tests/<test_id>')
+api.add_resource(QuestionListController, '/admin/questions')
+api.add_resource(QuestionController, '/admin/questions/<question_id>')
+api.add_resource(QuestionImageUploaderController, '/admin/questions/<question_id>/image')
+api.add_resource(AdminAttemptsListController, '/admin/attempts')
+api.add_resource(AdminAttemptsController, '/admin/attempts/<attempt_id>')
 
 # News
 api.add_resource(NewsListController, '/admin/news')

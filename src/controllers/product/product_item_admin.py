@@ -3,6 +3,13 @@ from flask_restful_swagger_3 import swagger, Schema
 
 from src.controllers.utils.BaseController import BaseListController, BaseController, not_found
 from src.models.product.ProductItemModel import ProductItem
+from src.utils.roles import jwt_reqired_backoffice
+
+
+get_parser = reqparse.RequestParser()
+get_parser.add_argument('page', type=int, required=False, location='args')
+get_parser.add_argument('size', type=int, required=False, location='args')
+
 
 parser = reqparse.RequestParser()
 parser.add_argument('product', type=str, required=True, help='id продукта')
@@ -36,12 +43,18 @@ class ProductItemListController(BaseListController):
     name = 'ProductItem'
     parser = parser
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Products')
     @swagger.response(response_code=200, summary='Список экземпляров продуктов (купонов)', description='-',
                       schema=ProductItemResponseModel)
     def get(self):
-        return super().get_()
+        args = get_parser.parse_args()
+        args = {k: v for k, v in args.items() if v is not None}
+        return super().get_(paginate_=True, **args)
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Products')
     @swagger.response(response_code=201, schema=ProductItemResponseModel,
                       summary='Создать новый экземпляр продукта (купон)', description='-')
@@ -56,12 +69,16 @@ class ProductItemController(BaseController):
     name = 'ProductItem'
     parser = parser
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Products')
     @swagger.response(response_code=200, summary='Экземпляр продукта (купона)', description='-',
                       schema=ProductItemResponseModel)
     def get(self, product_item_id):
         return super().get_(product_item_id)
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Products')
     @swagger.response(response_code=200, summary='Обнвоить экземпляр продукта (купона)', description='-',
                       schema=ProductItemResponseModel)

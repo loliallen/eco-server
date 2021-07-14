@@ -1,14 +1,21 @@
 import datetime
 
+from flask_restful import inputs
 from flask_restful import reqparse, fields
 from flask_restful_swagger_3 import swagger, Schema
 
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.product.ProductModel import Product
+from src.utils.roles import jwt_reqired_backoffice
 
 
-Date = lambda x: datetime.datetime.strptime(x, "%d-%m-%Y").date()
-Date.swagger_type = 'string'
+get_parser = reqparse.RequestParser()
+get_parser.add_argument('page', type=int, required=False, location='args')
+get_parser.add_argument('size', type=int, required=False, location='args')
+
+
+Date = inputs.date
+Date.swagger_type = 'date'
 
 
 parser = reqparse.RequestParser()
@@ -16,7 +23,7 @@ parser.add_argument('name', type=str, required=True, help='Название пр
 parser.add_argument('price', type=int, required=True, help='Стоимость продукта')
 parser.add_argument('date_from', type=Date, required=True, help='Срок действия с')
 parser.add_argument('date_to', type=Date, required=True, help='Срок действия по')
-parser.add_argument('is_active', type=bool, required=True, help='Активность продукта (можно ли его купить)')
+parser.add_argument('is_active', type=bool, required=False, help='Активность продукта (можно ли его купить)')
 
 
 class ProductResponseModel(Schema):
@@ -46,11 +53,17 @@ class ProductListController(BaseListController):
     name = 'Product'
     parser = parser
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Products')
     @swagger.response(response_code=200, summary='Список продуктов (купонов)', description='-', schema=ProductResponseModel)
     def get(self):
-        return super().get_()
+        args = get_parser.parse_args()
+        args = {k: v for k, v in args.items() if v is not None}
+        return super().get_(paginate_=True, **args)
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Products')
     @swagger.response(response_code=201, schema=ProductResponseModel, summary='Создать новый продукт (купон)', description='-')
     @swagger.reqparser(name='ProductCreateModel', parser=parser)
@@ -64,11 +77,15 @@ class ProductController(BaseController):
     name = 'Product'
     parser = parser
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Products')
     @swagger.response(response_code=200, summary='Продукт (купон)', description='-', schema=ProductResponseModel)
     def get(self, product_id):
         return super().get_(product_id)
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Products')
     @swagger.response(response_code=200, summary='Обновить продукт (купон)', description='-', schema=ProductResponseModel)
     @swagger.reqparser(name='ProductPutModel', parser=parser)

@@ -1,8 +1,14 @@
-from flask_restful import fields
+from flask_restful import fields, reqparse
 from flask_restful_swagger_3 import swagger, Schema
 
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.product.ProductItemTransactionModel import ProductItemTransaction
+from src.utils.roles import jwt_reqired_backoffice
+
+
+get_parser = reqparse.RequestParser()
+get_parser.add_argument('page', type=int, required=False, location='args')
+get_parser.add_argument('size', type=int, required=False, location='args')
 
 resource_fields_ = {
     'id': fields.String,
@@ -34,11 +40,15 @@ class BuyProductListController(BaseListController):
     model = ProductItemTransaction
     name = 'ProductItemTransaction'
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Products')
     @swagger.response(response_code=200, summary='Список всех покупок (Транзакций)', description='-',
                       schema=BuyProductResponseModel)
     def get(self):
-        return super().get_()
+        args = get_parser.parse_args()
+        args = {k: v for k, v in args.items() if v is not None}
+        return super().get_(paginate_=True, **args)
 
 
 class BuyProductController(BaseController):
@@ -46,6 +56,8 @@ class BuyProductController(BaseController):
     model = ProductItemTransaction
     name = 'ProductItemTransaction'
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Products')
     @swagger.response(response_code=200, summary='Транзакция', description='-',
                       schema=BuyProductResponseModel)

@@ -3,10 +3,13 @@ from flask_restful_swagger_3 import swagger, Schema
 
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.transaction.AdmissionTransaction import AdmissionTransaction, ACTION_TYPE_CHOICES, STATUS_CHOICES
+from src.utils.roles import jwt_reqired_backoffice
 
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('user', type=str, required=False, location='args')
 get_parser.add_argument('status', type=str, choices=STATUS_CHOICES, required=False, location='args')
+get_parser.add_argument('page', type=int, required=False, location='args')
+get_parser.add_argument('size', type=int, required=False, location='args')
 
 
 class AdmissionTransactionResponseModel(Schema):
@@ -39,6 +42,8 @@ class AdmissionTransactionListController(BaseListController):
     model = AdmissionTransaction
     name = 'AdmissionTransaction'
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Transaction')
     @swagger.response(response_code=201, schema=AdmissionTransactionResponseModel,
                       summary='Список транзакций зачислений',
@@ -50,7 +55,7 @@ class AdmissionTransactionListController(BaseListController):
     def get(self):
         args = get_parser.parse_args()
         args = {k: v for k, v in args.items() if v is not None}
-        return super().get_(**args)
+        return super().get_(paginate_=True, **args)
 
 
 class AdmissionTransactionTransactionController(BaseController):
@@ -58,6 +63,8 @@ class AdmissionTransactionTransactionController(BaseController):
     model = AdmissionTransaction
     name = 'AdmissionTransaction'
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Transaction')
     @swagger.response(response_code=201, schema=AdmissionTransactionResponseModel, summary='Транзакция зачисления',
                       description='-')

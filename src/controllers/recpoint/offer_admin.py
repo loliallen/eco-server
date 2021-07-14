@@ -9,6 +9,7 @@ from src.controllers.utils.BaseController import BaseListController
 from src.models.recpoint.RecPointModel import RecPoint
 from src.models.transaction.AdmissionTransaction import AdmissionTransaction
 from src.models.utils.enums import Status, STATUS_CHOICES
+from src.utils.roles import jwt_reqired_backoffice
 
 post_parser = reqparse.RequestParser()
 post_parser.add_argument('approve_status', type=str, choices=STATUS_CHOICES, required=True)
@@ -22,6 +23,8 @@ class RecPointOfferApproveController(BaseListController):
     name = 'RecPoint'
     parser = post_parser
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Recycle Points')
     @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Апрув изменения/добавления ПП приема',
                       description='-')

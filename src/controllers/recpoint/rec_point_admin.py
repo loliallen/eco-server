@@ -6,16 +6,21 @@ from flask_restful_swagger_3 import swagger, Schema
 from src.config import Configuration
 from src.controllers.utils import fields as custom_fields
 from src.controllers.utils.BaseController import BaseListController, BaseController
+from src.controllers.utils.pagination import paginate
 from src.models.recpoint.RecPointModel import RecPoint, PAYBACK_TYPE_CHOICES, RECEPTION_TYPE_CHOICES
 from src.models.utils.enums import STATUS_CHOICES
+from src.utils.roles import jwt_reqired_backoffice
 
 get_parser = reqparse.RequestParser()
-get_parser.add_argument('filters', type=literal_eval, required=False, location='args')
+get_parser.add_argument('filters', type=str, action='append', required=False, location='args')
 get_parser.add_argument('payback_type', type=str, required=False, location='args')
 get_parser.add_argument('reception_type', type=str, required=False, location='args')
-get_parser.add_argument('position', type=literal_eval, required=True, location='args')
-get_parser.add_argument('radius', type=int, required=True, location='args')
-get_parser.add_argument('status', type=str, required=False, location='args')
+get_parser.add_argument('position', type=str, action='append', required=False, location='args')
+get_parser.add_argument('radius', type=int, required=False, location='args')
+get_parser.add_argument('status', dest='approve_status', type=str, required=False, location='args')
+get_parser.add_argument('page', type=int, required=False, default=1, location='args')
+get_parser.add_argument('size', type=int, required=False, default=10, location='args')
+get_parser.add_argument('id', dest='id__in', type=str, action='append', location='args')
 
 
 post_parser = reqparse.RequestParser()
@@ -84,6 +89,8 @@ class RecPointListController(BaseListController):
     name = 'RecPoint'
     parser = post_parser
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Recycle Points')
     @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Список пунктов приема',
                       description='-')
@@ -93,20 +100,28 @@ class RecPointListController(BaseListController):
                        example='free', schema={'type': 'string', 'enum': PAYBACK_TYPE_CHOICES})
     @swagger.parameter(_in='query', name='reception_type', description='Тип переработки',
                        example='free', schema={'type': 'string', 'enum': RECEPTION_TYPE_CHOICES})
-    # TODO: переделать на пагинацию
     @swagger.parameter(_in='query', name='position', description='Координаты, относительно которых будут искаться ПП',
                        example='[55.799779, 49.1319283]', required=True, schema={'type': 'string'})
     @swagger.parameter(_in='query', name='radius', description='Радиус внутри которого будут искаться ПП',
                        example=10, required=True, schema={'type': 'integer'})
     @swagger.parameter(_in='query', name='status', description='Статус подтверждения',
                        required=False, schema={'type': 'string', 'enum': STATUS_CHOICES})
+    @swagger.parameter(_in='query', name='page',
+                       description='Номер страницы',
+                       example=1, required=False, schema={'type': 'integer'})
+    @swagger.parameter(_in='query', name='size',
+                       description='Кол-во элементов на странице',
+                       example=10, required=False, schema={'type': 'integer'})
     def get(self):
         args = get_parser.parse_args()
-        # if args.get('radius') > Configuration.MAX_RADIUS_REC_POINTS_SHOW:
-        #     return {'error': 'too long radius'}, 400
         points = RecPoint.read(**args)
-        return marshal(list(points), resource_fields_)
+        page = args.get('page')
+        size = args.get('size')
 
+        return paginate(points, page, size, resource_fields_, select_related_depth=1)
+
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Recycle Points')
     @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Создать новый пункт приема',
                       description='-')
@@ -122,12 +137,16 @@ class RecPointController(BaseController):
     name = 'RecPoint'
     parser = post_parser
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Recycle Points')
     @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Пункт приема',
                       description='-')
     def get(self, rec_point_id):
         return super().get_(rec_point_id)
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Recycle Points')
     @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Обновить пункт приема',
                       description='-')
@@ -135,6 +154,8 @@ class RecPointController(BaseController):
     def put(self, rec_point_id):
         return super().put_(rec_point_id)
 
+    @jwt_reqired_backoffice()
+    @swagger.security(JWT=[])
     @swagger.tags('Recycle Points')
     @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Удалить пункт приема',
                       description='-')
