@@ -28,7 +28,6 @@ from src.controllers.transaction.transaction_admin import (
 from src.controllers.user.admin.login import LoginController
 from src.controllers.user.admin.users import UsersListController, UsersController
 from src.controllers.user.admin.users_img_upload import UserImageUploaderController
-from src.middleware.collect_statistics import Collector
 from src.send_email import mail
 from src.utils.custom_swagger import CustomApi
 
@@ -36,7 +35,6 @@ app = Flask(__name__,
             static_url_path=Configuration.STATIC_URL_PATH,
             static_folder=Configuration.STATIC_FOLDER)
 app.config.from_object(Configuration)
-app.wsgi_app = Collector(app.wsgi_app)
 jwt = JWTManager(app)
 Database.global_connect()
 api = CustomApi(app, title='EcoApi for Admins',

@@ -29,7 +29,6 @@ from src.controllers.user.recovery_password.send_check_code import RecoverySendC
 from src.controllers.user.register import RegisterController
 from src.controllers.user.upload_profile_image import UserImageUploaderController
 from src.controllers.user.user_info import UserInfoController
-from src.middleware.collect_statistics import Collector
 from src.send_email import mail
 from src.utils.custom_swagger import CustomApi
 
@@ -37,7 +36,6 @@ app = Flask(__name__,
             static_url_path=Configuration.STATIC_URL_PATH,
             static_folder=Configuration.STATIC_FOLDER)
 app.config.from_object(Configuration)
-app.wsgi_app = Collector(app.wsgi_app)
 jwt = JWTManager(app)
 Database.global_connect()
 api = CustomApi(app, title="EcoApi for User",
