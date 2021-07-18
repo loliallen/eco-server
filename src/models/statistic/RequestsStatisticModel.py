@@ -1,37 +1,27 @@
-from mongoengine import Document, DateTimeField, StringField, ReferenceField
-from src.models.user.UserModel import User
+from datetime import datetime
+
+from mongoengine import Document, DateTimeField, StringField, ReferenceField, DictField
+
 from src.models.partner.PartnerModel import Partner
 from src.models.recpoint.RecPointModel import RecPoint
-from datetime import datetime
-from src.utils.JsonEncoder import JSONEncoder
-from bson import json_util
-import json
+from src.models.user.UserModel import User
 
-class Statistic(Document):
 
+class RequestsStatistic(Document):
     request_uri = StringField()
     date = DateTimeField(default=datetime.now)
+    params = DictField()
     user = ReferenceField(User, required=False)
+    user_agent = StringField()
     
     meta = {
         "db_alias": "core",
-        "collection": "statistics"
+        "collection": "requests_statistics"
     }
 
-    def to_jsony(self):
-        self.select_related(max_depth=2)
-        data = self.to_mongo()
-        if 'user' in data: #reference field
-            data['user'] = self.user.to_mongo() #reference field
-        # if 'reception_target' in data:
-        #     data['reception_target'] = self.reception_target.to_mongo()
-        # if 'reception_type' in data:
-        #     data['reception_type'] = self.reception_type.to_mongo()
-        # for i, r_point in enumerate(self.points):  #ListFiled(ReferenceField)
-        #     data['points'][i] = r_point.to_mongo()
-        data['date'] = str(self.date)
-        return json.loads(json.dumps(data, cls=JSONEncoder))
 
+
+# эти методы не используются, оставил их как пример для группировки
 def aggr(date=True, request=False):
     pipeline = [
         {

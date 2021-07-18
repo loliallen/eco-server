@@ -7,6 +7,7 @@ from src.config import Configuration
 from src.controllers.utils import fields as custom_fields
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.controllers.utils.pagination import paginate
+from src.controllers.utils.statistics_collector import collect_stat
 from src.models.recpoint.RecPointModel import RecPoint, RECEPTION_TYPE_CHOICES, PAYBACK_TYPE_CHOICES
 from src.models.utils.enums import Status
 
@@ -96,6 +97,8 @@ class RecPointListController(BaseListController):
     @swagger.parameter(_in='query', name='size',
                        description='Кол-во элементов на странице',
                        example=10, required=False, schema={'type': 'integer'})
+    # TODO: подумать, будем ли мы использовать эту статистику
+    @collect_stat(get_parser)
     def get(self):
         args = get_parser.parse_args()
         if args.get('radius') > Configuration.MAX_RADIUS_REC_POINTS_SHOW:
