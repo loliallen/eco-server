@@ -45,6 +45,7 @@ class RecPoint(Document, BaseCrud):
              reception_type: str = None,
              payback_type: str = None,
              approve_status: str = None,
+             id__in: list = None,
              **kwargs
              ) -> QuerySet:
         """
@@ -58,6 +59,8 @@ class RecPoint(Document, BaseCrud):
             rec_points = rec_points.filter(reception_type=reception_type)
         if payback_type:
             rec_points = rec_points.filter(payback_type=payback_type)
+        if id__in:
+            rec_points = rec_points.filter(id__in=id__in)
 
         if position and radius:
             radian = (radius * 10) / 6378.1

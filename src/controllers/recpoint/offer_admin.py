@@ -64,6 +64,9 @@ class RecPointOfferApproveController(BaseListController):
                 # копируем новую инфу из апдейта в старый ПП
                 d = json.loads(rec_point.to_json())
                 d.pop('_id')
+                d.pop('change_by')
+                d.pop('author')
+                d['approve_status'] = Status.confirmed.value
                 RecPoint.update_(rec_point.change_by.id, d)
                 rec_point.delete()  # удаляем апдейт
                 to_add = args['eco_coins'] or Configuration.ECO_COINS_BY_OFFER_CHANGE_REC_POINT

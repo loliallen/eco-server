@@ -8,6 +8,7 @@ from src.utils.roles import jwt_reqired_backoffice
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('user', type=str, required=False, location='args')
 get_parser.add_argument('status', type=str, choices=STATUS_CHOICES, required=False, location='args')
+get_parser.add_argument('action_type', type=str, choices=ACTION_TYPE_CHOICES, required=False, location='args')
 get_parser.add_argument('page', type=int, required=False, location='args')
 get_parser.add_argument('size', type=int, required=False, location='args')
 
