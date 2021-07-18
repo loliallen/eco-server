@@ -13,7 +13,8 @@ class Roles(Enum):
     moderator = 'moderator'
 
 
-BACKOFFICE_ACCESS_ROLES = [Roles.super_admin, Roles.moderator]
+ADMINS_GROUP = [Roles.super_admin, Roles.moderator]
+BACKOFFICE_ACCESS_ROLES = ADMINS_GROUP
 
 
 def role_need(role_list):
