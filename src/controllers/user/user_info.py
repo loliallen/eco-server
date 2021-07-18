@@ -1,9 +1,12 @@
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from flask_restful import fields, marshal
+from flask_restful import fields, marshal, reqparse
 from flask_restful_swagger_3 import swagger, Schema, Resource
 
 from src.controllers.utils import fields as custom_fields
 from src.models.user.UserModel import User
+
+post_parser = reqparse.RequestParser()
+post_parser.add_argument('name', type=str, required=True, help='Имя пользователя')
 
 
 class UserInfoResponseModel(Schema):
@@ -38,6 +41,10 @@ resource_fields_ = {
 
 
 class UserInfoController(Resource):
+    resource_fields = resource_fields_
+    model = User
+    name = 'User'
+    parser = post_parser
 
     @jwt_required()
     @swagger.security(JWT=[])
@@ -46,4 +53,17 @@ class UserInfoController(Resource):
                       description='-')
     def get(self):
         user = User.objects.filter(username=get_jwt_identity()).first()
+        return marshal(user, resource_fields_)
+
+    @jwt_required()
+    @swagger.security(JWT=[])
+    @swagger.tags('User')
+    @swagger.response(response_code=200, schema=UserInfoResponseModel, summary='Обновить информацию о пользователе',
+                      description='-')
+    @swagger.reqparser(name='UserUpdateModel', parser=post_parser)
+    def put(self):
+        updates = self.parser.parse_args()
+        user = User.get_user_from_request()
+        user: User
+        user.update(**updates)
         return marshal(user, resource_fields_)
