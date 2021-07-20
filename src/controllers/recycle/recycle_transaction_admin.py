@@ -5,7 +5,7 @@ import src.controllers.utils.fields as custom_fields
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.recycle.RecycleTransaction import RecycleTransaction
 from src.models.transaction.AdmissionTransaction import AdmissionTransaction
-from src.models.utils.enums import STATUS_CHOICES
+from src.models.utils.enums import STATUS_CHOICES, Status
 from src.utils.roles import jwt_reqired_backoffice
 
 get_parser = reqparse.RequestParser()
@@ -15,6 +15,7 @@ get_parser.add_argument('rec_point', dest='to_', type=str, required=False, locat
 get_parser.add_argument('status', type=str, choices=STATUS_CHOICES, required=False, location='args')
 get_parser.add_argument('page', type=int, required=False, location='args')
 get_parser.add_argument('size', type=int, required=False, location='args')
+get_parser.add_argument('id', dest='id__in', type=str, action='append', location='args')
 
 post_parser = reqparse.RequestParser()
 post_parser.add_argument('status', type=str, choices=STATUS_CHOICES, required=True)
@@ -108,12 +109,18 @@ class RecycleTransactionController(BaseController):
     @swagger.reqparser('RecycleApprove', post_parser)
     def put(self, recycle_id):
         rec_transaction = RecycleTransaction.find_by_id_(recycle_id)
+        rec_transaction: RecycleTransaction
         if rec_transaction is None:
-            return {'error': 'RecycleTransaction not fuond'}, 404
-        admission_transaction = AdmissionTransaction.objects.filter(action=rec_transaction.id)
+            return {'error': 'RecycleTransaction not found'}, 404
+        admission_transaction = AdmissionTransaction.objects.filter(action=rec_transaction.id).first()
+        admission_transaction: AdmissionTransaction
         if admission_transaction is None:
             return {'error': 'AdmissionTransaction not fuond'}, 404
+        if admission_transaction.status != Status.idle.value:
+            return {'error': 'Can not to change confirmed transaction'}, 400
         args = post_parser.parse_args()
         rec_transaction.update(set__status=args['status'])
         admission_transaction.update(set__status=args['status'])
+        if args['status'] == Status.confirmed.value:
+            rec_transaction.from_.add_freeze_coins(admission_transaction.eco_coins)
         return {'status': 'ok'}, 201

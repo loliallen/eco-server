@@ -40,7 +40,7 @@ class Configuration:
     ECO_COINS_BY_OFFER_CHANGE_REC_POINT = 20
 
     WEIGHT_RECYCLE_TO_NEED_APPROVE = 10
-    TEST_FREEZE_TIME = datetime.timedelta(days=15)
+    TEST_FREEZE_TIME = datetime.timedelta(days=1)
     MAX_RADIUS_REC_POINTS_SHOW = 100
 
     STATIC_FOLDER = os.getenv("STATIC_FOLDER", str(pathlib.Path(__file__).parent.absolute() / "statics"))
