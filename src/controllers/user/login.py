@@ -37,6 +37,6 @@ class LoginController(Resource):
             return {'error': 'wrong login or password'}, 403
         if not user.confirmed:
             return {'error': 'user not confirmed'}, 403
-        user.update(last_login__set=datetime.datetime.utcnow)
+        user.update(set__last_login=datetime.datetime.utcnow)
         access_token = create_access_token(identity=args['username'])
         return marshal({'access_token': access_token}, resource_fields_)
