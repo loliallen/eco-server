@@ -12,6 +12,7 @@ get_parser.add_argument('page', type=int, required=False, location='args')
 get_parser.add_argument('size', type=int, required=False, location='args')
 
 parser = reqparse.RequestParser()
+parser.add_argument('test', type=str, required=True, help='тест')
 parser.add_argument('question', type=str, required=True, help='название вопроса')
 parser.add_argument('question_type', type=str, required=True, choices=QUESTION_TYPE_CHOICES, help='Тип вопроса')
 parser.add_argument('answers_variants', type=str, action='append', required=True, help='Варианты ответа')

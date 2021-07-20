@@ -1,4 +1,4 @@
-from flask_restful import fields, reqparse
+from flask_restful import fields, reqparse, marshal
 from flask_restful_swagger_3 import swagger, Schema
 
 import src.controllers.utils.fields as custom_fields
@@ -123,4 +123,4 @@ class RecycleTransactionController(BaseController):
         admission_transaction.update(set__status=args['status'])
         if args['status'] == Status.confirmed.value:
             rec_transaction.from_.add_freeze_coins(admission_transaction.eco_coins)
-        return {'status': 'ok'}, 201
+        return marshal(rec_transaction, self.resource_fields)
