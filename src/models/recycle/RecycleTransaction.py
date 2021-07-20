@@ -33,3 +33,15 @@ class RecycleTransaction(Document, BaseCrud):
         "collection": "recycle_transaction",
         "strict": False
     }
+
+    @staticmethod
+    def get_statistic(**kwargs):
+        return RecycleTransaction.objects.filter(**kwargs).aggregate([
+            # {'$match': {'items': {'$ne': None}}},
+            {"$project": {"filter": "$items.filter", "amount": "$items.amount"}},
+            {"$unwind": "$filter"},
+            {"$unwind": "$amount"},
+            {"$group": {"_id": "$filter", "total": {"$sum": "$amount"}}},
+            {'$lookup': {'from': 'filters', 'localField': '_id', 'foreignField': '_id', 'as': 'filter_instance'}},
+            {"$project": {"_id": 0, "filter": "$_id", 'total': 1, 'name': {'$arrayElemAt': ['$filter_instance.name', 0]}}}
+        ])

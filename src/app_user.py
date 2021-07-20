@@ -17,6 +17,7 @@ from src.controllers.recpoint.rec_point_user import RecPointController, RecPoint
 from src.controllers.recycle.recycle_transaction_user import RecycleTransactionListController, \
     RecycleTransactionController
 from src.controllers.recycle.recycle_transaction_user_img_update import RecycleImageUploaderController
+from src.controllers.statistics.user.get_recycle_stat import RecycleStatisticController
 from src.controllers.test.user.answere_user_controller import UserAnswerController
 from src.controllers.test.user.attempts_user_controller import UserAttemptsListController, UserAttemptsController
 from src.controllers.transaction.transaction_user import AdmissionTransactionListController, \
@@ -85,6 +86,10 @@ api.add_resource(UserAnswerController, '/api/test_attempts/<attempt_id>/answer')
 api.add_resource(NewsListController, '/api/news')
 api.add_resource(NewsController, '/api/news/<news_id>')
 api.add_resource(NewsUserImageUploaderController, '/api/news/<news_id>/image')
+
+
+# Stats
+api.add_resource(RecycleStatisticController, '/api/stats')
 
 # swagger
 swagger_ui_blueprint = get_swaggerui_blueprint(
