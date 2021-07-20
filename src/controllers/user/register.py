@@ -9,17 +9,17 @@ from flask_restful import reqparse, fields, marshal
 from flask_restful_swagger_3 import swagger, Schema
 
 from src.controllers.utils.BaseController import BaseListController
+from src.controllers.utils import inputs
 from src.models.user.UserModel import User
 from src.send_email import send_email
 
 post_parser = reqparse.RequestParser()
-post_parser.add_argument('name', type=str, required=True, help='Имя пользователя')
-post_parser.add_argument('username', type=str, required=True, help='Почта пользователя')
-post_parser.add_argument('password', type=str, required=True, help='Пароль пользователя')
+post_parser.add_argument('name', type=inputs.NotEmptyString(), required=True, help='Имя пользователя')
+post_parser.add_argument('username', type=inputs.Email(), required=True,
+                         help='Почта пользователя должна содержать: имя ящика, @, почтового провайдера, домен (.ru)')
+post_parser.add_argument('password', type=inputs.Password(), required=True,
+                         help=f'Пароль пользователя должен иметь {inputs.Password.help_msg}')
 post_parser.add_argument('invite_code', type=str, required=False, help='Код приглашения')
-
-post_parser_img = post_parser.copy()
-post_parser_img.add_argument('image', type=werkzeug.datastructures.FileStorage, location='files')
 
 
 class RegisterResponseModel(Schema):
@@ -42,17 +42,14 @@ resource_fields_ = {
 
 
 class RegisterController(BaseListController):
-    resource_fields = resource_fields_
     model = User
-    name = 'User'
-    parser = post_parser_img
 
     @swagger.tags('User')
     @swagger.response(response_code=201, schema=RegisterResponseModel, summary='Зарегистрироваться',
                       description='-')
     @swagger.reqparser(name='RegisterCreateModel', parser=post_parser)
     def post(self):
-        args = post_parser_img.parse_args()
+        args = post_parser.parse_args()
         invite_code = args.pop('invite_code')
         if invite_code:
             invite_user = User.objects.filter(token=invite_code).first()
