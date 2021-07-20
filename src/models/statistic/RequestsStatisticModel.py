@@ -9,7 +9,7 @@ from src.models.user.UserModel import User
 
 class RequestsStatistic(Document):
     request_uri = StringField()
-    date = DateTimeField(default=datetime.now)
+    date = DateTimeField(default=datetime.utcnow)
     params = DictField()
     user = ReferenceField(User, required=False)
     user_agent = StringField()

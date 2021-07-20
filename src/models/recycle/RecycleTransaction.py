@@ -26,7 +26,7 @@ class RecycleTransaction(Document, BaseCrud):
     amount = FloatField(default=0.0)  # Количество сданного материала
     reward = IntField(default=0)  # Количество коинов-вознаграждения
     status = StringField(choices=STATUS_CHOICES, default=Status.idle.value)  # статус подтверждения
-    date = DateTimeField(default=datetime.now)
+    date = DateTimeField(default=datetime.utcnow)
 
     meta = {
         "db_alias": "core",

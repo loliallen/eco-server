@@ -1,3 +1,5 @@
+import datetime
+
 from flask_jwt_extended import get_jwt_identity
 from mongoengine import Document, StringField, BooleanField, DateTimeField, IntField, ReferenceField
 from pathlib import Path
@@ -7,9 +9,6 @@ from src.models.utils.Atomic import Atomic
 from src.models.utils.BaseCrud import BaseCrud
 from src.utils.generator import random_string, generate_code
 
-REL_PATH = "/statics/users"
-files_storage = Path('./src'+REL_PATH)
-
 
 class User(Document, UserMixin, BaseCrud, Atomic):
     username = StringField(required=True, unique=True)
@@ -18,7 +17,9 @@ class User(Document, UserMixin, BaseCrud, Atomic):
     password = StringField(required=True)
     image = StringField()
     confirmed = BooleanField(default=False)
+    register_on = DateTimeField(default=datetime.datetime.utcnow)
     confirmed_on = DateTimeField()
+    last_login = DateTimeField()
     eco_coins = IntField(default=0)  # экокоины, на которые можно покупать товары
     freeze_eco_coins = IntField(default=0)  # замороженные экокоины
     code = IntField(default=generate_code)  # код проверки, который отправляется на почту

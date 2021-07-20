@@ -30,7 +30,7 @@ class AdmissionTransaction(Document, BaseCrud):
     eco_coins = IntField()
     status = StringField(choices=STATUS_CHOICES, default=Status.idle.value)  # статус подтверждения
     description = StringField()
-    date = DateTimeField(default=datetime.now)
+    date = DateTimeField(default=datetime.utcnow)
 
     meta = {
         "db_alias": "core",

@@ -1,3 +1,5 @@
+import datetime
+
 from flask_jwt_extended import create_access_token
 from flask_restful import reqparse, fields, marshal
 from flask_restful_swagger_3 import swagger, Schema, Resource
@@ -35,5 +37,6 @@ class LoginController(Resource):
             return {'error': 'wrong login or password'}, 403
         if not user.confirmed:
             return {'error': 'user not confirmed'}, 403
+        user.update(last_login__set=datetime.datetime.utcnow)
         access_token = create_access_token(identity=args['username'])
         return marshal({'access_token': access_token}, resource_fields_)
