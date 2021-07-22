@@ -7,6 +7,15 @@ from src.models.utils.enums import STATUS_CHOICES, Status
 
 RECEPTION_TYPE_CHOICES = ('recycle', 'utilisation', 'charity')
 PAYBACK_TYPE_CHOICES = ('free', 'paid', 'partner')
+DISTRICTS = (
+    'Приволжский',
+    'Советский',
+    'Вахитовский',
+    'Ново-Савинский',
+    'Московский',
+    'Кировский',
+    'Авиастроительный'
+)
 
 
 class RecPoint(Document, BaseCrud):
@@ -18,6 +27,7 @@ class RecPoint(Document, BaseCrud):
     external_images = ListField(StringField())
     getBonus = BooleanField()
     address = StringField(requrend=True)
+    district = StringField()
     partner = ReferenceField('Partner', required=False)
     reception_type = StringField(choices=RECEPTION_TYPE_CHOICES)
     payback_type = StringField(choices=PAYBACK_TYPE_CHOICES)

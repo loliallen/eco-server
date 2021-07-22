@@ -7,9 +7,12 @@ from src.config import Configuration
 from src.controllers.utils import fields as custom_fields
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.controllers.utils.pagination import paginate
-from src.models.recpoint.RecPointModel import RecPoint, PAYBACK_TYPE_CHOICES, RECEPTION_TYPE_CHOICES
+from src.models.recpoint.RecPointModel import (
+    RecPoint, PAYBACK_TYPE_CHOICES, RECEPTION_TYPE_CHOICES, DISTRICTS
+)
+from src.models.user.UserModel import User
 from src.models.utils.enums import STATUS_CHOICES
-from src.utils.roles import jwt_reqired_backoffice
+from src.utils.roles import jwt_reqired_backoffice, role_need, Roles
 
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('filters', type=str, action='append', required=False, location='args')
@@ -39,6 +42,7 @@ post_parser.add_argument('description', type=str, required=False)
 post_parser.add_argument('getBonus', type=bool, required=False)
 post_parser.add_argument('external_images', type=str, action='append', required=False)
 post_parser.add_argument('approve_status', type=str, choices=STATUS_CHOICES, required=False)
+post_parser.add_argument('district', type=str, choices=DISTRICTS, required=False)
 
 
 class RecPointResponseModel(Schema):
@@ -56,6 +60,7 @@ class RecPointResponseModel(Schema):
         'coords': {'type': 'array', 'items': {'type': 'float'}},
         'description': {'type': 'string'},
         'getBonus': {'type': 'boolean'},
+        'district': {'type': 'string'},
         'images': {'type': 'string', 'description': 'Ссылки на изображения'}
     }
 
@@ -79,7 +84,8 @@ resource_fields_ = {
     "external_images": fields.List(fields.String),
     "approve_status": fields.String,
     "author": fields.String(attribute='author.id'),
-    "change_by": fields.String(attribute='change_by.id')
+    "change_by": fields.String(attribute='change_by.id'),
+    "district": fields.String,
 }
 
 
@@ -127,8 +133,8 @@ class RecPointListController(BaseListController):
                       description='-')
     @swagger.reqparser(name='RecPointCreateModel', parser=post_parser)
     def post(self):
-        # TODO: добавить автора
-        return super().post_()
+        admin = User.get_user_from_request()
+        return super().post_(author=admin)
 
 
 class RecPointController(BaseController):
@@ -155,9 +161,10 @@ class RecPointController(BaseController):
         return super().put_(rec_point_id)
 
     @jwt_reqired_backoffice()
+    @role_need([Roles.super_admin])
     @swagger.security(JWT=[])
     @swagger.tags('Recycle Points')
     @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Удалить пункт приема',
                       description='-')
     def delete(self, rec_point_id):
-        super().delete_(rec_point_id)
+        return super().delete_(rec_point_id)

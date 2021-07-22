@@ -17,6 +17,9 @@ from src.controllers.recpoint.rec_point_admin import RecPointController, RecPoin
 from src.controllers.recpoint.offer_admin import RecPointOfferApproveController
 from src.controllers.recpoint.rec_point_admin_img_update import RecPointImageUploaderController
 from src.controllers.recycle.recycle_transaction_admin import RecycleTransactionListController, RecycleTransactionController
+from src.controllers.statistics.admin.get_recycle_district_stat import \
+    RecycleStatisticDistrictController
+from src.controllers.statistics.admin.get_recycle_stat import RecycleStatisticController
 from src.controllers.test.admin.attempts_admin_controller import AdminAttemptsListController, AdminAttemptsController
 from src.controllers.test.admin.question_admin_controller import QuestionListController, QuestionController
 from src.controllers.test.admin.question_admin_img_uploader import QuestionImageUploaderController
@@ -92,6 +95,10 @@ api.add_resource(AdminAttemptsController, '/admin/attempts/<attempt_id>')
 api.add_resource(NewsListController, '/admin/news')
 api.add_resource(NewsController, '/admin/news/<news_id>')
 api.add_resource(NewsAdminImageUploaderController, '/admin/news/<news_id>/image')
+
+# Statistics
+api.add_resource(RecycleStatisticController, '/admin/recycle_stat')
+api.add_resource(RecycleStatisticDistrictController, '/admin/recycle_stat_district')
 
 # swagger
 swagger_ui_blueprint = get_swaggerui_blueprint(

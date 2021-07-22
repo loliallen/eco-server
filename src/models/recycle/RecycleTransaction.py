@@ -45,3 +45,17 @@ class RecycleTransaction(Document, BaseCrud):
             {'$lookup': {'from': 'filters', 'localField': '_id', 'foreignField': '_id', 'as': 'filter_instance'}},
             {"$project": {"_id": 0, "filter": "$_id", 'total': 1, 'name': {'$arrayElemAt': ['$filter_instance.name', 0]}}}
         ])
+
+    @staticmethod
+    def get_statistic_by_district(**kwargs):
+        return RecycleTransaction.objects.filter(**kwargs).aggregate([
+            {'$match': {'items': {'$ne': None}}},
+            {'$lookup': {'from': 'rec_points', 'localField': 'to_', 'foreignField': '_id', 'as': 'rec_point'}},
+            {"$project": {"district": {'$arrayElemAt': ['$rec_point.district', 0]}, "filter": "$items.filter", "amount": "$items.amount"}},
+            {"$unwind": "$filter"},
+            {"$unwind": "$amount"},
+            {"$group": {"_id": {"filter": "$filter", "district": "$district"}, "total": {"$sum": "$amount"}}},
+            {'$lookup': {'from': 'filters', 'localField': '_id.filter', 'foreignField': '_id', 'as': 'filter_instance'}},
+            {"$group": {"_id": "$_id.district", "items": {"$push": {"filter": "$_id.filter", "total": "$total", 'name': {'$arrayElemAt': ['$filter_instance.name', 0]}}}}},
+            {"$project": {"_id": 0, "district": "$_id", 'items': 1, 'total': { '$sum': '$items.total'}}},
+        ])
