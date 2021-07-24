@@ -1,21 +1,19 @@
 import datetime
 
-from flask_restful import fields, marshal, reqparse, inputs
+from flask_restful import fields, marshal, reqparse
 from flask_restful_swagger_3 import swagger, Schema
 
 from src.controllers.utils.BaseController import BaseController
 from src.models.recpoint.RecPointModel import DISTRICTS
 from src.models.recycle.RecycleTransaction import RecycleTransaction
-from src.models.transaction.AdmissionTransaction import Status
-from src.models.user.UserModel import User
 from src.utils.roles import jwt_reqired_backoffice
-
 
 PERIOD = ('day', 'week', 'month', 'year')
 
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('period', type=str, required=False, choices=PERIOD, location='args')
-# get_parser.add_argument('districts', dist='to___district', type=str, action='append', required=False, choices=DISTRICTS, location='args')
+get_parser.add_argument('districts', type=str, action='append', required=False, choices=DISTRICTS, location='args')
+get_parser.add_argument('filters', type=str, action='append', required=False, location='args')
 
 
 class RecycleStatItem(Schema):
@@ -65,6 +63,10 @@ class RecycleStatisticDistrictController(BaseController):
                       description='-')
     @swagger.parameter(_in='query', name='period', description='Фильтр по периоду',
                        schema={'type': 'string', 'enum': PERIOD})
+    @swagger.parameter(_in='query', name='districts', description='Районы',
+                       schema={'type': 'string', 'enum': DISTRICTS})
+    @swagger.parameter(_in='query', name='filters', description='Фильтры',
+                       schema={'type': 'string'})
     def get(self):
         args = get_parser.parse_args()
         args = {k: v for k, v in args.items() if v is not None}

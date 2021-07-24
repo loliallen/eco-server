@@ -12,6 +12,10 @@ class Roles(Enum):
     super_admin = 'super_admin'
     moderator = 'moderator'
 
+    @classmethod
+    def choices(cls):
+        return tuple(i.value for i in cls)
+
 
 ADMINS_GROUP = [Roles.super_admin, Roles.moderator]
 BACKOFFICE_ACCESS_ROLES = ADMINS_GROUP

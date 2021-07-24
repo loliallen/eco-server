@@ -7,6 +7,7 @@ import src.services.Database as Database
 from src.config import Configuration
 from src.controllers.filter.filter_admin import FilterController, FilterControllerList
 from src.controllers.filter.filter_admin_image_update import FilterImageUploaderController
+from src.controllers.lookups.lookup_controller import LookupsControllerList
 from src.controllers.news.news_admin import NewsListController, NewsController
 from src.controllers.news.news_img_upload import NewsAdminImageUploaderController
 from src.controllers.partner.admin import PartnerController, PartnerListController
@@ -20,6 +21,7 @@ from src.controllers.recycle.recycle_transaction_admin import RecycleTransaction
 from src.controllers.statistics.admin.get_recycle_district_stat import \
     RecycleStatisticDistrictController
 from src.controllers.statistics.admin.get_recycle_stat import RecycleStatisticController
+from src.controllers.statistics.admin.get_unique_users import UsersStatisticController
 from src.controllers.test.admin.attempts_admin_controller import AdminAttemptsListController, AdminAttemptsController
 from src.controllers.test.admin.question_admin_controller import QuestionListController, QuestionController
 from src.controllers.test.admin.question_admin_img_uploader import QuestionImageUploaderController
@@ -99,6 +101,10 @@ api.add_resource(NewsAdminImageUploaderController, '/admin/news/<news_id>/image'
 # Statistics
 api.add_resource(RecycleStatisticController, '/admin/recycle_stat')
 api.add_resource(RecycleStatisticDistrictController, '/admin/recycle_stat_district')
+api.add_resource(UsersStatisticController, '/admin/users_stat')
+
+# Lookups
+api.add_resource(LookupsControllerList, '/admin/lookups')
 
 # swagger
 swagger_ui_blueprint = get_swaggerui_blueprint(

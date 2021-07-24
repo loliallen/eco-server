@@ -47,3 +47,21 @@ class User(Document, UserMixin, BaseCrud, Atomic):
     def add_freeze_coins(self, coins):
         with self.lock() as user:
             user.update(inc__freeze_eco_coins=coins)
+
+    @staticmethod
+    def get_statistic(**kwargs):
+        period = kwargs.pop('period', None)
+        group_by = {'year': {'$year': '$confirmed_on'}}
+        if period in ['month', 'week', 'day']:
+            group_by['month'] = {'$month': '$confirmed_on'}
+        if period == 'week':
+            group_by["weekOfMonth"] = {'$floor': {'$divide': [{'$dayOfMonth': "$confirmed_on"}, 7]}}
+        if period == 'day':
+            group_by['day'] = {'$dayOfMonth': '$confirmed_on'}
+        return User.objects.filter(**kwargs).aggregate([
+            # {'$match': {'confirmed_on': {'$ne': None}}},
+            {'$group': {
+                '_id': group_by,
+                'cnt': {'$sum': 1}}},
+            {'$sort': {'_id': 1}}
+        ])
