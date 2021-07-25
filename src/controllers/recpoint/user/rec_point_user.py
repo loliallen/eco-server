@@ -1,5 +1,6 @@
 from ast import literal_eval
 
+from flask_jwt_extended import jwt_required
 from flask_restful import reqparse, fields, marshal
 from flask_restful_swagger_3 import swagger, Schema
 
@@ -7,9 +8,11 @@ from src.config import Configuration
 from src.controllers.utils import fields as custom_fields
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.controllers.utils.pagination import paginate
-from src.controllers.utils.statistics_collector import collect_stat
 from src.models.recpoint.RecPointModel import RecPoint, RECEPTION_TYPE_CHOICES, PAYBACK_TYPE_CHOICES
+from src.models.transaction.AdmissionTransaction import AdmissionTransaction, ActionType
+from src.models.user.UserModel import User
 from src.models.utils.enums import Status
+from src.utils.roles import role_need, Roles
 
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('filters', type=literal_eval, required=False, location='args')
@@ -19,6 +22,41 @@ get_parser.add_argument('position', type=literal_eval, required=True, location='
 get_parser.add_argument('radius', type=int, required=True, location='args')
 get_parser.add_argument('page', type=int, required=False, location='args')
 get_parser.add_argument('size', type=int, required=False, location='args')
+
+
+post_parser = reqparse.RequestParser()
+# post_parser.add_argument('name', type=str, required=True)
+post_parser.add_argument('address', type=str, required=True)
+# post_parser.add_argument('partner', type=str, required=False)
+# post_parser.add_argument('payback_type', type=str, required=True,
+#                          choices=PAYBACK_TYPE_CHOICES)
+# post_parser.add_argument('reception_type', type=str, required=True,
+#                          choices=RECEPTION_TYPE_CHOICES)
+post_parser.add_argument('contacts', type=str, action='append', required=False)
+# post_parser.add_argument('work_time', type=str, required=False)
+# post_parser.add_argument('accept_types', type=str, action='append', required=False)
+# post_parser.add_argument('coords', type=float, action='append', required=False)
+post_parser.add_argument('description', type=str, required=False)
+# post_parser.add_argument('getBonus', type=bool, required=False)
+# post_parser.add_argument('external_images', type=str, action='append', required=False)
+
+
+put_parser = reqparse.RequestParser()
+put_parser.add_argument('name', type=str, required=True)
+put_parser.add_argument('address', type=str, required=True)
+# put_parser.add_argument('partner', type=str, required=False)
+# put_parser.add_argument('payback_type', type=str, required=True,
+#                          choices=PAYBACK_TYPE_CHOICES)
+# put_parser.add_argument('reception_type', type=str, required=True,
+#                          choices=RECEPTION_TYPE_CHOICES)
+put_parser.add_argument('contacts', type=str, action='append', required=False)
+# put_parser.add_argument('work_time', type=str, required=False)
+put_parser.add_argument('accept_types', type=str, action='append', required=False)
+# put_parser.add_argument('coords', type=float, action='append', required=False)
+put_parser.add_argument('description', type=str, required=False)
+put_parser.add_argument('getBonus', type=bool, required=False)
+# put_parser.add_argument('external_images', type=str, action='append', required=False)
+
 
 
 class RecPointResponseModel(Schema):
@@ -97,8 +135,6 @@ class RecPointListController(BaseListController):
     @swagger.parameter(_in='query', name='size',
                        description='Кол-во элементов на странице',
                        example=10, required=False, schema={'type': 'integer'})
-    # TODO: подумать, будем ли мы использовать эту статистику
-    @collect_stat(get_parser)
     def get(self):
         args = get_parser.parse_args()
         if args.get('radius') > Configuration.MAX_RADIUS_REC_POINTS_SHOW:
@@ -111,14 +147,47 @@ class RecPointListController(BaseListController):
 
         return marshal(points.select_related(max_depth=1), resource_fields_reduced_)
 
+    @jwt_required()
+    @swagger.security(JWT=[])
+    @swagger.tags('Filters and Recycle Points')
+    @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Предложить новый пункт приема',
+                      description='-')
+    @swagger.reqparser(name='RecPointCreateModel', parser=post_parser)
+    def post(self):
+        user = User.get_user_from_request()
+        args = post_parser.parse_args()
+        args['work_time'] = {'comment': args.get('work_time', None)}
+        rec_point, error = self._create_obj(**args, author=user)
+        if error:
+            return error
+        AdmissionTransaction.create_(
+            action_type=ActionType.add_pp.value,
+            action=rec_point,
+            status=Status.idle.value,
+            user=user
+        )
+        return marshal(rec_point, self.resource_fields)
+
 
 class RecPointController(BaseController):
     resource_fields = resource_fields_
     model = RecPoint
     name = 'RecPoint'
+    parser = put_parser
 
     @swagger.tags('Filters and Recycle Points')
     @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Пункт приема',
                       description='-')
     def get(self, rec_point_id):
         return super().get_(rec_point_id)
+
+    @jwt_required()
+    @role_need([Roles.admin_pp])
+    @swagger.security(JWT=[])
+    @swagger.tags('Filters and Recycle Points')
+    @swagger.response(response_code=201, schema=RecPointResponseModel,
+                      summary='Изменить свой пункта приема (Только для админов ПП)',
+                      description='-')
+    @swagger.reqparser(name='RecPointPutModel', parser=post_parser)
+    def put(self, rec_point_id):
+        return super().put_(rec_point_id)

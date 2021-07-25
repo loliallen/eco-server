@@ -2,7 +2,7 @@ from flask_jwt_extended import jwt_required
 from flask_restful import reqparse, marshal
 from flask_restful_swagger_3 import swagger
 
-from src.controllers.recpoint.rec_point_user import RecPointResponseModel
+from src.controllers.recpoint.admin.rec_point_user import RecPointResponseModel
 from src.controllers.recpoint.rec_point_user import resource_fields_
 from src.controllers.utils.BaseController import BaseListController
 from src.models.recpoint.RecPointModel import RecPoint, RECEPTION_TYPE_CHOICES, PAYBACK_TYPE_CHOICES
@@ -32,15 +32,6 @@ class RecPointOfferController(BaseListController):
     model = RecPoint
     name = 'RecPoint'
     parser = post_parser
-
-    # @jwt_required()
-    # @swagger.security(JWT=[])
-    # @swagger.tags('Filters and Recycle Points')
-    # @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Список моих предложений пункта приема',
-    #                   description='-')
-    # def get(self):
-    #     user = User.get_user_from_request()
-    #     return super().get_(author=user)
 
     @jwt_required()
     @swagger.security(JWT=[])

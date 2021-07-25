@@ -10,6 +10,7 @@ from src.controllers.utils.pagination import paginate
 from src.models.recpoint.RecPointModel import (
     RecPoint, PAYBACK_TYPE_CHOICES, RECEPTION_TYPE_CHOICES, DISTRICTS
 )
+from src.models.transaction.AdmissionTransaction import AdmissionTransaction, ActionType
 from src.models.user.UserModel import User
 from src.models.utils.enums import STATUS_CHOICES
 from src.utils.roles import jwt_reqired_backoffice, role_need, Roles
@@ -29,20 +30,20 @@ get_parser.add_argument('id', dest='id__in', type=str, action='append', location
 post_parser = reqparse.RequestParser()
 post_parser.add_argument('name', type=str, required=True)
 post_parser.add_argument('address', type=str, required=True)
-post_parser.add_argument('partner', type=str, required=True)
-post_parser.add_argument('payback_type', type=str, required=True,
-                         choices=PAYBACK_TYPE_CHOICES)
-post_parser.add_argument('reception_type', type=str, required=True,
-                         choices=RECEPTION_TYPE_CHOICES)
-post_parser.add_argument('contacts', type=str, action='append', required=False)
-post_parser.add_argument('work_time', type=dict, required=True)
+post_parser.add_argument('partner', type=str, required=False)
+post_parser.add_argument('payback_type', type=str, required=False,
+                         choices=PAYBACK_TYPE_CHOICES + (None,))
+post_parser.add_argument('reception_type', type=str, required=False,
+                         choices=RECEPTION_TYPE_CHOICES + (None,))
+post_parser.add_argument('contacts', type=str, action='append', required=True)
+post_parser.add_argument('work_time', type=dict, required=False)
 post_parser.add_argument('accept_types', type=str, action='append', required=False)
 post_parser.add_argument('coords', type=float, action='append', required=False)
 post_parser.add_argument('description', type=str, required=False)
 post_parser.add_argument('getBonus', type=bool, required=False)
 post_parser.add_argument('external_images', type=str, action='append', required=False)
-post_parser.add_argument('approve_status', type=str, choices=STATUS_CHOICES, required=False)
-post_parser.add_argument('district', type=str, choices=DISTRICTS, required=False)
+post_parser.add_argument('approve_status', type=str, choices=STATUS_CHOICES + (None,), required=False)
+post_parser.add_argument('district', type=str, choices=DISTRICTS + (None,), required=False)
 
 
 class RecPointResponseModel(Schema):
@@ -158,7 +159,13 @@ class RecPointController(BaseController):
                       description='-')
     @swagger.reqparser(name='RecPointPutModel', parser=post_parser)
     def put(self, rec_point_id):
-        return super().put_(rec_point_id)
+        updates = self.parser.parse_args()
+        if updates['coords'] is None or updates['coords'] == [None]:
+            updates.pop('coords')
+        err, obj = self.update_obj(rec_point_id, updates)
+        if err:
+            return err
+        return marshal(obj, resource_fields_)
 
     @jwt_reqired_backoffice()
     @role_need([Roles.super_admin])
@@ -167,4 +174,9 @@ class RecPointController(BaseController):
     @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Удалить пункт приема',
                       description='-')
     def delete(self, rec_point_id):
+        admission_transaction = AdmissionTransaction.objects.filter(
+            action_type=ActionType.add_pp.value,
+            action=rec_point_id.id).first()
+        if admission_transaction is not None:
+            admission_transaction.update(set__action=None)
         return super().delete_(rec_point_id)

@@ -17,16 +17,18 @@ class RecPointImageUploaderController(BaseController):
     @swagger.security(JWT=[])
     @swagger.tags('Filters and Recycle Points')
     @swagger.response(response_code=201, schema=custom_swagger.OkSchema,
-                      summary='Загрузить изображения для предложенного ПП', description='-')
+                      summary='Загрузить изображения для ПП', description='-')
     @custom_swagger.mark_files_request(is_list=True)
     def post(self, rec_point_id):
         user = User.get_user_from_request()
         rec_point = RecPoint.objects.filter(id=rec_point_id).first()
         if rec_point is None:
             return {'error': 'RecycleTransaction not found'}, 404
-        if rec_point.author.id != user.id:
-            return {'error': 'Permission denied'}, 403
-        if rec_point.approve_status != Status.idle.value:
-            return {'error': 'Permission denied'}, 403
+        if user.attached_rec_point.id != rec_point.id:
+            if rec_point.author.id != user.id:
+                return {'error': 'Permission denied'}, 403
+            if rec_point.approve_status != Status.idle.value:
+                return {'error': 'Permission denied (rec point already approved), '
+                                 'create comment to change images'}, 403
         save_imgs(rec_point, root)
         return {'status': 'ok'}, 201

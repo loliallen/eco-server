@@ -6,14 +6,14 @@ from flask_swagger_ui import get_swaggerui_blueprint
 import src.services.Database as Database
 from src.config import Configuration
 from src.controllers.filter.filter_user import FilterController, FilterControllerList
+from src.controllers.lookups.user.lookup_controller import LookupsControllerList
 from src.controllers.news.news_img_upload import NewsUserImageUploaderController
 from src.controllers.news.news_user import NewsListController, NewsController
 from src.controllers.product.product_user import ProductController, ProductListController
 from src.controllers.product.buy_product_user import BuyProductController
-from src.controllers.recpoint.offer_user import RecPointOfferController, \
-    RecPointOfferUpdateController
-from src.controllers.recpoint.offer_user_img_update import RecPointImageUploaderController
-from src.controllers.recpoint.rec_point_user import RecPointController, RecPointListController
+from src.controllers.recpoint.user.comment_user import RecPointCommentController
+from src.controllers.recpoint.user.rec_point_user_img_update import RecPointImageUploaderController
+from src.controllers.recpoint.user.rec_point_user import RecPointController, RecPointListController
 from src.controllers.recycle.recycle_transaction_user import RecycleTransactionListController, \
     RecycleTransactionController
 from src.controllers.recycle.recycle_transaction_user_img_update import RecycleImageUploaderController
@@ -57,11 +57,15 @@ api.add_resource(ChangePasswordController, '/api/change_password')
 # Filters and Rec Points
 api.add_resource(FilterControllerList, '/api/filters')
 api.add_resource(FilterController, '/api/filters/<filter_id>')
+
 api.add_resource(RecPointListController, '/api/rec_points')
 api.add_resource(RecPointController, '/api/rec_points/<rec_point_id>')
-api.add_resource(RecPointOfferController, '/api/rec_offer')
-api.add_resource(RecPointOfferUpdateController, '/api/rec_offer/<rec_point_id>')
-api.add_resource(RecPointImageUploaderController, '/api/rec_offer/<rec_point_id>/images')
+api.add_resource(RecPointCommentController, '/api/rec_points/<rec_point_id>/comment')
+api.add_resource(RecPointImageUploaderController, '/api/rec_points/<rec_point_id>/images')
+
+# api.add_resource(RecPointOfferController, '/api/rec_offer')
+# api.add_resource(RecPointOfferUpdateController, '/api/rec_offer/<rec_point_id>')
+
 
 # Recycle
 api.add_resource(RecycleTransactionListController, '/api/recycle')
@@ -90,6 +94,9 @@ api.add_resource(NewsUserImageUploaderController, '/api/news/<news_id>/image')
 
 # Stats
 api.add_resource(RecycleStatisticController, '/api/stats')
+
+# Lookups
+api.add_resource(LookupsControllerList, '/admin/lookups')
 
 # swagger
 swagger_ui_blueprint = get_swaggerui_blueprint(

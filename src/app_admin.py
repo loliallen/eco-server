@@ -7,23 +7,32 @@ import src.services.Database as Database
 from src.config import Configuration
 from src.controllers.filter.filter_admin import FilterController, FilterControllerList
 from src.controllers.filter.filter_admin_image_update import FilterImageUploaderController
-from src.controllers.lookups.lookup_controller import LookupsControllerList
+from src.controllers.lookups.admin.lookup_controller import LookupsControllerList
 from src.controllers.news.news_admin import NewsListController, NewsController
 from src.controllers.news.news_img_upload import NewsAdminImageUploaderController
 from src.controllers.partner.admin import PartnerController, PartnerListController
-from src.controllers.product.product_admin import ProductController, ProductListController
-from src.controllers.product.product_item_admin import ProductItemController, ProductItemListController
 from src.controllers.product.buy_product_admin import BuyProductController, BuyProductListController
-from src.controllers.recpoint.rec_point_admin import RecPointController, RecPointListController
-from src.controllers.recpoint.offer_admin import RecPointOfferApproveController
-from src.controllers.recpoint.rec_point_admin_img_update import RecPointImageUploaderController
-from src.controllers.recycle.recycle_transaction_admin import RecycleTransactionListController, RecycleTransactionController
+from src.controllers.product.product_admin import ProductController, ProductListController
+from src.controllers.product.product_item_admin import ProductItemController, \
+    ProductItemListController
+from src.controllers.recpoint.admin.comment import RecPointCommentListController, \
+    RecPointCommentController
+from src.controllers.recpoint.admin.comment_approve import CommentsApproveController
+from src.controllers.recpoint.admin.rec_point_admin import RecPointController, \
+    RecPointListController
+from src.controllers.recpoint.admin.rec_point_admin_img_update import \
+    RecPointImageUploaderController
+from src.controllers.recpoint.admin.offer_admin import RecPointOfferApproveController
+from src.controllers.recycle.recycle_transaction_admin import RecycleTransactionListController, \
+    RecycleTransactionController
 from src.controllers.statistics.admin.get_recycle_district_stat import \
     RecycleStatisticDistrictController
 from src.controllers.statistics.admin.get_recycle_stat import RecycleStatisticController
 from src.controllers.statistics.admin.get_unique_users import UsersStatisticController
-from src.controllers.test.admin.attempts_admin_controller import AdminAttemptsListController, AdminAttemptsController
-from src.controllers.test.admin.question_admin_controller import QuestionListController, QuestionController
+from src.controllers.test.admin.attempts_admin_controller import AdminAttemptsListController, \
+    AdminAttemptsController
+from src.controllers.test.admin.question_admin_controller import QuestionListController, \
+    QuestionController
 from src.controllers.test.admin.question_admin_img_uploader import QuestionImageUploaderController
 from src.controllers.test.admin.test_admin_controller import TestListController, TestController
 from src.controllers.transaction.transaction_admin import (
@@ -56,17 +65,25 @@ api.add_resource(UsersListController, '/admin/users')
 api.add_resource(UsersController, '/admin/users/<user_id>')
 api.add_resource(UserImageUploaderController, '/admin/users/<user_id>/image')
 
-# Filters and Recycle Points
+# Filters
 api.add_resource(FilterControllerList, '/admin/filters')
 api.add_resource(FilterImageUploaderController, '/admin/filters/<filter_id>/image')
 api.add_resource(FilterController, '/admin/filters/<filter_id>')
+
+# Partners
 api.add_resource(PartnerListController, '/admin/partners')
 api.add_resource(PartnerController, '/admin/partners/<partner_id>')
+
+# Recycle Points
 api.add_resource(RecPointListController, '/admin/rec_points')
 api.add_resource(RecPointController, '/admin/rec_points/<rec_point_id>')
 api.add_resource(RecPointImageUploaderController, '/admin/rec_points/<rec_point_id>/images')
 api.add_resource(RecPointOfferApproveController, '/admin/rec_offer/<rec_point_id>')
 
+# Comments
+api.add_resource(RecPointCommentListController, '/admin/comments')
+api.add_resource(RecPointCommentController, '/admin/comments/<comment_id>')
+api.add_resource(CommentsApproveController, '/admin/comments/<comment_id>/approve')
 
 # Recycle
 api.add_resource(RecycleTransactionListController, '/admin/recycle')
