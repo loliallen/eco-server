@@ -18,6 +18,7 @@ class RecPointComment(Document, BaseCrud):
     text = StringField()
     transaction = ReferenceField('AdmissionTransaction')
     date = DateTimeField(default=datetime.utcnow)
+    images = ListField(StringField())
 
     meta = {
         "db_alias": "core",

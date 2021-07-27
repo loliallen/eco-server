@@ -1,3 +1,4 @@
+from bson import ObjectId
 from marshmallow import fields, validate
 
 
@@ -42,3 +43,11 @@ class NotEmptyString(fields.String):
     def _validate(self, value):
         super()._validate(value)
         return value
+
+
+class Id(ObjectId):
+    swagger_type = 'string'
+    help_msg = 'Id'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)

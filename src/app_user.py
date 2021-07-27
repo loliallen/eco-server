@@ -11,6 +11,7 @@ from src.controllers.news.news_img_upload import NewsUserImageUploaderController
 from src.controllers.news.news_user import NewsListController, NewsController
 from src.controllers.product.product_user import ProductController, ProductListController
 from src.controllers.product.buy_product_user import BuyProductController
+from src.controllers.recpoint.user.comment_img_update import RecPointCommentImageUploaderController
 from src.controllers.recpoint.user.comment_user import RecPointCommentController
 from src.controllers.recpoint.user.rec_point_user_img_update import RecPointImageUploaderController
 from src.controllers.recpoint.user.rec_point_user import RecPointController, RecPointListController
@@ -60,8 +61,9 @@ api.add_resource(FilterController, '/api/filters/<filter_id>')
 
 api.add_resource(RecPointListController, '/api/rec_points')
 api.add_resource(RecPointController, '/api/rec_points/<rec_point_id>')
-api.add_resource(RecPointCommentController, '/api/rec_points/<rec_point_id>/comment')
 api.add_resource(RecPointImageUploaderController, '/api/rec_points/<rec_point_id>/images')
+api.add_resource(RecPointCommentController, '/api/rec_comment')
+api.add_resource(RecPointCommentImageUploaderController, '/api/rec_comment/<comment_id>/images')
 
 # api.add_resource(RecPointOfferController, '/api/rec_offer')
 # api.add_resource(RecPointOfferUpdateController, '/api/rec_offer/<rec_point_id>')
