@@ -53,6 +53,12 @@ class AdmissionTransactionListController(BaseListController):
                        schema={'type': 'string'})
     @swagger.parameter(_in='query', name='status', description='Фильтр по статусам',
                        schema={'type': 'string', 'enum': STATUS_CHOICES})
+    @swagger.parameter(_in='query', name='page',
+                       description='Номер страницы',
+                       example=1, required=False, schema={'type': 'integer'})
+    @swagger.parameter(_in='query', name='size',
+                       description='Кол-во элементов на странице',
+                       example=10, required=False, schema={'type': 'integer'})
     def get(self):
         args = get_parser.parse_args()
         args = {k: v for k, v in args.items() if v is not None}

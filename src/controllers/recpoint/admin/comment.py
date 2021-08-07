@@ -7,8 +7,11 @@ from src.models.recpoint.RecPointComment import RecPointComment
 from src.utils.roles import jwt_reqired_backoffice
 
 
-# get_parser = reqparse.RequestParser()
-# get_parser.add_argument('status', type=str, required=False, help='Статус')
+get_parser = reqparse.RequestParser()
+get_parser.add_argument('page', type=int, required=False, location='args')
+get_parser.add_argument('size', type=int, required=False, location='args')
+get_parser.add_argument('id', dest='id__in', type=str, action='append', location='args')
+
 
 post_parser = reqparse.RequestParser()
 post_parser.add_argument('text', type=str, required=True, help='Текст комментария')
@@ -35,8 +38,16 @@ class RecPointCommentListController(BaseListController):
     @swagger.tags('Comments')
     @swagger.response(response_code=201,
                       summary='Комментарий к пункту приема', description='-')
+    @swagger.parameter(_in='query', name='page',
+                       description='Номер страницы',
+                       example=1, required=False, schema={'type': 'integer'})
+    @swagger.parameter(_in='query', name='size',
+                       description='Кол-во элементов на странице',
+                       example=10, required=False, schema={'type': 'integer'})
     def get(self):
-        return super().get_(paginate_=True)
+        args = get_parser.parse_args()
+        args = {k: v for k, v in args.items() if v is not None}
+        return super().get_(paginate_=True, **args)
 
 
 class RecPointCommentController(BaseController):

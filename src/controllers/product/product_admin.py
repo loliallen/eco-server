@@ -57,6 +57,12 @@ class ProductListController(BaseListController):
     @swagger.security(JWT=[])
     @swagger.tags('Products')
     @swagger.response(response_code=200, summary='Список продуктов (купонов)', description='-', schema=ProductResponseModel)
+    @swagger.parameter(_in='query', name='page',
+                       description='Номер страницы',
+                       example=1, required=False, schema={'type': 'integer'})
+    @swagger.parameter(_in='query', name='size',
+                       description='Кол-во элементов на странице',
+                       example=10, required=False, schema={'type': 'integer'})
     def get(self):
         args = get_parser.parse_args()
         args = {k: v for k, v in args.items() if v is not None}
