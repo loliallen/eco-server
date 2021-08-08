@@ -1,11 +1,11 @@
 from datetime import datetime
 
 from mongoengine import (
-    Document, EmbeddedDocument, ReferenceField, FloatField, StringField,
-    IntField, DateTimeField, ListField, EmbeddedDocumentField
+    Document, ReferenceField, StringField,
+    DateTimeField, ListField
 )
 
-from src.models.transaction.AdmissionTransaction import STATUS_CHOICES, Status
+from src.models.transaction.AdmissionTransaction import AdmissionTransaction
 from src.models.utils.BaseCrud import BaseCrud
 
 
@@ -25,13 +25,12 @@ class RecPointComment(Document, BaseCrud):
         "collection": "rec_point_comments",
         "strict": False
     }
-    #
-    # @classmethod
-    # def read_(cls, **kwargs):
-    #     status = kwargs.pop('status', None)
-    #     if status is None:
-    #         return cls.objects.filter(**kwargs).all()
-    #     RecPointComment.objects.aggregate([
-    #         {''},
-    #         {'math'}
-    #     ]).filter(**kwargs)
+
+    @classmethod
+    def read_(cls, **kwargs):
+        status = kwargs.pop('status', None)
+        q = RecPointComment.objects
+        if status is not None:
+            q = q.filter(transaction__in=AdmissionTransaction.objects(status='idle'))
+        q = q.filter(**kwargs)
+        return q

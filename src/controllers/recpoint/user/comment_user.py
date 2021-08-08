@@ -1,7 +1,7 @@
 from bson import ObjectId
 from flask_jwt_extended import jwt_required
 from flask_restful import reqparse, fields, marshal
-from flask_restful_swagger_3 import swagger
+from flask_restful_swagger_3 import swagger, Schema
 
 from src.controllers.utils.BaseController import BaseListController
 from src.controllers.utils.inputs import Id
@@ -24,8 +24,23 @@ resource_fields_ = {
     'type': fields.List(fields.String),
     'status': fields.String(attribute='transaction.status'),
     'date': fields.DateTime('iso8601'),
+    'rec_point_id': fields.String(attribute='rec_point.id'),
+    'rec_point_name': fields.String(attribute='rec_point.name'),
     'images': fields.List(custom_fields.ImageLink),
 }
+
+
+class RecPointCommentResponseModel(Schema):
+    properties = {
+        'id': {'type': 'string', 'description': 'Id сообщения'},
+        'text': {'type': 'string', 'description': 'Тест сообщения'},
+        'type': {'type': 'array', 'items': {'type': 'string'}, 'description': 'Тип жалобы'},
+        'status': {'type': 'string', 'description': 'Статус апрува'},
+        'date': {'type': 'string', 'description': 'Дата создания'},
+        'rec_point_id': {'type': 'string', 'description': 'id  пункта приема'},
+        'rec_point_name': {'type': 'string', 'description': 'Имя пункта приема'},
+        'images': {'type': 'array', 'items': {'type': 'string'}, 'description': 'Картинки'},
+    }
 
 
 class RecPointCommentController(BaseListController):
@@ -46,8 +61,8 @@ class RecPointCommentController(BaseListController):
     @jwt_required()
     @swagger.security(JWT=[])
     @swagger.tags('Filters and Recycle Points')
-    @swagger.response(response_code=201,
-                      summary='Комментарий к пункту приема', description='-')
+    @swagger.response(response_code=201, summary='Комментарий к пункту приема', description='-',
+                      schema=RecPointCommentResponseModel)
     @swagger.reqparser(name='RecPointCommentCreateModel', parser=post_parser)
     def post(self):
         user = User.get_user_from_request()

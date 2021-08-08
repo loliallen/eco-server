@@ -1,16 +1,17 @@
-from flask_jwt_extended import jwt_required
-from flask_restful import reqparse, marshal, fields
+from flask_restful import reqparse, fields, inputs
 from flask_restful_swagger_3 import swagger
 
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.recpoint.RecPointComment import RecPointComment
 from src.utils.roles import jwt_reqired_backoffice
 
-
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('page', type=int, required=False, location='args')
 get_parser.add_argument('size', type=int, required=False, location='args')
 get_parser.add_argument('id', dest='id__in', type=str, action='append', location='args')
+get_parser.add_argument('status', type=str, location='args')
+get_parser.add_argument('date__gt', type=inputs.date, location='args')
+get_parser.add_argument('date__lt', type=inputs.date, location='args')
 
 
 post_parser = reqparse.RequestParser()
@@ -24,6 +25,7 @@ resource_fields_ = {
     'user': fields.String(attribute='user.id'),
     'text': fields.String(),
     'type': fields.List(fields.String()),
+    'date': fields.DateTime('iso8601'),
 }
 
 
@@ -44,6 +46,15 @@ class RecPointCommentListController(BaseListController):
     @swagger.parameter(_in='query', name='size',
                        description='Кол-во элементов на странице',
                        example=10, required=False, schema={'type': 'integer'})
+    @swagger.parameter(_in='query', name='status',
+                       description='Фильтр по статусу',
+                       required=False, schema={'type': 'string'})
+    @swagger.parameter(_in='query', name='date__gt',
+                       description='Дата больше',
+                       required=False, schema={'type': 'string', 'format': 'date'})
+    @swagger.parameter(_in='query', name='date__lt',
+                       description='Дата меньше',
+                       required=False, schema={'type': 'string', 'format': 'date'})
     def get(self):
         args = get_parser.parse_args()
         args = {k: v for k, v in args.items() if v is not None}
