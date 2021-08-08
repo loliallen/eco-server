@@ -10,8 +10,8 @@ get_parser.add_argument('page', type=int, required=False, location='args')
 get_parser.add_argument('size', type=int, required=False, location='args')
 get_parser.add_argument('id', dest='id__in', type=str, action='append', location='args')
 get_parser.add_argument('status', type=str, location='args')
-get_parser.add_argument('date__gt', type=inputs.date, location='args')
-get_parser.add_argument('date__lt', type=inputs.date, location='args')
+get_parser.add_argument('date_from', dest='date__gt', type=inputs.date, location='args')
+get_parser.add_argument('date_to', dest='date__lt', type=inputs.date, location='args')
 
 
 post_parser = reqparse.RequestParser()
