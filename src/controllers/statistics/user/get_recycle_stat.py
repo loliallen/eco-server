@@ -26,12 +26,9 @@ class RecycleStatistic(Schema):
 
 
 resource_fields_ = {
-    'place': fields.Integer,
-    'items': {
-        'filter': fields.String,
-        'name': fields.String,
-        'total': fields.Float,
-    }
+    'filter': fields.String,
+    'name': fields.String,
+    'total': fields.Float,
 }
 
 
@@ -52,7 +49,7 @@ class RecycleStatisticController(BaseController):
         # фильтров у нас не много, общую сумму можно и здесь посчитать
         total = sum(i['total'] for i in stat)
         return {
-            'place': 1,
+            'place': 1,  # TODO подсчитывать место
             'total': total,
             'items': marshal(stat, resource_fields_),
         }
