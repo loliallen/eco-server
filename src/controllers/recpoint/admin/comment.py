@@ -49,11 +49,11 @@ class RecPointCommentListController(BaseListController):
     @swagger.parameter(_in='query', name='status',
                        description='Фильтр по статусу',
                        required=False, schema={'type': 'string'})
-    @swagger.parameter(_in='query', name='date__gt',
-                       description='Дата больше',
+    @swagger.parameter(_in='query', name='date_from',
+                       description='Дата с',
                        required=False, schema={'type': 'string', 'format': 'date'})
-    @swagger.parameter(_in='query', name='date__lt',
-                       description='Дата меньше',
+    @swagger.parameter(_in='query', name='date_to',
+                       description='Дата по',
                        required=False, schema={'type': 'string', 'format': 'date'})
     def get(self):
         args = get_parser.parse_args()
