@@ -23,6 +23,7 @@ resource_fields_ = {
     'fullName': fields.String(attribute='name'),
     'avatar': custom_fields.ImageLink(attribute='image'),
     'role': fields.String,
+    'access_schema': custom_fields.Dict
 }
 
 

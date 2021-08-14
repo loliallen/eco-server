@@ -115,9 +115,9 @@ class RecycleTransactionController(BaseController):
         admission_transaction = AdmissionTransaction.objects.filter(action=rec_transaction.id).first()
         admission_transaction: AdmissionTransaction
         if admission_transaction is None:
-            return {'error': 'AdmissionTransaction not fuond'}, 404
+            return {'error': 'AdmissionTransaction not found'}, 404
         if admission_transaction.status != Status.idle.value:
-            return {'error': 'Can not to change confirmed transaction'}, 400
+            return {'error': 'Can not to change transaction not in idle status'}, 400
         args = post_parser.parse_args()
         rec_transaction.update(set__status=args['status'])
         admission_transaction.update(set__status=args['status'])

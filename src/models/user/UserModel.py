@@ -8,6 +8,7 @@ from flask_login import UserMixin
 from src.models.utils.Atomic import Atomic
 from src.models.utils.BaseCrud import BaseCrud
 from src.utils.generator import random_string, generate_code
+from src.utils.roles import get_role_schema, Roles
 
 
 class User(Document, UserMixin, BaseCrud, Atomic):
@@ -65,3 +66,7 @@ class User(Document, UserMixin, BaseCrud, Atomic):
                 'cnt': {'$sum': 1}}},
             {'$sort': {'_id': 1}}
         ])
+
+    @property
+    def access_schema(self):
+        return get_role_schema(Roles(self.role))
