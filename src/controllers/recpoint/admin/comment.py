@@ -35,7 +35,7 @@ class RecPointCommentListController(BaseListController):
     name = 'RecPointComment'
     parser = post_parser
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('rec_point_comment', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Comments')
     @swagger.response(response_code=201,
@@ -67,7 +67,7 @@ class RecPointCommentController(BaseController):
     name = 'RecPointComment'
     parser = post_parser
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('rec_point_comment', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Comments')
     @swagger.response(response_code=201,

@@ -15,7 +15,7 @@ get_parser.add_argument('type', type=str, choices=LOOKUP, required=True, locatio
 
 
 class LookupsControllerList(BaseListController):
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('lookups', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Lookups')
     @swagger.response(response_code=200, summary='Список значений', description='-')

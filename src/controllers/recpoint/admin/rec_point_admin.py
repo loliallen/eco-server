@@ -96,7 +96,7 @@ class RecPointListController(BaseListController):
     name = 'RecPoint'
     parser = post_parser
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('rec_point', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Recycle Points')
     @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Список пунктов приема',
@@ -127,7 +127,7 @@ class RecPointListController(BaseListController):
 
         return paginate(points, page, size, resource_fields_, select_related_depth=1)
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('rec_point', 'create')
     @swagger.security(JWT=[])
     @swagger.tags('Recycle Points')
     @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Создать новый пункт приема',
@@ -144,7 +144,7 @@ class RecPointController(BaseController):
     name = 'RecPoint'
     parser = post_parser
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('rec_point', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Recycle Points')
     @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Пункт приема',
@@ -152,7 +152,7 @@ class RecPointController(BaseController):
     def get(self, rec_point_id):
         return super().get_(rec_point_id)
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('rec_point', 'edit')
     @swagger.security(JWT=[])
     @swagger.tags('Recycle Points')
     @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Обновить пункт приема',
@@ -167,7 +167,7 @@ class RecPointController(BaseController):
             return err
         return marshal(obj, resource_fields_)
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('rec_point', 'delete')
     @role_need([Roles.super_admin])
     @swagger.security(JWT=[])
     @swagger.tags('Recycle Points')

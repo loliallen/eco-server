@@ -43,7 +43,7 @@ class AdmissionTransactionListController(BaseListController):
     model = AdmissionTransaction
     name = 'AdmissionTransaction'
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('transactions', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Transaction')
     @swagger.response(response_code=201, schema=AdmissionTransactionResponseModel,
@@ -70,7 +70,7 @@ class AdmissionTransactionTransactionController(BaseController):
     model = AdmissionTransaction
     name = 'AdmissionTransaction'
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('transactions', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Transaction')
     @swagger.response(response_code=201, schema=AdmissionTransactionResponseModel, summary='Транзакция зачисления',

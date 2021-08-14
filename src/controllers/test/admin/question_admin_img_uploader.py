@@ -11,7 +11,7 @@ root = "question"
 
 class QuestionImageUploaderController(BaseController):
     
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('question', 'edit')
     @swagger.security(JWT=[])
     @swagger.tags('Tests')
     @swagger.response(response_code=201, schema=custom_swagger.OkSchema,

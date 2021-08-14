@@ -1,13 +1,11 @@
-import datetime
-
 from flask_restful import inputs
 from flask_restful import reqparse, fields
 from flask_restful_swagger_3 import swagger, Schema
 
+from models.user.UserModel import User
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.product.ProductModel import Product
-from src.utils.roles import jwt_reqired_backoffice
-
+from src.utils.roles import jwt_reqired_backoffice, Roles
 
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('page', type=int, required=False, location='args')
@@ -53,7 +51,7 @@ class ProductListController(BaseListController):
     name = 'Product'
     parser = parser
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('product', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Products')
     @swagger.response(response_code=200, summary='Список продуктов (купонов)', description='-', schema=ProductResponseModel)
@@ -66,15 +64,22 @@ class ProductListController(BaseListController):
     def get(self):
         args = get_parser.parse_args()
         args = {k: v for k, v in args.items() if v is not None}
+        admin = User.get_user_from_request()
+        if Roles(admin.role) == Roles.partner:
+            args['partner'] = admin
         return super().get_(paginate_=True, **args)
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('product', 'create')
     @swagger.security(JWT=[])
     @swagger.tags('Products')
     @swagger.response(response_code=201, schema=ProductResponseModel, summary='Создать новый продукт (купон)', description='-')
     @swagger.reqparser(name='ProductCreateModel', parser=parser)
     def post(self):
-        return super().post_()
+        args = {}
+        admin = User.get_user_from_request()
+        if Roles(admin.role) == Roles.partner:
+            args['partner'] = admin
+        return super().post_(**args)
 
 
 class ProductController(BaseController):
@@ -83,17 +88,25 @@ class ProductController(BaseController):
     name = 'Product'
     parser = parser
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('product', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Products')
     @swagger.response(response_code=200, summary='Продукт (купон)', description='-', schema=ProductResponseModel)
     def get(self, product_id):
-        return super().get_(product_id)
+        args = {}
+        admin = User.get_user_from_request()
+        if Roles(admin.role) == Roles.partner:
+            args['partner'] = admin
+        return super().get_(product_id, **args)
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('product', 'edit')
     @swagger.security(JWT=[])
     @swagger.tags('Products')
     @swagger.response(response_code=200, summary='Обновить продукт (купон)', description='-', schema=ProductResponseModel)
     @swagger.reqparser(name='ProductPutModel', parser=parser)
     def put(self, product_id):
-        return super().put_(product_id)
+        args = {}
+        admin = User.get_user_from_request()
+        if Roles(admin.role) == Roles.partner:
+            args['partner'] = admin
+        return super().put_(product_id, **args)

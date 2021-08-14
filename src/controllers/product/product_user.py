@@ -1,11 +1,11 @@
 import datetime
 
 from flask_jwt_extended import jwt_required
-from flask_restful import reqparse, fields, marshal
+from flask_restful import fields, marshal
 from flask_restful_swagger_3 import swagger, Schema
 
 from src.controllers.utils.BaseController import BaseListController, BaseController, not_found
-from src.models.product.ProductModel import Product, ProductItem
+from src.models.product.ProductModel import Product
 
 
 class ProductResponseModel(Schema):

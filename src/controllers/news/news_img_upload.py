@@ -13,7 +13,7 @@ root = "news"
 
 class NewsAdminImageUploaderController(BaseController):
     
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('news', 'edit')
     @swagger.security(JWT=[])
     @swagger.tags('News')
     @swagger.response(response_code=201, schema=custom_swagger.OkSchema,

@@ -54,7 +54,7 @@ class QuestionListController(BaseListController):
     name = 'Question'
     parser = parser
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('question', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Tests')
     @swagger.response(response_code=200, summary='Список вопросов', description='-',
@@ -72,7 +72,7 @@ class QuestionListController(BaseListController):
         args = {k:v for k,v in args.items() if v is not None}
         return super().get_(paginate_=True, **args)
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('question', 'create')
     @swagger.security(JWT=[])
     @swagger.tags('Tests')
     @swagger.response(response_code=201, schema=QuestionResponseModel,
@@ -88,7 +88,7 @@ class QuestionController(BaseController):
     name = 'Question'
     parser = parser
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('question', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Tests')
     @swagger.response(response_code=200, summary='Вопрос', description='-',
@@ -96,7 +96,7 @@ class QuestionController(BaseController):
     def get(self, question_id):
         return super().get_(question_id)
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('question', 'edit')
     @swagger.security(JWT=[])
     @swagger.tags('Tests')
     @swagger.response(response_code=200, summary='Обновить вопрос', description='-',
@@ -105,7 +105,7 @@ class QuestionController(BaseController):
     def put(self, question_id):
         return super().put_(question_id)
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('question', 'delete')
     @swagger.security(JWT=[])
     @swagger.tags('Tests')
     @swagger.response(response_code=200, summary='Удалить вопрос', description='-',

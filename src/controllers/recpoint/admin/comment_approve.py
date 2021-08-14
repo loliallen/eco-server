@@ -23,7 +23,7 @@ class CommentsApproveController(BaseListController):
     name = 'RecPoint'
     parser = post_parser
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('rec_point_comment', 'approve')
     @swagger.security(JWT=[])
     @swagger.tags('Comments')
     @swagger.response(response_code=201,

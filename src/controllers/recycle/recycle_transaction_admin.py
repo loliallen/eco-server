@@ -67,7 +67,7 @@ class RecycleTransactionListController(BaseListController):
     model = RecycleTransaction
     name = 'RecycleTransaction'
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('recycle_transaction', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Recycle')
     @swagger.response(response_code=201, schema=RecycleTransactionResponseModel,
@@ -93,7 +93,7 @@ class RecycleTransactionController(BaseController):
     name = 'RecycleTransaction'
     parser = post_parser
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('recycle_transaction', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Recycle')
     @swagger.response(response_code=201, schema=RecycleTransactionResponseModel, summary='Транзакция сдачи отхода',
@@ -101,10 +101,10 @@ class RecycleTransactionController(BaseController):
     def get(self, recycle_id):
         return super().get_(recycle_id)
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('recycle_transaction', 'approve')
     @swagger.security(JWT=[])
     @swagger.tags('Recycle')
-    @swagger.response(response_code=201, schema=RecycleTransactionResponseModel, summary='Транзакция сдачи отхода',
+    @swagger.response(response_code=201, schema=RecycleTransactionResponseModel, summary='Апрув транзакции сдачи отхода',
                       description='-')
     @swagger.reqparser('RecycleApprove', post_parser)
     def put(self, recycle_id):

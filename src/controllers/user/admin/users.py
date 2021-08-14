@@ -66,7 +66,7 @@ class UsersListController(BaseListController):
     name = 'User'
     parser = post_parser
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('users', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Users')
     @swagger.response(response_code=201, schema=UsersResponseModel, summary='Список пользователей',
@@ -95,7 +95,7 @@ class UsersController(BaseController):
     name = 'User'
     parser = post_parser
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('users', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Users')
     @swagger.response(response_code=201, schema=UsersResponseModel, summary='Пункт приема',
@@ -103,7 +103,7 @@ class UsersController(BaseController):
     def get(self, user_id):
         return super().get_(user_id)
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('users', 'edit')
     @swagger.security(JWT=[])
     @swagger.tags('Users')
     @swagger.response(response_code=201, schema=UsersResponseModel, summary='Обновить пользователя',

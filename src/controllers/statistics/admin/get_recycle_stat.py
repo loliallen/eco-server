@@ -46,7 +46,7 @@ class RecycleStatisticController(BaseController):
     model = RecycleTransaction
     name = 'RecycleTransaction'
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('dashboard', 'show')
     @swagger.security(JWT=[])
     @swagger.tags('Statistic')
     @swagger.response(response_code=201, schema=RecycleStatistic, summary='Статистика сдачи отхода',

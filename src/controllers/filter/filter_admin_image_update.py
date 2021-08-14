@@ -15,7 +15,7 @@ root = "filters"
 
 class FilterImageUploaderController(BaseController):
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('filters', 'edit')
     @swagger.security(JWT=[])
     @swagger.tags('Filters')
     @swagger.response(response_code=201, schema=custom_swagger.OkSchema,

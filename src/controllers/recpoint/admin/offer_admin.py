@@ -24,7 +24,7 @@ class RecPointOfferApproveController(BaseListController):
     name = 'RecPoint'
     parser = post_parser
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('rec_point', 'approve')
     @swagger.security(JWT=[])
     @swagger.tags('Recycle Points')
     @swagger.response(response_code=201, schema=RecPointResponseModel,

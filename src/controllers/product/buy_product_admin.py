@@ -40,7 +40,7 @@ class BuyProductListController(BaseListController):
     model = ProductItemTransaction
     name = 'ProductItemTransaction'
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('buy_product', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Products')
     @swagger.response(response_code=200, summary='Список всех покупок (Транзакций)', description='-',
@@ -62,7 +62,7 @@ class BuyProductController(BaseController):
     model = ProductItemTransaction
     name = 'ProductItemTransaction'
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('buy_product', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Products')
     @swagger.response(response_code=200, summary='Транзакция', description='-',

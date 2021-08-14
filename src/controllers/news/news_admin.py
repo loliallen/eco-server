@@ -50,7 +50,7 @@ class NewsListController(BaseListController):
     name = 'News'
     parser = post_parser
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('news', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('News')
     @swagger.response(response_code=200, schema=NewsResponseModel, summary='Список новостей',
@@ -68,7 +68,7 @@ class NewsListController(BaseListController):
         args = {k: v for k, v in args.items() if v is not None}
         return super().get_(paginate_=True, **args)
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('news', 'create')
     @swagger.security(JWT=[])
     @swagger.tags('News')
     @swagger.response(response_code=201, schema=NewsResponseModel, summary='Создать новость',
@@ -85,7 +85,7 @@ class NewsController(BaseController):
     name = 'News'
     parser = post_parser
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('news', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('News')
     @swagger.response(response_code=201, schema=NewsResponseModel, summary='Новость',
@@ -93,7 +93,7 @@ class NewsController(BaseController):
     def get(self, news_id):
         return super().get_(news_id)
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('news', 'edit')
     @swagger.security(JWT=[])
     @swagger.tags('News')
     @swagger.response(response_code=201, schema=NewsResponseModel, summary='Обновить новость',
@@ -102,7 +102,7 @@ class NewsController(BaseController):
     def put(self, news_id):
         return super().put_(news_id)
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('news', 'delete')
     @swagger.security(JWT=[])
     @swagger.tags('News')
     @swagger.response(response_code=201, schema=NewsResponseModel, summary='Удалить новость',

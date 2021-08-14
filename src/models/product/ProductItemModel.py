@@ -7,9 +7,10 @@ from src.models.utils.BaseCrud import BaseCrud
 
 class ProductItem(Document, BaseCrud, Atomic):
     product = ReferenceField('Product')
+    partner = ReferenceField('User')
     contents = StringField()
     attached_file = StringField()  # TODO: проверить нужно ли это поле
-    is_active = BooleanField(default=True)
+    is_active = BooleanField(default=False)
     user = ReferenceField(User)
 
     meta = {

@@ -14,6 +14,7 @@ class Product(Document, BaseCrud):
     date_from = DateField()
     date_to = DateField()
     is_active = BooleanField(default=False)
+    partner = ReferenceField('User')
     items = ListField(ReferenceField('ProductItem'))
     transactions = ListField(ReferenceField('ProductItemTransaction'))
 

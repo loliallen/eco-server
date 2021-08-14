@@ -13,7 +13,7 @@ root = "users"
 
 class UserImageUploaderController(BaseController):
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('users', 'edit')
     @swagger.security(JWT=[])
     @swagger.tags('Recycle')
     @swagger.response(response_code=201, schema=custom_swagger.OkSchema,

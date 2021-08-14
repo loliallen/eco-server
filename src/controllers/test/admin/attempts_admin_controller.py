@@ -46,7 +46,7 @@ class AdminAttemptsListController(BaseListController):
     model = UserAttempts
     name = 'UserAttempt'
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('test_attempt', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Tests')
     @swagger.response(response_code=200, summary='Список попыток', description='-',
@@ -68,7 +68,7 @@ class AdminAttemptsController(BaseController):
     model = UserAttempts
     name = 'UserAttempt'
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('test_attempt', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Tests')
     @swagger.response(response_code=200, summary='Попытка', description='-',
@@ -76,7 +76,7 @@ class AdminAttemptsController(BaseController):
     def get(self, attempt_id):
         return super().get_(attempt_id)
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('test_attempt', 'delete')
     @swagger.security(JWT=[])
     @swagger.tags('Tests')
     @swagger.response(response_code=200, summary='Удалить попытку', description='-',

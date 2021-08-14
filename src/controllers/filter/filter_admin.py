@@ -58,7 +58,7 @@ class FilterControllerList(BaseListController):
     name = 'Filter'
     parser = post_parser
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('filters', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Filters')
     @swagger.response(response_code=200, summary='Список фильтров', description='-', schema=FilterResponseModel)
@@ -76,7 +76,7 @@ class FilterControllerList(BaseListController):
         args = {k: v for k, v in args.items() if v is not None}
         return super().get_(paginate_=True, **args)
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('filters', 'create')
     @swagger.security(JWT=[])
     @swagger.tags('Filters')
     @swagger.response(response_code=201, schema=FilterResponseModel, summary='Создать новый фильтр')
@@ -92,14 +92,14 @@ class FilterController(BaseController):
     name = 'Filter'
     parser = post_parser
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('filters', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Filters')
     @swagger.response(response_code=200, summary='Фильтр', description='-', schema=FilterResponseModel)
     def get(self, filter_id):
         return super().get_(filter_id)
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('filters', 'edit')
     @swagger.security(JWT=[])
     @swagger.tags('Filters')
     @swagger.response(response_code=204, summary='Обновить Фильтр', description='-', schema=FilterResponseModel)
@@ -107,7 +107,7 @@ class FilterController(BaseController):
     def put(self, filter_id):
         return super().put_(filter_id)
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('filters', 'delete')
     @swagger.security(JWT=[])
     @swagger.tags('Filters')
     @swagger.response(response_code=204, summary='Удалить фильтр', description='-', schema=FilterResponseModel)

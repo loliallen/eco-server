@@ -34,13 +34,18 @@ def role_need(role_list):
     return wrapper
 
 
-def jwt_reqired_backoffice(optional=False, fresh=False, refresh=False, locations=None):
+def jwt_reqired_backoffice(view, action, optional=False, fresh=False, refresh=False, locations=None):
     def wrapper(fn):
+        from src.models.user.UserModel import User
         @wraps(fn)
         def decorator(*args, **kwargs):
             verify_jwt_in_request(optional, fresh, refresh, locations)
             if not get_jwt().get('backoffice', False):
                 return {'error': 'token is not backoffice'}, 405
+
+            user = User.get_user_from_request()
+            if Roles(user.role) not in BACKOFFICE_ACCESS_RULES[view][action]:
+                return {'error': 'permission denied'}, 403
             return fn(*args, **kwargs)
         return decorator
     return wrapper
@@ -49,6 +54,9 @@ def jwt_reqired_backoffice(optional=False, fresh=False, refresh=False, locations
 BACKOFFICE_ACCESS_RULES = {
     'dashboard': {
         'show': [Roles.super_admin],
+    },
+    'lookups': {
+        'read': [Roles.super_admin],
     },
     'news': {
         'read': ADMINS_GROUP,
@@ -69,8 +77,8 @@ BACKOFFICE_ACCESS_RULES = {
     },
     'partner': {
         'read': ADMINS_GROUP + [Roles.partner],
-        'create': [Roles.super_admin],
-        'edit': [Roles.super_admin],
+        'create': ADMINS_GROUP,
+        'edit': ADMINS_GROUP + [Roles.partner],
         'delete': [Roles.super_admin],
     },
     'rec_point': {
@@ -94,9 +102,9 @@ BACKOFFICE_ACCESS_RULES = {
         'approve': ADMINS_GROUP,  # апрув транзакции сдачи отходов
     },
     'product': {
-        'read': ADMINS_GROUP,
-        'create': [Roles.super_admin, Roles.partner],
-        'edit': [Roles.super_admin, Roles.partner, Roles.moderator],
+        'read': ADMINS_GROUP + [Roles.partner],
+        'create': [Roles.super_admin, Roles.partner] + [Roles.partner],
+        'edit': [Roles.super_admin, Roles.partner, Roles.moderator] + [Roles.partner],
         'delete': [Roles.super_admin]
     },
     'product_item': {

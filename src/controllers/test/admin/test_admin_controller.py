@@ -45,7 +45,7 @@ class TestListController(BaseListController):
     name = 'Test'
     parser = parser
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('test', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Tests')
     @swagger.response(response_code=200, summary='Список тестов', description='-',
@@ -61,7 +61,7 @@ class TestListController(BaseListController):
         args = {k:v for k,v in args.items() if v is not None}
         return super().get_(paginate_=True, **args)
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('test', 'create')
     @swagger.security(JWT=[])
     @swagger.tags('Tests')
     @swagger.response(response_code=201, schema=TestResponseModel,
@@ -77,7 +77,7 @@ class TestController(BaseController):
     name = 'Test'
     parser = parser
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('test', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Tests')
     @swagger.response(response_code=200, summary='Тест', description='-',
@@ -85,7 +85,7 @@ class TestController(BaseController):
     def get(self, test_id):
         return super().get_(test_id)
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('test', 'edit')
     @swagger.security(JWT=[])
     @swagger.tags('Tests')
     @swagger.response(response_code=200, summary='Обновить тест', description='-',
@@ -94,7 +94,7 @@ class TestController(BaseController):
     def put(self, test_id):
         return super().put_(test_id)
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('test', 'delete')
     @swagger.security(JWT=[])
     @swagger.tags('Tests')
     @swagger.response(response_code=200, summary='Удалить тест', description='-',

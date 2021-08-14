@@ -12,6 +12,7 @@ class Partner(Document, BaseCrud):
     name = StringField(required=True)
     points = ListField(ReferenceField('RecPoint'))
     products = ListField(ReferenceField('Product'))
+    user = ReferenceField('User')
     meta = {
         "db_alias": "core",
         "collection": "partners",

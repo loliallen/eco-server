@@ -1,10 +1,10 @@
-from flask_restful import reqparse, fields, marshal
+from flask_restful import reqparse, fields
 from flask_restful_swagger_3 import swagger, Schema
 
-from src.controllers.utils.BaseController import BaseListController, BaseController, not_found
+from models.user.UserModel import User
+from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.product.ProductItemModel import ProductItem
-from src.utils.roles import jwt_reqired_backoffice
-
+from src.utils.roles import jwt_reqired_backoffice, Roles
 
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('page', type=int, required=False, location='args')
@@ -18,8 +18,7 @@ parser.add_argument('is_active', type=bool, help='Активность, отве
 
 resource_fields_ = {
     'id': fields.String,
-    'product_id': fields.String(attribute='product.id'),
-    'product_name': fields.String(attribute='product.name'),
+    'product': fields.String(attribute='product.id'),
     'contents': fields.String,
     'is_active': fields.Boolean,
     'is_bought': fields.Boolean(attribute=lambda x: bool(x.user))
@@ -43,7 +42,7 @@ class ProductItemListController(BaseListController):
     name = 'ProductItem'
     parser = parser
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('product_item', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Products')
     @swagger.response(response_code=200, summary='Список экземпляров продуктов (купонов)', description='-',
@@ -57,16 +56,23 @@ class ProductItemListController(BaseListController):
     def get(self):
         args = get_parser.parse_args()
         args = {k: v for k, v in args.items() if v is not None}
+        admin = User.get_user_from_request()
+        if Roles(admin.role) == Roles.partner:
+            args['partner'] = admin
         return super().get_(paginate_=True, **args)
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('product_item', 'create')
     @swagger.security(JWT=[])
     @swagger.tags('Products')
     @swagger.response(response_code=201, schema=ProductItemResponseModel,
                       summary='Создать новый экземпляр продукта (купон)', description='-')
     @swagger.reqparser(name='ProductItemCreateModel', parser=parser)
     def post(self):
-        return super().post_()
+        args = {}
+        admin = User.get_user_from_request()
+        if Roles(admin.role) == Roles.partner:
+            args['partner'] = admin
+        return super().post_(**args)
 
 
 class ProductItemController(BaseController):
@@ -75,27 +81,32 @@ class ProductItemController(BaseController):
     name = 'ProductItem'
     parser = parser
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('product_item', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Products')
     @swagger.response(response_code=200, summary='Экземпляр продукта (купона)', description='-',
                       schema=ProductItemResponseModel)
     def get(self, product_item_id):
-        return super().get_(product_item_id)
+        args = {}
+        admin = User.get_user_from_request()
+        if Roles(admin.role) == Roles.partner:
+            args['partner'] = admin
+        return super().get_(product_item_id, **args)
 
-    @jwt_reqired_backoffice()
+    @jwt_reqired_backoffice('product_item', 'edit')
     @swagger.security(JWT=[])
     @swagger.tags('Products')
     @swagger.response(response_code=200, summary='Обнвоить экземпляр продукта (купона)', description='-',
                       schema=ProductItemResponseModel)
     @swagger.reqparser(name='ProductItemPutModel', parser=parser)
     def put(self, product_item_id):
-        updates = self.parser.parse_args()
-        err, obj = self.update_obj(product_item_id, updates)
-        if err:
-            return err
-        if not obj:
-            return not_found(self.name, product_item_id)
+        args = {}
+        admin = User.get_user_from_request()
+        if Roles(admin.role) == Roles.partner:
+            args['partner'] = admin
+        obj = ProductItem.objects.filter(id=product_item_id).first()
+        if Roles(admin.role) == Roles.partner and obj.partner != admin:
+            return {'error': 'permission denied'}, 403
         if obj.user is not None:
             return {'error': 'can\' put, because product already bought'}, 400
-        return marshal(obj, self.resource_fields)
+        return super().put_(product_item_id)
