@@ -1,7 +1,7 @@
 from flask_restful import reqparse, fields
 from flask_restful_swagger_3 import swagger, Schema
 
-from models.user.UserModel import User
+from src.models.user.UserModel import User
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.product.ProductItemModel import ProductItem
 from src.utils.roles import jwt_reqired_backoffice, Roles

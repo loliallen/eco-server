@@ -1,7 +1,7 @@
 from flask_restful import reqparse, fields
 from flask_restful_swagger_3 import swagger, Schema
 
-from models.user.UserModel import User
+from src.models.user.UserModel import User
 from src.controllers.utils import fields as custom_fields
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.partner.PartnerModel import Partner

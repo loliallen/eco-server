@@ -2,7 +2,6 @@ import datetime
 
 from flask_jwt_extended import get_jwt_identity
 from mongoengine import Document, StringField, BooleanField, DateTimeField, IntField, ReferenceField
-from pathlib import Path
 from flask_login import UserMixin
 
 from src.models.utils.Atomic import Atomic
