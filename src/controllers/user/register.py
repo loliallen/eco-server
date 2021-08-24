@@ -1,15 +1,11 @@
-from pathlib import Path
-
-import werkzeug.datastructures
 from flask import render_template
-from flask_login import login_user
 from flask_mail import Message
-from flask_restful import reqparse, fields, marshal
 from flask_restful import reqparse, fields, marshal
 from flask_restful_swagger_3 import swagger, Schema
 
-from src.controllers.utils.BaseController import BaseListController
 from src.controllers.utils import inputs
+from src.controllers.utils.BaseController import BaseListController
+from src.controllers.utils.hash_password import generate_salt, hash_password
 from src.models.user.UserModel import User
 from src.send_email import send_email
 
@@ -56,9 +52,13 @@ class RegisterController(BaseListController):
             if invite_user is None:
                 return {'error': 'invite user not found'}, 400
             args['invite_by_user'] = invite_user
+        args['salt'] = generate_salt()
+        args['password'] = hash_password(args['password'], args['salt'])
         user, error = self._create_obj(**args)
         if error:
             return error
+
+        # TODO вынести это дело в фоновую таску
         code = user.code
         print(code)
         html = render_template('email.html', code=code)

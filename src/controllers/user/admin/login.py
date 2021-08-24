@@ -38,7 +38,7 @@ class LoginController(Resource):
         user = User.objects.filter(username=args['username']).first()
         if not user:
             return {'error': 'wrong login or password'}, 404
-        if user.password != args['password']:
+        if not user.check_password(args['password']):
             return {'error': 'wrong login or password'}, 403
         if not user.confirmed:
             return {'error': 'user not confirmed'}, 403

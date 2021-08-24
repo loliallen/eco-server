@@ -9,7 +9,8 @@ def global_connect():
         db = connect(
             alias="core",
             name="eco",
-            host=Configuration.DB_URL
+            host=Configuration.DB_URL,
+            tlsCertificateKeyFile=Configuration.DB_SERT,
         )
         print("[Database]: Connected")
     except ConnectionError:

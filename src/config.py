@@ -4,7 +4,7 @@ import pathlib
 
 
 class Configuration:
-    SECRET_KEY = 'a really really really really long secret key'
+    SECRET_KEY = 'a really really really really long secret key'  # TODO вынести в секреты
     JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(hours=2)
     JWT_ADMIN_ACCESS_TOKEN_EXPIRES = datetime.timedelta(hours=2)
     JWT_TOKEN_LOCATION = 'headers'
@@ -17,11 +17,14 @@ class Configuration:
     MAIL_USE_TLS = True
     MAIL_USERNAME = 'cronenbergclaw@gmail.com'  # введите свой адрес электронной почты здесь
     MAIL_DEFAULT_SENDER = 'cronenbergclaw@gmail.com'  # и здесь
-    MAIL_PASSWORD = 'eikbzcpodtroenca'
+    MAIL_PASSWORD = 'eikbzcpodtroenca'  # TODO вынести в секреты
+
+    PASSWORD_HASH_FUNC = 'sha256'  # алгоритм генерации пароля, если поменять все текущие пароли слетят
+    PASSWORD_GENERATE_ITERATIONS = 10000  # кол-во итераций при генерации пароля, если поменять все текущие пароли слетят
 
     DB_NAME = "eco"
-    DB_PASSWORD = "eCo1251kek"  # TODO при выходе в прод вынести
-    DB_URL = os.getenv("DB_URL", default=f"mongodb+srv://root:{DB_PASSWORD}@eco.y8cj7.mongodb.net/{DB_NAME}?retryWrites=true&w=majority")
+    DB_URL = os.getenv("DB_URL", default=f"mongodb+srv://eco.y8cj7.mongodb.net/eco?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority")
+    DB_SERT = os.getenv("DB_SERT", default='mongo.pem')
 
     HOST = os.getenv("HOST", default="0.0.0.0")
     PORT = os.getenv("PORT", default=8000)

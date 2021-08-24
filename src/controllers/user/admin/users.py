@@ -1,12 +1,9 @@
-import datetime
-from ast import literal_eval
-
 from flask_restful import inputs
 from flask_restful import reqparse, fields
 from flask_restful_swagger_3 import swagger, Schema
 
-from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.controllers.utils import fields as custom_fields
+from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.user.UserModel import User
 from src.utils.roles import jwt_reqired_backoffice
 

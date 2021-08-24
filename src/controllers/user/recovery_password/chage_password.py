@@ -3,6 +3,7 @@ from flask_restful import reqparse
 from flask_restful_swagger_3 import swagger
 
 from src.controllers.utils.BaseController import BaseListController
+from src.controllers.utils.hash_password import generate_salt, hash_password
 from src.models.user.UserModel import User
 
 post_parser = reqparse.RequestParser()
@@ -27,5 +28,7 @@ class ChangePasswordController(BaseListController):
             return {'error': 'user not found'}, 404
         if args['password'] != args['password_repeat']:
             return {'error': 'passwords are not identical'}
-        user.update(set__password=args['password'])
+        salt = generate_salt()
+        args['password'] = hash_password(args['password'], salt)
+        user.update(set__password=args['password'], set__salt=salt)
         return {'status': 'OK'}
