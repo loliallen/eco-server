@@ -1,4 +1,5 @@
 from bson import ObjectId
+from flask_babel import lazy_gettext as _
 from marshmallow import fields, validate
 
 
@@ -15,7 +16,7 @@ class Email(fields.Email):
 
 class Password(fields.String):
     swagger_type = 'string'
-    help_msg = 'минимум 8 знаков, минимум одна цифра и одну букву'
+    help_msg = _('minimum 8 sign, minimum 1 digit and 1 letter')
 
     def __init__(self, *args, **kwargs):
         super().__init__(validate=validate.Regexp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$'),

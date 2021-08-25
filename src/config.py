@@ -4,6 +4,9 @@ import pathlib
 
 
 class Configuration:
+    BABEL_DEFAULT_LOCALE = 'ru'
+    BABEL_TRANSLATION_DIRECTORIES = '/home/inysnko/PycharmProjects/eco/eco-server/src/translations'
+
     SECRET_KEY = 'a really really really really long secret key'  # TODO вынести в секреты
     JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(hours=2)
     JWT_ADMIN_ACCESS_TOKEN_EXPIRES = datetime.timedelta(hours=2)

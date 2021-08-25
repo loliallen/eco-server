@@ -1,6 +1,20 @@
 # EcoHub
 Бэкэнд для приложения EcoHub. Используется база данных redis.
 
+# Перевод
+Сканировать все места, нуждающиеся в переводе:
+```bash
+pybabel extract -F src/translations/babel.cfg -k lazy_gettext -o src/translations/messages.pot src
+```
+Создать переводы:
+```bash
+pybabel update -i src/translations/messages.pot -d src/translations
+```
+Скомплировать перевод:
+```bash
+pybabel compile -f -d src/translations
+```
+
 ## Деплой
 Имеется три апи:
 1) eco_api - основное пользовательское апи. Используется на проде. 

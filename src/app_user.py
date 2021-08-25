@@ -1,4 +1,5 @@
-from flask import Flask
+from flask import Flask, request
+from flask_babel import Babel
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_swagger_ui import get_swaggerui_blueprint
@@ -39,6 +40,7 @@ app = Flask(__name__,
             static_folder=Configuration.STATIC_FOLDER)
 app.config.from_object(Configuration)
 jwt = JWTManager(app)
+babel = Babel(app, configure_jinja=False)
 Database.global_connect()
 api = CustomApi(app, title="EcoApi for User",
                 authorizations={"JWT": {"type": "http", "scheme": "bearer", "bearerFormat": "JWT"}})
@@ -109,3 +111,9 @@ swagger_ui_blueprint = get_swaggerui_blueprint(
     }
 )
 app.register_blueprint(swagger_ui_blueprint)
+
+
+# babel
+@babel.localeselector
+def get_locale():
+    return request.accept_languages.best_match(['ru', 'en'])

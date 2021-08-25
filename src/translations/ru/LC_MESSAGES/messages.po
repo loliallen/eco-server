@@ -1,0 +1,39 @@
+# Russian translations for PROJECT.
+# Copyright (C) 2021 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2021-08-25 21:55+0300\n"
+"PO-Revision-Date: 2021-08-25 16:08+0300\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+
+#: src/controllers/user/register.py:16
+#, fuzzy
+msgid "Username must be not empty"
+msgstr "Имя не может быть пустым"
+
+#: src/controllers/user/register.py:18
+msgid "Email must contains: mail addres, @, provider, doman (.com)"
+msgstr "Почта пользователя должна содержать: имя ящика, @, почтового провайдера, домен (.ru)"
+
+#: src/controllers/user/register.py:20
+#, python-format
+msgid "Password must contains %(value)s"
+msgstr "Пароль пользователя должен содержать %(value)s"
+
+#: src/controllers/utils/inputs.py:19
+msgid "minimum 8 sign, minimum 1 digit and 1 letter"
+msgstr "минимум 8 знаков, минимум одну цифру и одну букву"
+
