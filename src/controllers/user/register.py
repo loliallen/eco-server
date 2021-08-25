@@ -17,7 +17,7 @@ post_parser.add_argument('username', type=inputs.Email(), required=True,
                          help=_('Email must contains: mail addres, @, provider, doman (.com)'))
 post_parser.add_argument('password', type=inputs.Password(), required=True,
                          help=_('Password must contains %(value)s', value=inputs.Password.help_msg))
-post_parser.add_argument('invite_code', type=str, required=False, help='Код приглашения')
+post_parser.add_argument('invite_code', type=str, required=False, help=_('Invite code'))
 
 
 class RegisterResponseModel(Schema):
@@ -46,14 +46,17 @@ class RegisterController(BaseListController):
     @swagger.tags('User')
     @swagger.response(response_code=201, schema=RegisterResponseModel, summary='Зарегистрироваться',
                       description='-')
-    # @swagger.reqparser(name='RegisterCreateModel', parser=post_parser)
+    @swagger.reqparser(name='RegisterCreateModel', parser=post_parser)
     def post(self):
         args = post_parser.parse_args()
         invite_code = args.pop('invite_code')
+        user = User.objects.filter(username=args['username']).first()
+        if user is not None:
+            return {'error': _('This email already registered')}, 400
         if invite_code:
             invite_user = User.objects.filter(token=invite_code).first()
             if invite_user is None:
-                return {'error': 'invite user not found'}, 400
+                return {'error': _('Invite user not found')}, 400
             args['invite_by_user'] = invite_user
         args['salt'] = generate_salt()
         args['password'] = hash_password(args['password'], args['salt'])

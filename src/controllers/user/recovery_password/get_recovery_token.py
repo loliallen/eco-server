@@ -1,3 +1,4 @@
+from flask_babel import lazy_gettext as _
 from flask_jwt_extended import create_access_token
 from flask_restful import reqparse, fields, marshal
 from flask_restful_swagger_3 import swagger, Schema
@@ -8,8 +9,8 @@ from src.models.user.UserModel import User
 from src.models.user.UsersCodeNotify import UsersCodeNotify
 
 post_parser = reqparse.RequestParser()
-post_parser.add_argument('username', type=str, required=True, help='Почта пользователя')
-post_parser.add_argument('code', type=str, required=True, help='Проверочный код')
+post_parser.add_argument('username', type=str, required=True, help=_('Email'))
+post_parser.add_argument('code', type=str, required=True, help=_('Check code'))
 
 
 class RecoveryTokenResponseModel(Schema):
@@ -35,12 +36,12 @@ class RecoveryTokenController(BaseListController):
         args = post_parser.parse_args()
         user = User.objects.filter(username=args['username']).first()
         if not user:
-            return {'error': 'user not found'}, 404
+            return {'error': _('User not found')}, 404
         notify = UsersCodeNotify.objects.filter(user=user, notify_type='recovery').first()
         if not notify:
-            return {'error': 'check code not sent, or is deprecated'}
+            return {'error': _('Check code not sent, or is deprecated')}
         if args['code'] != notify.code:
-            return {'error': 'wrong check code'}
+            return {'error': _('Wrong check code')}
         notify.delete()
         token = create_access_token(
             identity=args['username'],

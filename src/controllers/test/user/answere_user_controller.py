@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from flask_babel import lazy_gettext as _
 from flask_jwt_extended import jwt_required
 from flask_restful import reqparse
 from flask_restful_swagger_3 import swagger, Schema
@@ -40,19 +41,19 @@ class UserAnswerController(BaseListController):
     def post(self, attempt_id):
         attempt = UserAttempts.objects.filter(id=attempt_id).first()
         if not attempt:
-            return {'error': 'attempt not found'}, 404
+            return {'error': _('Attempt not found')}, 404
         user = User.get_user_from_request()
         if attempt.user != user:
-            return {'error': 'permission denied'}, 405
+            return {'error': _('Permission denied')}, 405
         if attempt.is_closed:
-            return {'error': 'attempt is closed'}, 400
+            return {'error': _('Attempt is closed')}, 400
 
         args = post_parser.parse_args()
         all_test_questions = Question.objects.filter(test=attempt.test).all()
         if args['question_id'] not in [str(i.id) for i in all_test_questions]:
-            return {'error': 'this question not in test'}, 400
+            return {'error': _('This question not in test')}, 400
         if args['question_id'] in attempt.already_answered:
-            return {'error': 'this question already answered'}, 400
+            return {'error': _('This question already answered')}, 400
         question = Question.find_by_id_(_id=args['question_id'])
         attempt.already_answered.append(question)
         answer_is_right = bool(question.correct_answer == args['answer'])

@@ -1,3 +1,4 @@
+from flask_babel import lazy_gettext as _
 from flask_jwt_extended import (
     jwt_required, verify_jwt_in_request, exceptions as jwt_exceptions
 )
@@ -68,11 +69,11 @@ class NewsListController(BaseListController):
             try:
                 verify_jwt_in_request()
             except jwt_exceptions.NoAuthorizationError:
-                return {'error': 'jwt header was not passed into request'}, 403
+                return {'error': _('You are not logged')}, 403
             else:
                 user = User.get_user_from_request()
                 if Roles(user.role) not in self.who_can_add_edit_news:
-                    return {'error': 'param only_my_news only for admin_pp'}, 403
+                    return {'error': _('Param only_my_news only for admin_pp')}, 403
                 args['author'] = user
         else:
             # если не запрошены только созданные мной новости - отдаем только заапрувленные

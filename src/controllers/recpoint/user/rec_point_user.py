@@ -1,5 +1,6 @@
 from ast import literal_eval
 
+from flask_babel import lazy_gettext as _
 from flask_jwt_extended import jwt_required
 from flask_restful import reqparse, fields, marshal
 from flask_restful_swagger_3 import swagger, Schema
@@ -138,7 +139,7 @@ class RecPointListController(BaseListController):
     def get(self):
         args = get_parser.parse_args()
         if args.get('radius') > Configuration.MAX_RADIUS_REC_POINTS_SHOW:
-            return {'error': 'too long radius'}, 400
+            return {'error': _('Too long radius')}, 400
         points = RecPoint.read(**args, approve_status=Status.confirmed.value)
         page = args.get('page')
         size = args.get('size')

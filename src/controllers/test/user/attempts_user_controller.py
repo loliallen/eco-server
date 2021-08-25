@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from flask_babel import lazy_gettext as _
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_restful import fields, marshal
 from flask_restful_swagger_3 import swagger, Schema
@@ -108,7 +109,7 @@ class UserAttemptsListController(BaseListController):
         ).first()
 
         if available_test is None:
-            return {"error": "Available tests not found"}, 404
+            return {"error": _("Available tests not found")}, 404
 
         attempt = UserAttempts.create_(user=user.id, test=available_test,
                                        datetime_opened=datetime.utcnow())

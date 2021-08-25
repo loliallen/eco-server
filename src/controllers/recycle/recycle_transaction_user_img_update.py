@@ -1,3 +1,4 @@
+from flask_babel import lazy_gettext as _
 from flask_jwt_extended import jwt_required
 from flask_restful_swagger_3 import swagger
 
@@ -25,6 +26,6 @@ class RecycleImageUploaderController(BaseController):
         admin_pp = User.get_user_from_request()
         transaction = RecycleTransaction.objects.filter(id=recycle_id, admin_pp=admin_pp).first()
         if transaction is None:
-            return {'error': f'RecycleTransaction not found'}, 404
+            return {'error': _('RecycleTransaction not found')}, 404
         save_imgs(transaction, root)
         return {'status': 'ok'}, 201

@@ -1,5 +1,6 @@
 import datetime
 
+from flask_babel import lazy_gettext as _
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_restful import reqparse, fields, marshal
 from flask_restful_swagger_3 import swagger, Schema
@@ -65,12 +66,12 @@ class BuyProductController(BaseListController):
         args = parser.parse_args()
         product = Product.find_by_id_(args['product'])
         if not product:
-            return {'error': 'product not found'}, 404
+            return {'error': _('Product not found')}, 404
         user = User.objects.filter(username=get_jwt_identity()).first()
         try:
             trasaction = product.buy(user)
         except NotEnoughtCoins:
-            return {'error': 'Not enought coins'}, 400
+            return {'error': _('Not enough coins')}, 400
         except ProductsIsOver:
-            return {'error': 'product is over'}, 400
+            return {'error': _('Product is over')}, 400
         return marshal(trasaction, resource_fields_)

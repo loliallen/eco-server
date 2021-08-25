@@ -2,10 +2,11 @@ import datetime
 import os
 import pathlib
 
+from src.utils.custom_swagger import JSONEncoder
+
 
 class Configuration:
     BABEL_DEFAULT_LOCALE = 'ru'
-    BABEL_TRANSLATION_DIRECTORIES = '/home/inysnko/PycharmProjects/eco/eco-server/src/translations'
 
     SECRET_KEY = 'a really really really really long secret key'  # TODO вынести в секреты
     JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(hours=2)
@@ -55,3 +56,5 @@ class Configuration:
     STATIC_URL = f"{PROTOCOL}://{HOST}:{PORT}{STATIC_URL_PATH}/"
     if not os.path.exists(STATIC_FOLDER):
         os.mkdir(STATIC_FOLDER)
+
+    RESTFUL_JSON = {'cls': JSONEncoder}

@@ -1,5 +1,5 @@
 from cerberus import Validator
-from flask import request
+from flask_babel import lazy_gettext as _
 from flask_jwt_extended import jwt_required
 from flask_restful import reqparse, fields, marshal
 from flask_restful_swagger_3 import swagger, Schema
@@ -27,23 +27,23 @@ def validate_item(value):
 
 
 post_parser = reqparse.RequestParser()
-post_parser.add_argument('user_token', type=str, required=True, help='qr код пользователя')
+post_parser.add_argument('user_token', type=str, required=True, help=_('User qr code'))
 post_parser.add_argument('items', type=validate_item, required=True, action='append')
 
 
 class RecycleTransactionItemCreateModel(Schema):
     properties = {
-        'filter_type': {'type': 'string', 'description': 'Id фильтра'},
-        'amount': {'type': 'float', 'description': 'Количество сданного ресурса в кг'},
+        'filter_type': {'type': 'string', 'description': _('Filter id')},
+        'amount': {'type': 'float', 'description': _('Amount passed resource in kg')},
     }
 
 
 class RecycleTransactionCreateModel(Schema):
     properties = {
-        'user_token': {'type': 'string', 'description': 'qr код пользователя'},
+        'user_token': {'type': 'string', 'description': _('User qr code')},
         'items': {'type': 'array',
                   'items': RecycleTransactionItemCreateModel,
-                  'description': 'Список сдаваемых материалов'},
+                  'description': _('List passed resource')},
     }
 
 
@@ -114,18 +114,18 @@ class RecycleTransactionListController(BaseListController):
         pp_admin = User.get_user_from_request()
         user = User.objects.filter(token=args.pop('user_token')).first()
         if not user:
-            return {'error': 'user by token not found'}, 400
+            return {'error': _('User by token not found')}, 400
         if not user.role == "user":
-            return {'error': 'admin_pp cant to recycle'}, 403
+            return {'error': _('Admin_pp cant to recycle')}, 403
 
         items = {i['filter_type']: i['amount'] for i in args['items']}
         filters_ids = list(items.keys())
         if len(set(filters_ids)) < len(args['items']):
-            return {'error': 'some filters are duplicated'}, 400
+            return {'error': _('Some filters are duplicated')}, 400
         filters = Filter.objects.filter(id__in=filters_ids).all()
         not_found_filters_ids = set(filters_ids) - {str(i.id) for i in filters}
         if len(not_found_filters_ids) > 0:
-            return {'error': f'filters not found: {not_found_filters_ids}'}, 400
+            return {'error': _('Filters not found: %(value)s', not_found_filters_ids)}, 400
         items = [RecycleTransactionItem(filter=filter_, amount=items[str(filter_.id)]) for filter_ in filters]
         reward = sum(i.filter.coins_per_unit * i.amount for i in items)
 

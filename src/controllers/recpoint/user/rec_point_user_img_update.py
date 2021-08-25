@@ -1,3 +1,4 @@
+from flask_babel import lazy_gettext as _
 from flask_jwt_extended import jwt_required
 from flask_restful_swagger_3 import swagger
 
@@ -23,12 +24,12 @@ class RecPointImageUploaderController(BaseController):
         user = User.get_user_from_request()
         rec_point = RecPoint.objects.filter(id=rec_point_id).first()
         if rec_point is None:
-            return {'error': 'RecycleTransaction not found'}, 404
+            return {'error': _('RecycleTransaction not found')}, 404
         if user.attached_rec_point != rec_point:
             if rec_point.author != user:
-                return {'error': 'Permission denied (you are not author)'}, 403
+                return {'error': _('Permission denied (you are not author)')}, 403
             if rec_point.approve_status != Status.idle.value:
-                return {'error': 'Permission denied (rec point already approved), '
-                                 'create comment to change images'}, 403
+                return {'error': _('Permission denied (rec point already approved), '
+                                   'create comment to change images')}, 403
         save_imgs(rec_point, root)
         return {'status': 'ok'}, 201

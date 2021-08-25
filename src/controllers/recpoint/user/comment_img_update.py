@@ -1,3 +1,4 @@
+from flask_babel import lazy_gettext as _
 from flask_jwt_extended import jwt_required
 from flask_restful_swagger_3 import swagger
 
@@ -23,10 +24,10 @@ class RecPointCommentImageUploaderController(BaseController):
         user = User.get_user_from_request()
         comment = RecPointComment.objects.filter(id=comment_id).first()
         if comment is None:
-            return {'error': 'Comment not found'}, 404
+            return {'error': _('Comment not found')}, 404
         if user != comment.user:
-            return {'error': 'Permission denied'}, 403
+            return {'error': _('Permission denied')}, 403
         if comment.transaction.status != Status.idle.value:
-            return {'error': 'Permission denied (comment already approved)'}, 403
+            return {'error': _('Permission denied (comment already approved)')}, 403
         save_imgs(comment, root.format(id=comment.rec_point.id))
         return {'status': 'ok'}, 201

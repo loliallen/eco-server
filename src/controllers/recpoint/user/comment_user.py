@@ -1,4 +1,4 @@
-from bson import ObjectId
+from flask_babel import lazy_gettext as _
 from flask_jwt_extended import jwt_required
 from flask_restful import reqparse, fields, marshal
 from flask_restful_swagger_3 import swagger, Schema
@@ -13,9 +13,9 @@ from src.models.utils.enums import Status
 from src.controllers.utils import fields as custom_fields
 
 post_parser = reqparse.RequestParser()
-post_parser.add_argument('text', type=str, required=True, help='Текст комментария')
-post_parser.add_argument('type', type=str, action='append', required=True, help='Массив тем')
-post_parser.add_argument('rec_point', type=Id, required=True, help='Id ПП')
+post_parser.add_argument('text', type=str, required=True, help=_('Text'))
+post_parser.add_argument('type', type=str, action='append', required=True, help=_('List of themes'))
+post_parser.add_argument('rec_point', type=Id, required=True, help=_('Id of rec point'))
 
 
 resource_fields_ = {
@@ -69,7 +69,7 @@ class RecPointCommentController(BaseListController):
         args = self.parser.parse_args()
         rec_point = RecPoint.find_by_id_(args.pop('rec_point'))
         if not rec_point:
-            return {'error': 'RecPoint not found'}
+            return {'error': _('RecPoint not found')}
         rec_point_comment, error = self._create_obj(**args, user=user, rec_point=rec_point)
         if error:
             return error

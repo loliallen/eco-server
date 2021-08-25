@@ -1,5 +1,6 @@
 from ast import literal_eval
 
+from flask_babel import lazy_gettext as _
 from flask_restful import marshal
 from flask_restful_swagger_3 import Resource
 from mongoengine import NotUniqueError
@@ -10,16 +11,16 @@ from src.exceptions.common import FieldError
 
 
 def not_found(name, id):
-    return {"message": f"{name} not found id={id}"}, 404
+    return {"error": _("%(name)s not found id=%(id)s", name=name, id=id)}, 404
 
 
 def handle_duplicate_error(ex):
-    return {"Not unique key": ex.details['keyPattern']}
+    return {"error": _("Not unique: %(value)s", value=ex.details['keyPattern'])}, 400
 
 
 def handle_unique_error(ex):
     details = literal_eval((str(ex).split('error: ')[1][:-1]))
-    return {"Not unique key": details['keyPattern']}
+    return {"error": _("Not unique: $(value)s", value=details['keyPattern'])}, 400
 
 
 class BaseController(Resource):
@@ -78,10 +79,14 @@ class BaseListController(Resource):
         return marshal(obj, self.resource_fields)
 
     def _create_obj(self, **kwargs):
+        """
+        :param kwargs:
+        :return: obj, error
+        """
         try:
             obj = self.model.create_(**kwargs)
         except DuplicateKeyError as ex:
-            return None, ({"message": handle_duplicate_error(ex)}, 400)
+            return None, handle_duplicate_error(ex)
         except NotUniqueError as ex:
-            return None, ({"message": handle_unique_error(ex)}, 400)
+            return None, handle_unique_error(ex)
         return obj, None

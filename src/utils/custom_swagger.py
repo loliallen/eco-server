@@ -1,9 +1,27 @@
-from enum import Enum
 from functools import wraps
 
 import werkzeug
+from flask_babel import LazyString, force_locale
 from flask_restful import reqparse
-from flask_restful_swagger_3 import Api, RequestParserExtractor, Schema
+from flask.json import JSONEncoder as BaseEncoder
+from flask_restful_swagger_3 import Api, Schema, DefinitionEncoder
+
+
+class JSONEncoder(BaseEncoder):
+    def default(self, o):
+        if isinstance(o, LazyString):
+            return str(o)
+        return super().default(o)
+
+
+def default(self, obj):
+    if isinstance(obj, LazyString):
+        with force_locale('ru_RU'):
+            return str(obj)
+    return obj.definitions()
+
+
+DefinitionEncoder.default = default
 
 
 class CustomApi(Api):

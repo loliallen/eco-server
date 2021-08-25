@@ -1,3 +1,4 @@
+from flask_babel import lazy_gettext as _
 from flask_jwt_extended import create_access_token
 from flask_restful import reqparse, fields, marshal
 from flask_restful_swagger_3 import swagger, Schema, Resource
@@ -37,13 +38,13 @@ class LoginController(Resource):
         args = post_parser.parse_args()
         user = User.objects.filter(username=args['username']).first()
         if not user:
-            return {'error': 'wrong login or password'}, 404
+            return {'error': _('Wrong login or password')}, 404
         if not user.check_password(args['password']):
-            return {'error': 'wrong login or password'}, 403
+            return {'error': _('Wrong login or password')}, 403
         if not user.confirmed:
-            return {'error': 'user not confirmed'}, 403
+            return {'error': _('User not confirmed')}, 403
         if Roles(user.role) not in BACKOFFICE_ACCESS_ROLES:
-            return {'error': 'you has not permission to admin api'}, 403
+            return {'error': _('You has not permission to admin api')}, 403
         access_token = create_access_token(
             identity=args['username'],
             expires_delta=Configuration.JWT_ADMIN_ACCESS_TOKEN_EXPIRES,
