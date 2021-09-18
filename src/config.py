@@ -27,8 +27,8 @@ class Configuration:
     PASSWORD_GENERATE_ITERATIONS = 10000  # кол-во итераций при генерации пароля, если поменять все текущие пароли слетят
 
     DB_NAME = "eco"
-    DB_URL = os.getenv("DB_URL", default=f"mongodb+srv://eco.y8cj7.mongodb.net/eco?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority")
-    DB_SERT = os.getenv("DB_SERT", default='mongo.pem')
+    DB_URL = os.getenv("DB_URL", default=f"mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000")
+    DB_SERT = os.getenv("DB_SERT", default='deployment/ssl_2/mongodb.pem')
 
     HOST = os.getenv("HOST", default="0.0.0.0")
     PORT = os.getenv("PORT", default=8000)
@@ -58,3 +58,21 @@ class Configuration:
         os.mkdir(STATIC_FOLDER)
 
     RESTFUL_JSON = {'cls': JSONEncoder}
+
+
+# db.createUser({
+#     "user" : "root",
+#     "pwd": passwordPrompt(),
+#     "roles" : [
+#             {
+#                     "role" : "root",
+#                     "db" : "admin"
+#             }
+#     ]
+# })
+# #
+# db.createUser({
+#     "user" : "app",
+#     "pwd": "pass",
+#     "roles" : ["readWrite"]
+# })

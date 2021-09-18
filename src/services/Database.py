@@ -10,6 +10,8 @@ def global_connect():
             alias="core",
             name="eco",
             host=Configuration.DB_URL,
+            username='app',
+            password='pass',
             tlsCertificateKeyFile=Configuration.DB_SERT,
         )
         print("[Database]: Connected")

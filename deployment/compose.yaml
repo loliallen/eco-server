@@ -1,0 +1,48 @@
+version: "3.9"
+services:
+  mongo_stage:
+    container_name: mongo_stage
+    hostname: mongo_stage
+    # the image from the docker-hub repository
+    image: "mongo"
+    # mongo uses port 27017 to change see more info https://hub.docker.com/_/mongo
+    expose:
+      - "27017"
+    command: [--auth]
+    ports:
+      - 27017:27017
+    # here comes the interesting part, with volumes we can easily insert all the configuration that we need!
+    volumes:
+      # This volume will hold the database information, what you save, your collections, documents, etc. Since we have 3 nodes we need three places which will hold information this is the first one
+      - ./data/stage:/data/db
+      # This volume will hold the Server Certificate file which will be signed by the CA and will make work TLS - The shell script create all the folders inside ssl just need to run the script!
+      - ./ssl_2:/data/ssl
+      # This volume will hold this node cluster configuration! Each node has it's own configuration and differences, but to simplify things I just created ONE configuration to dominate them ALL =D! The file is the cluster.conf
+      - ./config/cluster.conf:/etc/mongod.conf
+    # always restart right.. keep it alive!
+    restart: always
+#    command: mongod
+    # entrypoint will execute a command inside the container as soon as it starts. So basically we are saying run mongo database with this file configuration settings. Note that the cluster.conf is inside the volume folder set in the volume section. Since it is mapped inside the container we don't need to copy any files (nice and slender!)
+#    entrypoint: ["mongod", "--config", "/data/config/cluster.conf"]
+    # setting the inside network
+    networks:
+      # the name of the below configured network we have to belong to it
+      my_network:
+
+    # This works like MAGIC - this allows us to connect inside the network "my_network" FROM THE
+    # HOST - because we are creating a closed network we would have to configure a DNS server
+    # only to reach it. So very complicated. This option make it easy for us! Check your ip
+    # address with ifconfig in Linux and REPLACE "(YOUR MACHINE/SERVER IP)"
+#    extra_hosts:
+#      - "localhost:(YOUR MACHINE/SERVER IP)"
+    # mongo images use this variables inside the container and they are very helpful. Set the username and password of the Database. We are going to have to configure it by hand anyway but it's nice to have it there
+#    env_file:
+#      - ./.env
+#    environment:
+#      MONGO_INITDB_ROOT_USERNAME: mdb_admin
+#      MONGO_INITDB_ROOT_PASSWORD: mdb_pass
+#      MONGO_INITDB_DATABASE: eco
+
+networks:
+  # this is your custom network NAME inside this file
+  my_network:
