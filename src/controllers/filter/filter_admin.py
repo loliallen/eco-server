@@ -1,6 +1,5 @@
-from ast import literal_eval
-
 from flask_restful import reqparse, fields
+from flask_restful.inputs import boolean
 from flask_restful_swagger_3 import swagger, Schema
 
 import src.controllers.utils.fields as custom_fields
@@ -14,6 +13,7 @@ get_parser = reqparse.RequestParser()
 get_parser.add_argument('page', type=int, required=False, location='args')
 get_parser.add_argument('size', type=int, required=False, location='args')
 get_parser.add_argument('id', dest='id__in', type=str, action='append', location='args')
+get_parser.add_argument('visible', type=boolean, location='args')
 
 post_parser = reqparse.RequestParser()
 post_parser.add_argument('name', type=str, required=True, help='Название фильтра')
@@ -22,7 +22,9 @@ post_parser.add_argument('key_words', type=str, action='append', required=True,
                          help='Список слов, используемых для поиска этого фильтра')
 post_parser.add_argument('bad_words', type=str, action='append', required=True,
                          help='Спиок слов, не используемых для поиска этого фильтра')
-post_parser.add_argument('coins_per_unit', type=int, help='Количество коинов за единицу сданного типа ресурса')
+post_parser.add_argument('coins_per_unit', type=int, help='Количество коинов за '
+                                                          'единицу сданного типа ресурса')
+post_parser.add_argument('visible', type=bool, help='Видимость типа ресурса')
 
 
 class FilterResponseModel(Schema):
@@ -37,7 +39,8 @@ class FilterResponseModel(Schema):
         'coins_per_unit': {'type': 'integer',
                            'description': 'Количество коинов за единицу сданного типа ресурса'},
         'image': {'type': 'string',
-                  'description': 'Ссылка на изображение'}
+                  'description': 'Ссылка на изображение'},
+        'visible': {'type': 'string', 'description': 'Видимость для пользователя'},
     }
 
 
@@ -49,6 +52,7 @@ resource_fields_ = {
     'bad_words': fields.List(fields.String),
     "coins_per_unit": fields.Float,
     "image": custom_fields.ImageLink,
+    "visible": fields.Boolean,
 }
 
 

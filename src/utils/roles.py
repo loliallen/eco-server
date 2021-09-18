@@ -73,7 +73,7 @@ BACKOFFICE_ACCESS_RULES = {
         'read': ADMINS_GROUP,
         'create': ADMINS_GROUP,
         'edit': ADMINS_GROUP,
-        'delete': [Roles.super_admin],
+        # 'delete': [Roles.super_admin],
     },
     'partner': {
         'read': ADMINS_GROUP + [Roles.partner],
@@ -86,7 +86,7 @@ BACKOFFICE_ACCESS_RULES = {
         'create': ADMINS_GROUP,
         'approve': ADMINS_GROUP,  # апрув предложения нового пп
         'edit': ADMINS_GROUP,
-        'delete': [Roles.super_admin],
+        # 'delete': [Roles.super_admin],
     },
     'rec_point_comment': {
         'read': ADMINS_GROUP,

@@ -48,7 +48,7 @@ class FilterControllerList(BaseListController):
     @swagger.response(response_code=200, summary='Список фильтров (Типов ресурса)',
                       description='-', schema=FilterResponseModel)
     def get(self):
-        return super().get_()
+        return super().get_(visible=True)
 
 
 class FilterController(BaseController):
@@ -60,4 +60,4 @@ class FilterController(BaseController):
     @swagger.response(response_code=200, summary='Фильтр (Тип ресурса)',
                       description='-', schema=FilterResponseModel)
     def get(self, filter_id):
-        return super().get_(filter_id)
+        return super().get_(filter_id, visible=True)

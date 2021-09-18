@@ -1,9 +1,7 @@
-from ast import literal_eval
-
 from flask_restful import reqparse, fields, marshal
+from flask_restful.inputs import boolean
 from flask_restful_swagger_3 import swagger, Schema
 
-from src.config import Configuration
 from src.controllers.utils import fields as custom_fields
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.controllers.utils.pagination import paginate
@@ -15,8 +13,11 @@ from src.models.user.UserModel import User
 from src.models.utils.enums import STATUS_CHOICES
 from src.utils.roles import jwt_reqired_backoffice, role_need, Roles
 
+from bson import ObjectId
+
 get_parser = reqparse.RequestParser()
-get_parser.add_argument('filters', type=str, action='append', required=False, location='args')
+get_parser.add_argument('accept_types', dest='accept_types__in',
+                        type=ObjectId, action='append', required=False, location='args')
 get_parser.add_argument('payback_type', type=str, required=False, location='args')
 get_parser.add_argument('reception_type', type=str, required=False, location='args')
 get_parser.add_argument('position', type=str, action='append', required=False, location='args')
@@ -25,6 +26,7 @@ get_parser.add_argument('status', dest='approve_status', type=str, required=Fals
 get_parser.add_argument('page', type=int, required=False, default=1, location='args')
 get_parser.add_argument('size', type=int, required=False, default=10, location='args')
 get_parser.add_argument('id', dest='id__in', type=str, action='append', location='args')
+get_parser.add_argument('visible', type=boolean, location='args')
 
 
 post_parser = reqparse.RequestParser()
@@ -41,6 +43,7 @@ post_parser.add_argument('accept_types', type=str, action='append', required=Fal
 post_parser.add_argument('coords', type=float, action='append', required=False)
 post_parser.add_argument('description', type=str, required=False)
 post_parser.add_argument('getBonus', type=bool, required=False)
+post_parser.add_argument('visible', type=bool, required=False)
 post_parser.add_argument('external_images', type=str, action='append', required=False)
 post_parser.add_argument('approve_status', type=str, choices=STATUS_CHOICES + (None,), required=False)
 post_parser.add_argument('district', type=str, choices=DISTRICTS + (None,), required=False)
@@ -61,6 +64,7 @@ class RecPointResponseModel(Schema):
         'coords': {'type': 'array', 'items': {'type': 'float'}},
         'description': {'type': 'string'},
         'getBonus': {'type': 'boolean'},
+        'visible': {'type': 'boolean'},
         'district': {'type': 'string'},
         'images': {'type': 'string', 'description': 'Ссылки на изображения'}
     }
@@ -81,6 +85,7 @@ resource_fields_ = {
     'coords': fields.List(fields.Float, attribute='coords.coordinates'),
     'description': fields.String,
     'getBonus': fields.Boolean(attribute=lambda x: getattr(x, 'getBonus', False)),
+    'visible': fields.Boolean,
     "images": fields.List(custom_fields.ImageLink),
     "external_images": fields.List(fields.String),
     "approve_status": fields.String,
@@ -121,10 +126,9 @@ class RecPointListController(BaseListController):
                        example=10, required=False, schema={'type': 'integer'})
     def get(self):
         args = get_parser.parse_args()
+        page = args.pop('page')
+        size = args.pop('size')
         points = RecPoint.read(**args)
-        page = args.get('page')
-        size = args.get('size')
-
         return paginate(points, page, size, resource_fields_, select_related_depth=1)
 
     @jwt_reqired_backoffice('rec_point', 'create')

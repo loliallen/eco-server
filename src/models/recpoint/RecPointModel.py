@@ -35,10 +35,9 @@ class RecPoint(Document, BaseCrud):
     coords = PointField(auto_index=False)
     accept_types = ListField(ReferenceField(Filter))
     work_time = DictField()
+    visible = BooleanField(default=True)
     approve_status = StringField(choices=STATUS_CHOICES, default=Status.idle.value)
     author = ReferenceField('User')
-    # если это изменение - то здесь будет ссылка на изменяемый объект
-    change_by = ReferenceField('RecPoint')
 
     meta = {
         "db_alias": "core",
@@ -51,33 +50,17 @@ class RecPoint(Document, BaseCrud):
     def read(cls,
              position: list,
              radius: int,
-             filters: list = None,
-             reception_type: str = None,
-             payback_type: str = None,
-             approve_status: str = None,
-             id__in: list = None,
              **kwargs
              ) -> QuerySet:
         """
         Custom read for RecPoints with filters
         """
-        rec_points = RecPoint.objects
-        if filters:
-            for filter in filters:
-                rec_points = rec_points.filter(accept_types__contains=filter)
-        if reception_type:
-            rec_points = rec_points.filter(reception_type=reception_type)
-        if payback_type:
-            rec_points = rec_points.filter(payback_type=payback_type)
-        if id__in:
-            rec_points = rec_points.filter(id__in=id__in)
+        kwargs = {k: v for k, v in kwargs.items() if v is not None}
+        rec_points = RecPoint.objects.filter(**kwargs)
 
         if position and radius:
             radian = (radius * 10) / 6378.1
             rec_points = rec_points.filter(coords__geo_within_center=[position, radian])
-        if approve_status is not None:
-            rec_points = rec_points.filter(approve_status=approve_status)
-
         return rec_points
 
     @classmethod

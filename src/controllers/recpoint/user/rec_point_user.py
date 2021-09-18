@@ -14,9 +14,11 @@ from src.models.transaction.AdmissionTransaction import AdmissionTransaction, Ac
 from src.models.user.UserModel import User
 from src.models.utils.enums import Status
 from src.utils.roles import role_need, Roles
+from bson import ObjectId
 
 get_parser = reqparse.RequestParser()
-get_parser.add_argument('filters', type=literal_eval, required=False, location='args')
+get_parser.add_argument('filters', dest='accept_types__in',
+                        type=ObjectId, action='append', required=False, location='args')
 get_parser.add_argument('payback_type', type=str, required=False, location='args')
 get_parser.add_argument('reception_type', type=str, required=False, location='args')
 get_parser.add_argument('position', type=literal_eval, required=True, location='args')
@@ -140,12 +142,11 @@ class RecPointListController(BaseListController):
         args = get_parser.parse_args()
         if args.get('radius') > Configuration.MAX_RADIUS_REC_POINTS_SHOW:
             return {'error': _('Too long radius')}, 400
-        points = RecPoint.read(**args, approve_status=Status.confirmed.value)
-        page = args.get('page')
-        size = args.get('size')
+        page = args.pop('page')
+        size = args.pop('size')
+        points = RecPoint.read(**args, approve_status=Status.confirmed.value, visible=True)
         if page and size:
             return paginate(points, page, size, resource_fields_, select_related_depth=1)
-
         return marshal(points.select_related(max_depth=1), resource_fields_reduced_)
 
     @jwt_required()
