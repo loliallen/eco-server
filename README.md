@@ -60,7 +60,7 @@ pybabel compile -f -d src/translations
 ### Обновление
 - Собрать новый контейнер:
   ```bash
-  docker build -t eco_api -f deployment/api/prod/Docker ./
+  docker build -t eco_api -f <абсолютный путь до проекта>/deployment/api/prod/Docker ./
   ```
   После сборки проверьте работоспособность сборки через Запуск (предыдущий пункт)
 - Запушить собранный билд:
