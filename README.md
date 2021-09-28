@@ -4,7 +4,7 @@
 ## Локальный запуск
 1) Развернуть mongo локально:
    ```bash
-   docker run -d -p 27017-27019:27017-27019 --name mongo_db_local mongo
+   docker run -d -p 27017-27019:27017-27019 --name mongo_db_local mongo:latest
    ```
 2) Запуск апи пользователя:
    ```bash  
@@ -40,7 +40,11 @@
    ```
 4) Запутстить:
    ```bash
-   [sudo] docker-compose up
+   [sudo] docker-compose up -d
+   ```
+5) Проверить, что все работает:
+   ```bash
+   [sudo] docker ps
    ```
 
 ## Перевод
