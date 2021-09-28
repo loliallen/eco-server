@@ -1,7 +1,7 @@
 FROM python:3.7-alpine
 
 
-RUN mkdir -p /usr/src/app 
+RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 COPY . /usr/src/app
@@ -16,10 +16,3 @@ RUN apk update
 
 RUN pip3 install --no-cache-dir -r requirements.txt
 RUN python3 -m pip install --upgrade Pillow
-
-ENV PORT=5000
-ENV DEBUG='False'
-
-EXPOSE 5000
-
-CMD gunicorn -b 0.0.0.0:5000 --certfile certificate.pem --keyfile key.pem  -w 3 src.app_user:app

@@ -1,15 +1,47 @@
 # EcoHub
-Бэкэнд для приложения EcoHub. Используется база данных redis.
+Бэкэнд для приложения EcoHub. Используется база данных mongo.
 
 ## Локальный запуск
-Запуск апи пользователя:
-```bash
-python run.py user
-```
-Запуск апи админа:
-```bash
-python run.py admin
-```
+1) Развернуть mongo локально:
+   ```bash
+   docker run -d -p 27017-27019:27017-27019 --name mongo_db_local mongo
+   ```
+2) Запуск апи пользователя:
+   ```bash  
+   python run.py user
+   ```
+3) Запуск апи админа:
+   ```bash
+   python run.py admin
+   ```
+
+## Деплой
+Имеется три апи:
+1) eco_api - основное пользовательское апи. Используется на проде. 
+   Поднимается на 5000 порту.
+2) eco_api_stage - пользовательское апи. Используется для демонстрации
+   нового функционала, который может сломать обратную совместимость.
+   Поднимается на 7000 порту. 
+3) eco_api_admin - админское апи. Используется на проде. Поднимается на
+   8000 порту.
+
+## Развернуть на сервере
+Для развертывания понадобятся консольные команды docker и docker-compose.
+
+1) Создать в папке deployment `.env` файл (скопировать `.env.exmaple`)
+2) В корне проекта создать сертификаты
+   ```bash
+   openssl req -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out certificate.pem
+   ```
+3) Собрать образ: 
+   ```bash
+   cd deployment
+   [sudo] docker-compose build
+   ```
+4) Запутстить:
+   ```bash
+   [sudo] docker-compose up
+   ```
 
 ## Перевод
 Сканировать все места, нуждающиеся в переводе:
@@ -24,57 +56,3 @@ pybabel update -i src/translations/messages.pot -d src/translations
 ```bash
 pybabel compile -f -d src/translations
 ```
-
-## Деплой
-Имеется три апи:
-1) eco_api - основное пользовательское апи. Используется на проде. 
-   Поднимается на 5000 порту.
-2) eco_api_stage - пользовательское апи. Используется для демонстрации
-   нового функционала, который может сломать обратную совместимость.
-   Поднимается на 7000 порту. 
-3) eco_api_admin - админское апи. Используется на проде. Поднимается на
-   8000 порту.
-
-### Развернуть локально/на сервере
-- Скачать себе образ eco_api (например  tag=0.1):
-    ```bash
-    docker pull intsynko1/eco_api:{tag}
-    ```
-  Аналогично для eco_api_stage, eco_api_admin
-
-Для разработки локально можно использовать mongo из контейнера. На проде 
-используется монго на облаке.
-- Скачать себе образ mongo:
-    ```bash
-    docker pull mongo:latest
-    ```
-
-#### Запуск
-
-- запустить api
-  ```bash
-  docker run -d --name eco_api -p 5000:5000 -v ~/<путь до папки статики на сервере>/statics:/statics --env HOST='<host сервера>' --env STATIC_FOLDER='/statics'  intsynko1/eco_api:{tag} 
-  ```
-
-
-### Обновление
-- Собрать новый контейнер:
-  ```bash
-  docker build -t eco_api -f <абсолютный путь до проекта>/deployment/api/prod/Docker ./
-  ```
-  После сборки проверьте работоспособность сборки через Запуск (предыдущий пункт)
-- Запушить собранный билд:
-  ```bash
-  docker tag eco_api:latest intsynko1/eco_api:{tag}
-  docker push intsynko1/eco_api:{tag}
-  ```
-- Выполнить шаги "Развернуть локально/на сервере", "Запуск" на сервере
-
-
-## SSL серитификат
-
-- Создать сертификат:
-```bash
-openssl req -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out certificate.pem
-```
-

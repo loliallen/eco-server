@@ -26,9 +26,12 @@ class Configuration:
     PASSWORD_HASH_FUNC = 'sha256'  # алгоритм генерации пароля, если поменять все текущие пароли слетят
     PASSWORD_GENERATE_ITERATIONS = 10000  # кол-во итераций при генерации пароля, если поменять все текущие пароли слетят
 
-    DB_NAME = "eco"
-    DB_URL = os.getenv("DB_URL", default=f"mongodb+srv://eco.y8cj7.mongodb.net/eco?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority")
+    DB_NAME = os.getenv("MONGO_INITDB_DATABASE", default="eco")
+    DB_URL = os.getenv("DB_URL", default=f"mongodb://0.0.0.0:27017")
+    DB_USERNAME = os.getenv("MONGO_USERNAME", default="user")
+    DB_PASSWORD = os.getenv("MONGO_PASSWORD", default="password")
     DB_SERT = os.getenv("DB_SERT", default='mongo.pem')
+    DB_TIMEOUT = os.getenv("DB_TIMEOUT", default=5000)
 
     HOST = os.getenv("HOST", default="0.0.0.0")
     PORT = os.getenv("PORT", default=8000)

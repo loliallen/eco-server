@@ -1,0 +1,53 @@
+version: '3'
+services:
+  api:
+   container_name: eco_api
+   build:
+    context: ../
+    dockerfile: ./deployment/Dockerfile
+   image: eco_api:latest
+   ports:
+    - "5000:5000"
+   volumes:
+    - ./statics:/statics
+   env_file:
+    - .env
+   environment:
+    HOST: "0.0.0.0"
+    PORT: 5000
+    DB_URL: "eco_api_mongo:27017"
+   depends_on:
+    - mongo_db
+   command: ["gunicorn", "-b", "0.0.0.0:5000", "--certfile", "certificate.pem", "--keyfile", "key.pem", "src.app_user:app"]
+
+  api_admin:
+   container_name: eco_api_admin
+   image: eco_api:latest
+   ports:
+    - "8000:8000"
+   volumes:
+    - ./statics:/statics
+   env_file:
+    - .env
+   environment:
+    HOST: "0.0.0.0"
+    PORT: 8000
+    DB_URL: "eco_api_mongo:27017"
+   depends_on:
+    - mongo_db
+   command: ["gunicorn", "-b", "0.0.0.0:8000", "src.app_admin:app"]
+
+  mongo_db:
+   image: mongo:latest
+   container_name: eco_api_mongo
+   ports:
+    - "27017:27017"
+   command: [--auth]
+   volumes:
+    - mongodb:/data/dbeco
+    - ./init-mongo.sh:/docker-entrypoint-initdb.d/mongo-init.sh
+   env_file:
+    - .env
+
+volumes:
+  mongodb:
