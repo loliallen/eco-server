@@ -52,3 +52,6 @@ class AdmissionTransaction(Document, BaseCrud):
             user.save()
             self.status = Status.confirmed.value
             self.save()
+
+    def __repr__(self):
+        return f'<AdmissionTransaction: ({self.id}) {self.action_type} by {self.user.username}>'

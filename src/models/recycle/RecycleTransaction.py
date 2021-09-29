@@ -64,3 +64,6 @@ class RecycleTransaction(Document, BaseCrud):
             {"$group": {"_id": "$_id.district", "items": {"$push": {"filter": "$_id.filter", "total": "$total", 'name': '$name'}}}},
             {"$project": {"_id": 0, "district": "$_id", 'items': 1, 'total': {'$sum': '$items.total'}}},
         ])
+
+    def __repr__(self):
+        return f'<RecycleTransaction: ({self.id})>'

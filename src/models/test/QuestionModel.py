@@ -22,3 +22,6 @@ class Question(Document, BaseCrud):
         "collection": "question",
         "strict": False,
     }
+
+    def __repr__(self):
+        return f'<Test: ({self.id}) {self.test.name} {self.question}>'

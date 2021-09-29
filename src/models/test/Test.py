@@ -15,3 +15,6 @@ class Test(Document, BaseCrud):
         "collection": "test",
         "strict": False
     }
+
+    def __repr__(self):
+        return f'<Test: ({self.id}) {self.test_name}>'

@@ -34,3 +34,6 @@ class RecPointComment(Document, BaseCrud):
             q = q.filter(transaction__in=AdmissionTransaction.objects(status='idle'))
         q = q.filter(**kwargs)
         return q
+
+    def __repr__(self):
+        return f'<RecPointComment: ({self.id}) {self.text}>'

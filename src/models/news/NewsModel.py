@@ -18,3 +18,6 @@ class News(Document, BaseCrud):
         "db_alias": "core",
         "collection": "news",
     }
+
+    def __repr__(self):
+        return f'<News: ({self.id}) [{self.pub_date}] {self.title}>'

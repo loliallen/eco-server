@@ -18,3 +18,6 @@ class Partner(Document, BaseCrud):
         "collection": "partners",
         "strict": False
     }
+
+    def __repr__(self):
+        return f'<Parent: ({self.id}) {self.name}>'

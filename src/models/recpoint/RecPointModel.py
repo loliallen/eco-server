@@ -73,3 +73,6 @@ class RecPoint(Document, BaseCrud):
             radius: radius at kilometres
         """
         return RecPoint.objects.filter(coords__near=[lon, lat], coords__max_distance=radius)
+
+    def __repr__(self):
+        return f'<RecPoint: ({self.id}) {self.name}>'

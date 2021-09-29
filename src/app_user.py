@@ -35,13 +35,14 @@ from src.controllers.user.user_info import UserInfoController
 from src.send_email import mail
 from src.utils.custom_swagger import CustomApi
 
+
 app = Flask(__name__,
             static_url_path=Configuration.STATIC_URL_PATH,
             static_folder=Configuration.STATIC_FOLDER)
 app.config.from_object(Configuration)
 jwt = JWTManager(app)
 babel = Babel(app, configure_jinja=False)
-Database.global_connect()
+Database.global_connect(app.logger)
 api = CustomApi(app, title="EcoApi for User",
                 authorizations={"JWT": {"type": "http", "scheme": "bearer", "bearerFormat": "JWT"}})
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})

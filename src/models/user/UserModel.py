@@ -46,7 +46,10 @@ class User(Document, UserMixin, BaseCrud, Atomic):
 
     @staticmethod
     def get_user_from_request():
-        return User.objects.filter(username=get_jwt_identity()).first()
+        from flask import request
+        if not getattr(request, 'user', None):
+            request.user = User.objects.filter(username=get_jwt_identity()).first()
+        return request.user
 
     def add_freeze_coins(self, coins):
         with self.lock() as user:
@@ -73,3 +76,6 @@ class User(Document, UserMixin, BaseCrud, Atomic):
     @property
     def access_schema(self):
         return get_role_schema(Roles(self.role))
+
+    def __repr__(self):
+        return f'<User: ({self.id}) {self.role} {self.username} [{self.name}]>'

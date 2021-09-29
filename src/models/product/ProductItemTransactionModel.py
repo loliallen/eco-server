@@ -17,3 +17,6 @@ class ProductItemTransaction(Document, BaseCrud):
         "collection": "product_item_transactions",
         "strict": False,
     }
+
+    def __repr__(self):
+        return f'<ProductItemTransaction: ({self.id}) {self.date}>'

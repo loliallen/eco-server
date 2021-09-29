@@ -5,9 +5,6 @@ from mongoengine import Document, StringField, ListField, FloatField, BooleanFie
 
 from src.models.utils.BaseCrud import BaseCrud
 
-REL_PATH = "/statics/filters"
-files_storage = Path('./src'+REL_PATH)
-
 
 class Filter(Document, BaseCrud):
     name = StringField(required=True, unique=True, comment='Имя')
@@ -23,11 +20,5 @@ class Filter(Document, BaseCrud):
         "comment": "Таблица для хранения типа отхода (батарейка, макулатура)"
     }
 
-    def save_img(self, image):
-        mime_type = image.split('.').pop()
-        filename = str(self.id) + "." + mime_type
-        img_path = REL_PATH + "/" + filename
-        old_path = files_storage / image
-        new_path = files_storage / filename
-        os.rename(old_path.resolve(), new_path.resolve())
-        self.image = img_path
+    def __repr__(self):
+        return f'<Filter: ({self.id}) {self.name}>'

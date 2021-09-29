@@ -75,3 +75,6 @@ class Product(Document, BaseCrud):
                 }
             }
         )
+
+    def __repr__(self):
+        return f'<Product: ({self.id}) {self.name}>'

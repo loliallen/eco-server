@@ -1,11 +1,13 @@
 from ast import literal_eval
 
+from flask import current_app as app
 from flask_babel import lazy_gettext as _
 from flask_restful import marshal
 from flask_restful_swagger_3 import Resource
 from mongoengine import NotUniqueError
 from pymongo.errors import DuplicateKeyError
 
+from models.user.UserModel import User
 from src.controllers.utils.pagination import paginate
 from src.exceptions.common import FieldError
 
@@ -28,11 +30,19 @@ class BaseController(Resource):
     model = None
     name = 'Resource'
     parser = None
+    log_settings = {
+        'get': False,
+        'put': True,
+        'delete': True
+    }
 
     def get_(self, id, **kwargs):
         obj = self.model.find_by_id_(id, **kwargs)
         if not obj:
             return not_found(self.name, id)
+        if self.log_settings['get']:
+            user = User.get_user_from_request()
+            app.logger.info(f'({repr(obj)}) was selected by {repr(user)}')
         return marshal(obj, self.resource_fields)
 
     def put_(self, id, **kwargs):
@@ -42,13 +52,18 @@ class BaseController(Resource):
             return err
         if not obj:
             return not_found(self.name, id)
-
+        if self.log_settings['put']:
+            user = User.get_user_from_request()
+            app.logger.info(f'({repr(obj)}) was updated by {repr(user)}')
         return marshal(obj, self.resource_fields)
 
     def delete_(self, id, **kwargs):
         obj = self.model.delete_(id, **kwargs)
-        if not bool(obj):
+        if obj is None:
             return not_found(self.name, id)
+        if self.log_settings['delete']:
+            user = User.get_user_from_request()
+            app.logger.info(f'({repr(obj)}) was deleted by {repr(user)}')
         return marshal(obj, self.resource_fields)
 
     def update_obj(self, id, updates, **kwargs):
@@ -63,9 +78,16 @@ class BaseListController(Resource):
     model = None
     name = 'Resource'
     parser = None
+    log_settings = {
+        'get': False,
+        'post': True
+    }
 
     def get_(self, paginate_=False, page=1, size=10, select_related_depth=1, **kwargs):
         objs = self.model.read_(**kwargs)
+        if self.log_settings['get']:
+            user = User.get_user_from_request()
+            app.logger.info(f'{self.name} was selected by {repr(user)}')
         if paginate_:
             return paginate(objs, page, size, self.resource_fields,
                             select_related_depth=select_related_depth)
@@ -76,6 +98,9 @@ class BaseListController(Resource):
         obj, error = self._create_obj(**args, **kwargs)
         if error:
             return error
+        if self.log_settings['post']:
+            user = User.get_user_from_request()
+            app.logger.info(f'({repr(obj)}) was created by {repr(user)}')
         return marshal(obj, self.resource_fields)
 
     def _create_obj(self, **kwargs):

@@ -18,3 +18,6 @@ class ProductItem(Document, BaseCrud, Atomic):
         "collection": "product_items",
         "strict": False,
     }
+
+    def __repr__(self):
+        return f'<ProductItem: ({self.id})>'

@@ -20,3 +20,6 @@ class UserAttempts(Document, BaseCrud):
         "collection": "user_attempts",
         "strict": False
     }
+
+    def __repr__(self):
+        return f'<UserAttempts: ({self.id})>'

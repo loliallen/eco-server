@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_babel import Babel
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_swagger_ui import get_swaggerui_blueprint
@@ -49,8 +50,9 @@ app = Flask(__name__,
             static_url_path=Configuration.STATIC_URL_PATH,
             static_folder=Configuration.STATIC_FOLDER)
 app.config.from_object(Configuration)
+babel = Babel(app, configure_jinja=False)
+Database.global_connect(app.logger)
 jwt = JWTManager(app)
-Database.global_connect()
 api = CustomApi(app, title='EcoApi for Admins',
                 authorizations={"JWT": {"type": "http", "scheme": "bearer", "bearerFormat": "JWT"}})
 cors = CORS(app, resources={ "/admin/*": {"origins": "*"}, "/api/*": {"origins": "*"}})
