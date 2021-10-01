@@ -13,7 +13,6 @@ services:
    env_file:
     - .env
    environment:
-    HOST: "0.0.0.0"
     PORT: 5000
     DB_URL: "eco_api_mongo:27017"
    depends_on:
@@ -30,7 +29,6 @@ services:
    env_file:
     - .env
    environment:
-    HOST: "0.0.0.0"
     PORT: 8000
     DB_URL: "eco_api_mongo:27017"
    depends_on:
