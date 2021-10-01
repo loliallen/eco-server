@@ -33,7 +33,7 @@ services:
     DB_URL: "eco_api_mongo:27017"
    depends_on:
     - mongo_db
-   command: ["gunicorn", "-b", "0.0.0.0:8000", "src.app_admin:app"]
+   command: ["gunicorn", "-b", "0.0.0.0:8000", "--certfile", "certificate.pem", "--keyfile", "key.pem", "src.app_admin:app"]
 
   mongo_db:
    image: mongo:latest

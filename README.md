@@ -29,7 +29,7 @@
 Для развертывания понадобятся консольные команды docker и docker-compose.
 
 1) Создать в папке deployment `.env` файл (скопировать `.env.exmaple`)
-2) В корне проекта создать сертификаты
+2) В корнь проекта скопировать сертификаты или создать с помощь команды:
    ```bash
    openssl req -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out certificate.pem
    ```
