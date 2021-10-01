@@ -7,7 +7,7 @@ from flask_restful_swagger_3 import Resource
 from mongoengine import NotUniqueError
 from pymongo.errors import DuplicateKeyError
 
-from models.user.UserModel import User
+from src.models.user.UserModel import User
 from src.controllers.utils.pagination import paginate
 from src.exceptions.common import FieldError
 
