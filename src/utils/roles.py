@@ -44,6 +44,8 @@ def jwt_reqired_backoffice(view, action, optional=False, fresh=False, refresh=Fa
                 return {'error': 'token is not backoffice'}, 405
 
             user = User.get_user_from_request()
+            if user is None:
+                return {'error': 'user not found'}, 404
             if Roles(user.role) not in BACKOFFICE_ACCESS_RULES[view].get(action, []):
                 return {'error': 'permission denied'}, 403
             return fn(*args, **kwargs)
