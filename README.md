@@ -4,7 +4,7 @@
 ## Локальный запуск
 1) Развернуть mongo локально:
    ```bash
-   docker run -d -p 27017-27019:27017-27019 --name mongo_db_local mongo:latest
+   docker -f ./deployment/local/ up -d 
    ```
 2) Запуск апи пользователя:
    ```bash  
@@ -13,6 +13,22 @@
 3) Запуск апи админа:
    ```bash
    python run.py admin
+   ```
+4) Загрузить фикстуры:
+   ```bash
+   mongorestore --db eco ./src/fixtures/simple/  
+   ```
+
+## Тестирование
+1) Установить зависимости для тестов
+   ```bash
+   pip install -r requremets-test.txt
+   ```
+2) Запуск тестов
+   ```bash
+   export PYTHONPATH=$(pwd)
+   cd src/tests/
+   pytest
    ```
 
 ## Деплой
@@ -25,7 +41,7 @@
 3) eco_api_admin - админское апи. Используется на проде. Поднимается на
    8000 порту.
 
-## Развернуть на сервере
+### Развернуть на сервере
 Для развертывания понадобятся консольные команды docker и docker-compose.
 
 1) Создать в папке deployment `.env` файл (скопировать `.env.exmaple`)
