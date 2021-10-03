@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"},{"v":{"$numberInt":"2"},"key":{"coords":"2dsphere"},"name":"coords_2dsphere","background":false,"2dsphereIndexVersion":{"$numberInt":"3"}}],"uuid":"fa23419b9e0146b6b7b48740887977e1","collectionName":"rec_points","type":"collection"}
