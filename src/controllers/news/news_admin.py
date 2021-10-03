@@ -20,7 +20,7 @@ get_parser.add_argument('page', type=int, required=False, location='args')
 get_parser.add_argument('size', type=int, required=False, location='args')
 
 
-class NewsResponseModel(Schema):
+class NewsResponseModelAdmin(Schema):
     properties = {
         'id': {'type': 'string'},
         'title': {'type': 'string'},
@@ -53,7 +53,7 @@ class NewsListController(BaseListController):
     @jwt_reqired_backoffice('news', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('News')
-    @swagger.response(response_code=200, schema=NewsResponseModel, summary='Список новостей',
+    @swagger.response(response_code=200, schema=NewsResponseModelAdmin, summary='Список новостей',
                       description='-')
     @swagger.parameter(_in='query', name='only_advice', description='Только советы', schema={'type': 'boolean'})
     @swagger.parameter(_in='query', name='is_approved', description='Статус апрува', schema={'type': 'boolean'})
@@ -71,9 +71,9 @@ class NewsListController(BaseListController):
     @jwt_reqired_backoffice('news', 'create')
     @swagger.security(JWT=[])
     @swagger.tags('News')
-    @swagger.response(response_code=201, schema=NewsResponseModel, summary='Создать новость',
+    @swagger.response(response_code=201, schema=NewsResponseModelAdmin, summary='Создать новость',
                       description='-')
-    @swagger.reqparser(name='NewsCreateModel', parser=post_parser)
+    @swagger.reqparser(name='NewsCreateModelAdmin', parser=post_parser)
     def post(self):
         user = User.get_user_from_request()
         return super().post_(author=user)
@@ -88,7 +88,7 @@ class NewsController(BaseController):
     @jwt_reqired_backoffice('news', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('News')
-    @swagger.response(response_code=201, schema=NewsResponseModel, summary='Новость',
+    @swagger.response(response_code=201, schema=NewsResponseModelAdmin, summary='Новость',
                       description='-')
     def get(self, news_id):
         return super().get_(news_id)
@@ -96,7 +96,7 @@ class NewsController(BaseController):
     @jwt_reqired_backoffice('news', 'edit')
     @swagger.security(JWT=[])
     @swagger.tags('News')
-    @swagger.response(response_code=201, schema=NewsResponseModel, summary='Обновить новость',
+    @swagger.response(response_code=201, schema=NewsResponseModelAdmin, summary='Обновить новость',
                       description='-')
     @swagger.reqparser(name='NewsPutModel', parser=post_parser)
     def put(self, news_id):
@@ -105,7 +105,7 @@ class NewsController(BaseController):
     @jwt_reqired_backoffice('news', 'delete')
     @swagger.security(JWT=[])
     @swagger.tags('News')
-    @swagger.response(response_code=201, schema=NewsResponseModel, summary='Удалить новость',
+    @swagger.response(response_code=201, schema=NewsResponseModelAdmin, summary='Удалить новость',
                       description='-')
     def delete(self, news_id):
         super().delete_(news_id)

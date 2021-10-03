@@ -27,7 +27,7 @@ post_parser.add_argument('coins_per_unit', type=int, help='Количество 
 post_parser.add_argument('visible', type=bool, help='Видимость типа ресурса')
 
 
-class FilterResponseModel(Schema):
+class FilterResponseModelAdmin(Schema):
     properties = {
         'id': {'type': 'string', 'description': 'Id фильтра'},
         'name': {'type': 'string', 'description': 'Название фильтра'},
@@ -65,7 +65,7 @@ class FilterControllerList(BaseListController):
     @jwt_reqired_backoffice('filters', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Filters')
-    @swagger.response(response_code=200, summary='Список фильтров', description='-', schema=FilterResponseModel)
+    @swagger.response(response_code=200, summary='Список фильтров', description='-', schema=FilterResponseModelAdmin)
     @swagger.parameter(_in='query', name='page',
                        description='Номер страницы',
                        example=1, required=False, schema={'type': 'integer'})
@@ -83,7 +83,7 @@ class FilterControllerList(BaseListController):
     @jwt_reqired_backoffice('filters', 'create')
     @swagger.security(JWT=[])
     @swagger.tags('Filters')
-    @swagger.response(response_code=201, schema=FilterResponseModel, summary='Создать новый фильтр')
+    @swagger.response(response_code=201, schema=FilterResponseModelAdmin, summary='Создать новый фильтр')
     @swagger.reqparser(name='FilterCreateModel', parser=post_parser)
     def post(self):
         """Создать новый фильтр"""
@@ -99,14 +99,14 @@ class FilterController(BaseController):
     @jwt_reqired_backoffice('filters', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Filters')
-    @swagger.response(response_code=200, summary='Фильтр', description='-', schema=FilterResponseModel)
+    @swagger.response(response_code=200, summary='Фильтр', description='-', schema=FilterResponseModelAdmin)
     def get(self, filter_id):
         return super().get_(filter_id)
 
     @jwt_reqired_backoffice('filters', 'edit')
     @swagger.security(JWT=[])
     @swagger.tags('Filters')
-    @swagger.response(response_code=204, summary='Обновить Фильтр', description='-', schema=FilterResponseModel)
+    @swagger.response(response_code=204, summary='Обновить Фильтр', description='-', schema=FilterResponseModelAdmin)
     @swagger.reqparser(name='FilterPutModel', parser=post_parser)
     def put(self, filter_id):
         return super().put_(filter_id)
@@ -114,6 +114,6 @@ class FilterController(BaseController):
     @jwt_reqired_backoffice('filters', 'delete')
     @swagger.security(JWT=[])
     @swagger.tags('Filters')
-    @swagger.response(response_code=204, summary='Удалить фильтр', description='-', schema=FilterResponseModel)
+    @swagger.response(response_code=204, summary='Удалить фильтр', description='-', schema=FilterResponseModelAdmin)
     def delete(self, filter_id):
         return super().delete_(filter_id)

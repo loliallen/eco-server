@@ -19,7 +19,7 @@ class Password(fields.String):
     help_msg = _('minimum 8 sign, minimum 1 digit and 1 letter')
 
     def __init__(self, *args, **kwargs):
-        super().__init__(validate=validate.Regexp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$'),
+        super().__init__(validate=validate.Regexp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d_!@#$%^&*]{8,}$'),
                          *args, **kwargs)
 
     def __call__(self, *args, **kwargs):

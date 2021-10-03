@@ -34,7 +34,7 @@ resource_fields_ = {
 }
 
 
-class QuestionResponseModel(Schema):
+class QuestionResponseModelAdmin(Schema):
     properties = {
         'id': {'type': 'string'},
         'test': {'type': 'string'},
@@ -58,7 +58,7 @@ class QuestionListController(BaseListController):
     @swagger.security(JWT=[])
     @swagger.tags('Tests')
     @swagger.response(response_code=200, summary='Список вопросов', description='-',
-                      schema=QuestionResponseModel)
+                      schema=QuestionResponseModelAdmin)
     @swagger.parameter(_in='query', name='test_id', description='Фильтр по Id теста',
                        schema={'type': 'string'})
     @swagger.parameter(_in='query', name='page',
@@ -75,7 +75,7 @@ class QuestionListController(BaseListController):
     @jwt_reqired_backoffice('question', 'create')
     @swagger.security(JWT=[])
     @swagger.tags('Tests')
-    @swagger.response(response_code=201, schema=QuestionResponseModel,
+    @swagger.response(response_code=201, schema=QuestionResponseModelAdmin,
                       summary='Создать новый вопрос', description='-')
     @swagger.reqparser(name='QuestionCreateModel', parser=parser)
     def post(self):
@@ -92,7 +92,7 @@ class QuestionController(BaseController):
     @swagger.security(JWT=[])
     @swagger.tags('Tests')
     @swagger.response(response_code=200, summary='Вопрос', description='-',
-                      schema=QuestionResponseModel)
+                      schema=QuestionResponseModelAdmin)
     def get(self, question_id):
         return super().get_(question_id)
 
@@ -100,7 +100,7 @@ class QuestionController(BaseController):
     @swagger.security(JWT=[])
     @swagger.tags('Tests')
     @swagger.response(response_code=200, summary='Обновить вопрос', description='-',
-                      schema=QuestionResponseModel)
+                      schema=QuestionResponseModelAdmin)
     @swagger.reqparser(name='QuestionPutModel', parser=parser)
     def put(self, question_id):
         return super().put_(question_id)
@@ -109,6 +109,6 @@ class QuestionController(BaseController):
     @swagger.security(JWT=[])
     @swagger.tags('Tests')
     @swagger.response(response_code=200, summary='Удалить вопрос', description='-',
-                      schema=QuestionResponseModel)
+                      schema=QuestionResponseModelAdmin)
     def delete(self, question_id):
         return super().delete_(question_id)

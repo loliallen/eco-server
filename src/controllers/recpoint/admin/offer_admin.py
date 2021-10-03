@@ -4,7 +4,7 @@ from flask_restful import reqparse
 from flask_restful_swagger_3 import swagger
 
 from src.config import Configuration
-from src.controllers.recpoint.admin.rec_point_admin import RecPointResponseModel, resource_fields_
+from src.controllers.recpoint.admin.rec_point_admin import RecPointResponseModelAdmin, resource_fields_
 from src.controllers.utils.BaseController import BaseListController
 from src.models.recpoint.RecPointModel import RecPoint
 from src.models.transaction.AdmissionTransaction import AdmissionTransaction
@@ -27,7 +27,7 @@ class RecPointOfferApproveController(BaseListController):
     @jwt_reqired_backoffice('rec_point', 'approve')
     @swagger.security(JWT=[])
     @swagger.tags('Recycle Points')
-    @swagger.response(response_code=201, schema=RecPointResponseModel,
+    @swagger.response(response_code=201, schema=RecPointResponseModelAdmin,
                       summary='Апрув добавления нового ПП',
                       description='-')
     @swagger.reqparser(name='RecPointApproveModel', parser=post_parser)

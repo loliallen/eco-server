@@ -113,6 +113,8 @@ class RecycleTransactionListController(BaseListController):
     def post(self):
         args = self.parser.parse_args()
         pp_admin = User.get_user_from_request()
+        if pp_admin.attached_rec_point is None:
+            return {'error': _('Administrator have not attached Recycle Point')}, 400
         user = User.objects.filter(token=args.pop('user_token')).first()
         if not user:
             return {'error': _('User by token not found')}, 400
@@ -127,7 +129,7 @@ class RecycleTransactionListController(BaseListController):
         not_found_filters_ids = set(filters_ids) - {str(i.id) for i in filters}
         if len(not_found_filters_ids) > 0:
             return {'error': _('Filters not found: %(value)s', not_found_filters_ids)}, 400
-        items = [RecycleTransactionItem(filter=filter_, amount=items[str(filter_.id)]) for filter_ in filters]
+        items = [RecycleTransactionItem(filter=filter_.id, amount=items[str(filter_.id)]) for filter_ in filters]
         reward = sum(i.filter.coins_per_unit * i.amount for i in items)
 
         # если больше 10 кг, то оставляем на проверку (статус idle), иначе confirmed
@@ -135,9 +137,9 @@ class RecycleTransactionListController(BaseListController):
         status = Status.idle if need_approve else Status.confirmed
         # создаем транзакцию на сдачу отходов
         rec_transaction, error = self._create_obj(
-            from_=user,
+            from_=user.id,
             to_=pp_admin.attached_rec_point,
-            admin_pp=pp_admin,
+            admin_pp=pp_admin.id,
             items=items,
             reward=reward,
             status=status.value

@@ -13,7 +13,7 @@ post_parser.add_argument('username', type=str, required=True, help='Почта �
 post_parser.add_argument('password', type=str, required=True, help='Пароль пользователя')
 
 
-class LoginResponseModel(Schema):
+class LoginResponseModelAdmin(Schema):
     properties = {
         'access_token': {'type': 'string'},
     }
@@ -31,9 +31,9 @@ resource_fields_ = {
 class LoginController(Resource):
 
     @swagger.tags('Auth')
-    @swagger.response(response_code=201, schema=LoginResponseModel, summary='Логин',
+    @swagger.response(response_code=201, schema=LoginResponseModelAdmin, summary='Логин',
                       description='-')
-    @swagger.reqparser(name='LoginModel', parser=post_parser)
+    @swagger.reqparser(name='LoginModelAdmin', parser=post_parser)
     def post(self):
         args = post_parser.parse_args()
         user = User.objects.filter(username=args['username']).first()

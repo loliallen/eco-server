@@ -24,7 +24,7 @@ parser.add_argument('date_to', type=Date, required=True, help='Срок дейс
 parser.add_argument('is_active', type=bool, required=False, help='Активность продукта (можно ли его купить)')
 
 
-class ProductResponseModel(Schema):
+class ProductResponseModelAdmin(Schema):
     properties = {
         'id': {'type': 'string', 'description': 'Id продукта'},
         'name': {'type': 'string', 'description': 'Название продукта'},
@@ -54,7 +54,7 @@ class ProductListController(BaseListController):
     @jwt_reqired_backoffice('product', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Products')
-    @swagger.response(response_code=200, summary='Список продуктов (купонов)', description='-', schema=ProductResponseModel)
+    @swagger.response(response_code=200, summary='Список продуктов (купонов)', description='-', schema=ProductResponseModelAdmin)
     @swagger.parameter(_in='query', name='page',
                        description='Номер страницы',
                        example=1, required=False, schema={'type': 'integer'})
@@ -72,7 +72,7 @@ class ProductListController(BaseListController):
     @jwt_reqired_backoffice('product', 'create')
     @swagger.security(JWT=[])
     @swagger.tags('Products')
-    @swagger.response(response_code=201, schema=ProductResponseModel, summary='Создать новый продукт (купон)', description='-')
+    @swagger.response(response_code=201, schema=ProductResponseModelAdmin, summary='Создать новый продукт (купон)', description='-')
     @swagger.reqparser(name='ProductCreateModel', parser=parser)
     def post(self):
         args = {}
@@ -91,7 +91,7 @@ class ProductController(BaseController):
     @jwt_reqired_backoffice('product', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Products')
-    @swagger.response(response_code=200, summary='Продукт (купон)', description='-', schema=ProductResponseModel)
+    @swagger.response(response_code=200, summary='Продукт (купон)', description='-', schema=ProductResponseModelAdmin)
     def get(self, product_id):
         args = {}
         admin = User.get_user_from_request()
@@ -102,7 +102,7 @@ class ProductController(BaseController):
     @jwt_reqired_backoffice('product', 'edit')
     @swagger.security(JWT=[])
     @swagger.tags('Products')
-    @swagger.response(response_code=200, summary='Обновить продукт (купон)', description='-', schema=ProductResponseModel)
+    @swagger.response(response_code=200, summary='Обновить продукт (купон)', description='-', schema=ProductResponseModelAdmin)
     @swagger.reqparser(name='ProductPutModel', parser=parser)
     def put(self, product_id):
         args = {}

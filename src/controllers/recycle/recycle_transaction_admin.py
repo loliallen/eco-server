@@ -23,7 +23,7 @@ post_parser = reqparse.RequestParser()
 post_parser.add_argument('status', type=str, choices=STATUS_CHOICES, required=True)
 
 
-class RecycleTransactionItemResponseModel(Schema):
+class RecycleTransactionItemResponseModelAdmin(Schema):
     properties = {
         'filter_id': {'type': 'string', 'description': 'Id фильтра'},
         'filter_name': {'type': 'string', 'description': 'Имя фильтра'},
@@ -31,12 +31,12 @@ class RecycleTransactionItemResponseModel(Schema):
     }
 
 
-class RecycleTransactionResponseModel(Schema):
+class RecycleTransactionResponseModelAdmin(Schema):
     # TODO: актуализировать
     properties = {
         'id': {'type': 'string', 'description': 'Id транзакции'},
         'rec_point_id': {'type': 'string', 'description': 'Id пункта приема'},
-        'items': {'type': 'array', 'items': RecycleTransactionItemResponseModel, 'description': 'Сданные ресурсы'},
+        'items': {'type': 'array', 'items': RecycleTransactionItemResponseModelAdmin, 'description': 'Сданные ресурсы'},
         'reward': {'type': 'integer', 'description': 'Количество коинов-вознаграждения'},
         'status': {'type': 'string', 'description': 'Статус транзакции'},
         'date': {'type': 'datetime', 'description': 'Дата транзакции'},
@@ -72,7 +72,7 @@ class RecycleTransactionListController(BaseListController):
     @jwt_reqired_backoffice('recycle_transaction', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Recycle')
-    @swagger.response(response_code=201, schema=RecycleTransactionResponseModel,
+    @swagger.response(response_code=201, schema=RecycleTransactionResponseModelAdmin,
                       summary='Список транзакций сдачи отходов',
                       description='-')
     @swagger.parameter(_in='query', name='user', description='Фильтр по пользователю',
@@ -98,7 +98,7 @@ class RecycleTransactionController(BaseController):
     @jwt_reqired_backoffice('recycle_transaction', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Recycle')
-    @swagger.response(response_code=201, schema=RecycleTransactionResponseModel, summary='Транзакция сдачи отхода',
+    @swagger.response(response_code=201, schema=RecycleTransactionResponseModelAdmin, summary='Транзакция сдачи отхода',
                       description='-')
     def get(self, recycle_id):
         return super().get_(recycle_id)
@@ -106,7 +106,7 @@ class RecycleTransactionController(BaseController):
     @jwt_reqired_backoffice('recycle_transaction', 'approve')
     @swagger.security(JWT=[])
     @swagger.tags('Recycle')
-    @swagger.response(response_code=201, schema=RecycleTransactionResponseModel, summary='Апрув транзакции сдачи отхода',
+    @swagger.response(response_code=201, schema=RecycleTransactionResponseModelAdmin, summary='Апрув транзакции сдачи отхода',
                       description='-')
     @swagger.reqparser('RecycleApprove', post_parser)
     def put(self, recycle_id):

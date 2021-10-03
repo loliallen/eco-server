@@ -73,4 +73,4 @@ class RegisterController(BaseListController):
         message = Message(subject=subject, html=html, recipients=[user.username])
         send_email(message)
 
-        return marshal(user, resource_fields_)
+        return marshal(user, resource_fields_), 201

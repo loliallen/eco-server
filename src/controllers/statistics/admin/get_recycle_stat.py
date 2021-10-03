@@ -27,7 +27,7 @@ class RecycleStatDistrictItem(Schema):
     }
 
 
-class RecycleStatistic(Schema):
+class RecycleStatisticAdmin(Schema):
     properties = {
         'total': {'type': 'integer', 'description': 'Всего сданных кг'},
         'items': {'type': 'array', 'items': RecycleStatDistrictItem, 'description': 'Сданные ресурсы'},
@@ -49,7 +49,7 @@ class RecycleStatisticController(BaseController):
     @jwt_reqired_backoffice('dashboard', 'show')
     @swagger.security(JWT=[])
     @swagger.tags('Statistic')
-    @swagger.response(response_code=201, schema=RecycleStatistic, summary='Статистика сдачи отхода',
+    @swagger.response(response_code=201, schema=RecycleStatisticAdmin, summary='Статистика сдачи отхода',
                       description='-')
     @swagger.parameter(_in='query', name='period', description='Фильтр по периоду',
                        schema={'type': 'string', 'enum': PERIOD})

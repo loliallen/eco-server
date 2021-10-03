@@ -49,7 +49,7 @@ post_parser.add_argument('approve_status', type=str, choices=STATUS_CHOICES + (N
 post_parser.add_argument('district', type=str, choices=DISTRICTS + (None,), required=False)
 
 
-class RecPointResponseModel(Schema):
+class RecPointResponseModelAdmin(Schema):
     properties = {
         'id': {'type': 'string'},
         'name': {'type': 'string'},
@@ -104,7 +104,7 @@ class RecPointListController(BaseListController):
     @jwt_reqired_backoffice('rec_point', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Recycle Points')
-    @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Список пунктов приема',
+    @swagger.response(response_code=201, schema=RecPointResponseModelAdmin, summary='Список пунктов приема',
                       description='-')
     @swagger.parameter(_in='query', name='filters', description='Тип принимаемого фильтра (вида отхода)',
                        schema={'type': 'string'})
@@ -134,9 +134,9 @@ class RecPointListController(BaseListController):
     @jwt_reqired_backoffice('rec_point', 'create')
     @swagger.security(JWT=[])
     @swagger.tags('Recycle Points')
-    @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Создать новый пункт приема',
+    @swagger.response(response_code=201, schema=RecPointResponseModelAdmin, summary='Создать новый пункт приема',
                       description='-')
-    @swagger.reqparser(name='RecPointCreateModel', parser=post_parser)
+    @swagger.reqparser(name='RecPointCreateModelAdmin', parser=post_parser)
     def post(self):
         admin = User.get_user_from_request()
         return super().post_(author=admin)
@@ -151,7 +151,7 @@ class RecPointController(BaseController):
     @jwt_reqired_backoffice('rec_point', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Recycle Points')
-    @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Пункт приема',
+    @swagger.response(response_code=201, schema=RecPointResponseModelAdmin, summary='Пункт приема',
                       description='-')
     def get(self, rec_point_id):
         return super().get_(rec_point_id)
@@ -159,9 +159,9 @@ class RecPointController(BaseController):
     @jwt_reqired_backoffice('rec_point', 'edit')
     @swagger.security(JWT=[])
     @swagger.tags('Recycle Points')
-    @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Обновить пункт приема',
+    @swagger.response(response_code=201, schema=RecPointResponseModelAdmin, summary='Обновить пункт приема',
                       description='-')
-    @swagger.reqparser(name='RecPointPutModel', parser=post_parser)
+    @swagger.reqparser(name='RecPointPutModelAdmin', parser=post_parser)
     def put(self, rec_point_id):
         updates = self.parser.parse_args()
         if updates['coords'] is None or updates['coords'] == [None]:
@@ -175,7 +175,7 @@ class RecPointController(BaseController):
     @role_need([Roles.super_admin])
     @swagger.security(JWT=[])
     @swagger.tags('Recycle Points')
-    @swagger.response(response_code=201, schema=RecPointResponseModel, summary='Удалить пункт приема',
+    @swagger.response(response_code=201, schema=RecPointResponseModelAdmin, summary='Удалить пункт приема',
                       description='-')
     def delete(self, rec_point_id):
         admission_transaction = AdmissionTransaction.objects.filter(

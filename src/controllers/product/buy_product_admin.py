@@ -22,7 +22,7 @@ resource_fields_ = {
 }
 
 
-class BuyProductResponseModel(Schema):
+class BuyProductResponseModelAdmin(Schema):
     properties = {
         'id': {'type': 'string', 'description': 'Id транзакции'},
         'user_id': {'type': 'string', 'description': 'Id пользователя'},
@@ -44,7 +44,7 @@ class BuyProductListController(BaseListController):
     @swagger.security(JWT=[])
     @swagger.tags('Products')
     @swagger.response(response_code=200, summary='Список всех покупок (Транзакций)', description='-',
-                      schema=BuyProductResponseModel)
+                      schema=BuyProductResponseModelAdmin)
     @swagger.parameter(_in='query', name='page',
                        description='Номер страницы',
                        example=1, required=False, schema={'type': 'integer'})
@@ -66,6 +66,6 @@ class BuyProductController(BaseController):
     @swagger.security(JWT=[])
     @swagger.tags('Products')
     @swagger.response(response_code=200, summary='Транзакция', description='-',
-                      schema=BuyProductResponseModel)
+                      schema=BuyProductResponseModelAdmin)
     def get(self, transaction_id):
         return super().get_(transaction_id)

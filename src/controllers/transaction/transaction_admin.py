@@ -13,7 +13,7 @@ get_parser.add_argument('page', type=int, required=False, location='args')
 get_parser.add_argument('size', type=int, required=False, location='args')
 
 
-class AdmissionTransactionResponseModel(Schema):
+class AdmissionTransactionResponseModelAdmin(Schema):
     properties = {
         'id': {'type': 'string', 'description': 'Id транзакции'},
         'action_type': {'type': 'string', 'description': 'Тип действия', 'choices': ACTION_TYPE_CHOICES},
@@ -46,7 +46,7 @@ class AdmissionTransactionListController(BaseListController):
     @jwt_reqired_backoffice('transactions', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Transaction')
-    @swagger.response(response_code=201, schema=AdmissionTransactionResponseModel,
+    @swagger.response(response_code=201, schema=AdmissionTransactionResponseModelAdmin,
                       summary='Список транзакций зачислений',
                       description='-')
     @swagger.parameter(_in='query', name='user', description='Фильтр по пользователю',
@@ -73,7 +73,7 @@ class AdmissionTransactionTransactionController(BaseController):
     @jwt_reqired_backoffice('transactions', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Transaction')
-    @swagger.response(response_code=201, schema=AdmissionTransactionResponseModel, summary='Транзакция зачисления',
+    @swagger.response(response_code=201, schema=AdmissionTransactionResponseModelAdmin, summary='Транзакция зачисления',
                       description='-')
     def get(self, transaction_id):
         return super().get_(transaction_id)

@@ -16,7 +16,7 @@ get_parser.add_argument('districts', type=str, action='append', required=False, 
 get_parser.add_argument('filters', type=str, action='append', required=False, location='args')
 
 
-class RecycleStatItem(Schema):
+class RecycleStatItemAdmin(Schema):
     properties = {
         'filter': {'type': 'string', 'description': 'Id фильтра'},
         'name': {'type': 'string', 'description': 'Название фильтра'},
@@ -28,7 +28,7 @@ class RecycleStatDistrict(Schema):
     properties = {
         'district': {'type': 'string', 'description': 'Id фильтра'},
         'total': {'type': 'float', 'description': 'Всего сданных кг'},
-        'items': {'type': 'array', 'items': RecycleStatItem, 'description': 'Сданные ресурсы'},
+        'items': {'type': 'array', 'items': RecycleStatItemAdmin, 'description': 'Сданные ресурсы'},
     }
 
 
