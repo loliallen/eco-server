@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-08-26 00:33+0300\n"
+"POT-Creation-Date: 2021-10-03 19:34+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -50,23 +50,23 @@ msgstr ""
 msgid "Permission denied (comment already approved)"
 msgstr ""
 
-#: src/controllers/recpoint/user/comment_user.py:16
+#: src/controllers/recpoint/user/comment_user.py:17
 msgid "Text"
 msgstr ""
 
-#: src/controllers/recpoint/user/comment_user.py:17
+#: src/controllers/recpoint/user/comment_user.py:18
 msgid "List of themes"
 msgstr ""
 
-#: src/controllers/recpoint/user/comment_user.py:18
+#: src/controllers/recpoint/user/comment_user.py:19
 msgid "Id of rec point"
 msgstr ""
 
-#: src/controllers/recpoint/user/comment_user.py:72
+#: src/controllers/recpoint/user/comment_user.py:73
 msgid "RecPoint not found"
 msgstr ""
 
-#: src/controllers/recpoint/user/rec_point_user.py:142
+#: src/controllers/recpoint/user/rec_point_user.py:144
 msgid "Too long radius"
 msgstr ""
 
@@ -85,36 +85,40 @@ msgid ""
 "images"
 msgstr ""
 
-#: src/controllers/recycle/recycle_transaction_user.py:30
-#: src/controllers/recycle/recycle_transaction_user.py:43
+#: src/controllers/recycle/recycle_transaction_user.py:31
+#: src/controllers/recycle/recycle_transaction_user.py:44
 msgid "User qr code"
 msgstr ""
 
-#: src/controllers/recycle/recycle_transaction_user.py:36
+#: src/controllers/recycle/recycle_transaction_user.py:37
 msgid "Filter id"
 msgstr ""
 
-#: src/controllers/recycle/recycle_transaction_user.py:37
+#: src/controllers/recycle/recycle_transaction_user.py:38
 msgid "Amount passed resource in kg"
 msgstr ""
 
-#: src/controllers/recycle/recycle_transaction_user.py:46
+#: src/controllers/recycle/recycle_transaction_user.py:47
 msgid "List passed resource"
 msgstr ""
 
 #: src/controllers/recycle/recycle_transaction_user.py:117
+msgid "Administrator have not attached Recycle Point"
+msgstr ""
+
+#: src/controllers/recycle/recycle_transaction_user.py:120
 msgid "User by token not found"
 msgstr ""
 
-#: src/controllers/recycle/recycle_transaction_user.py:119
+#: src/controllers/recycle/recycle_transaction_user.py:122
 msgid "Admin_pp cant to recycle"
 msgstr ""
 
-#: src/controllers/recycle/recycle_transaction_user.py:124
+#: src/controllers/recycle/recycle_transaction_user.py:127
 msgid "Some filters are duplicated"
 msgstr ""
 
-#: src/controllers/recycle/recycle_transaction_user.py:128
+#: src/controllers/recycle/recycle_transaction_user.py:131
 #, python-format
 msgid "Filters not found: %(value)s"
 msgstr ""
@@ -139,28 +143,28 @@ msgstr ""
 msgid "Available tests not found"
 msgstr ""
 
-#: src/controllers/user/confirm.py:12 src/controllers/user/login.py:11
+#: src/controllers/user/confirm.py:13 src/controllers/user/login.py:11
 #: src/controllers/user/recovery_password/get_recovery_token.py:12
 #: src/controllers/user/recovery_password/send_check_code.py:15
 msgid "Email"
 msgstr ""
 
-#: src/controllers/user/confirm.py:13
+#: src/controllers/user/confirm.py:14
 msgid "Check code from letter"
 msgstr ""
 
-#: src/controllers/user/confirm.py:37
+#: src/controllers/user/confirm.py:38
 #: src/controllers/user/recovery_password/chage_password.py:29
 #: src/controllers/user/recovery_password/get_recovery_token.py:39
 #: src/controllers/user/recovery_password/send_check_code.py:28
 msgid "User not found"
 msgstr ""
 
-#: src/controllers/user/confirm.py:39
+#: src/controllers/user/confirm.py:40
 msgid "Account already confirmed. Please login."
 msgstr ""
 
-#: src/controllers/user/confirm.py:41
+#: src/controllers/user/confirm.py:42
 msgid "Not valid code"
 msgstr ""
 
@@ -178,28 +182,28 @@ msgstr ""
 msgid "User not confirmed"
 msgstr ""
 
-#: src/controllers/user/register.py:15
+#: src/controllers/user/register.py:16
 msgid "Username must be not empty"
 msgstr ""
 
-#: src/controllers/user/register.py:17
+#: src/controllers/user/register.py:18
 msgid "Email must contains: mail addres, @, provider, doman (.com)"
 msgstr ""
 
-#: src/controllers/user/register.py:19
+#: src/controllers/user/register.py:20
 #, python-format
 msgid "Password must contains %(value)s"
 msgstr ""
 
-#: src/controllers/user/register.py:20
+#: src/controllers/user/register.py:21
 msgid "Invite code"
 msgstr ""
 
-#: src/controllers/user/register.py:55
+#: src/controllers/user/register.py:56
 msgid "This email already registered"
 msgstr ""
 
-#: src/controllers/user/register.py:59
+#: src/controllers/user/register.py:60
 msgid "Invite user not found"
 msgstr ""
 
@@ -242,17 +246,17 @@ msgid ""
 " again."
 msgstr ""
 
-#: src/controllers/utils/BaseController.py:14
+#: src/controllers/utils/BaseController.py:16
 #, python-format
 msgid "%(name)s not found id=%(id)s"
 msgstr ""
 
-#: src/controllers/utils/BaseController.py:18
+#: src/controllers/utils/BaseController.py:20
 #, python-format
 msgid "Not unique: %(value)s"
 msgstr ""
 
-#: src/controllers/utils/BaseController.py:23
+#: src/controllers/utils/BaseController.py:25
 msgid "Not unique: $(value)s"
 msgstr ""
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-08-26 00:33+0300\n"
+"POT-Creation-Date: 2021-10-03 19:34+0300\n"
 "PO-Revision-Date: 2021-08-25 16:08+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
@@ -54,24 +54,24 @@ msgstr "Нет доступа"
 msgid "Permission denied (comment already approved)"
 msgstr "Нет доступа (комментарий уже подтвержден)"
 
-#: src/controllers/recpoint/user/comment_user.py:16
+#: src/controllers/recpoint/user/comment_user.py:17
 msgid "Text"
 msgstr "Текст"
 
-#: src/controllers/recpoint/user/comment_user.py:17
+#: src/controllers/recpoint/user/comment_user.py:18
 msgid "List of themes"
 msgstr "Список тем"
 
-#: src/controllers/recpoint/user/comment_user.py:18
+#: src/controllers/recpoint/user/comment_user.py:19
 msgid "Id of rec point"
 msgstr "Пункт приема"
 
-#: src/controllers/recpoint/user/comment_user.py:72
+#: src/controllers/recpoint/user/comment_user.py:73
 #, fuzzy
 msgid "RecPoint not found"
 msgstr "Пользователь не найден"
 
-#: src/controllers/recpoint/user/rec_point_user.py:142
+#: src/controllers/recpoint/user/rec_point_user.py:144
 msgid "Too long radius"
 msgstr "Слишком большой радиус"
 
@@ -92,37 +92,41 @@ msgstr ""
 "Нет доступа (пункт приема уже подтвержден), напишите комментарий для "
 "изменения изображения"
 
-#: src/controllers/recycle/recycle_transaction_user.py:30
-#: src/controllers/recycle/recycle_transaction_user.py:43
+#: src/controllers/recycle/recycle_transaction_user.py:31
+#: src/controllers/recycle/recycle_transaction_user.py:44
 msgid "User qr code"
 msgstr "Qr код пользователя"
 
-#: src/controllers/recycle/recycle_transaction_user.py:36
+#: src/controllers/recycle/recycle_transaction_user.py:37
 msgid "Filter id"
 msgstr "Фильтр"
 
-#: src/controllers/recycle/recycle_transaction_user.py:37
+#: src/controllers/recycle/recycle_transaction_user.py:38
 msgid "Amount passed resource in kg"
 msgstr "Количество сдаваемого ресурса в кг"
 
-#: src/controllers/recycle/recycle_transaction_user.py:46
+#: src/controllers/recycle/recycle_transaction_user.py:47
 msgid "List passed resource"
 msgstr "Список сдаваемых ресурсов"
 
 #: src/controllers/recycle/recycle_transaction_user.py:117
+msgid "Administrator have not attached Recycle Point"
+msgstr "Администратор не прикреплен к пункту приема"
+
+#: src/controllers/recycle/recycle_transaction_user.py:120
 #, fuzzy
 msgid "User by token not found"
 msgstr "Пользователь не найден"
 
-#: src/controllers/recycle/recycle_transaction_user.py:119
+#: src/controllers/recycle/recycle_transaction_user.py:122
 msgid "Admin_pp cant to recycle"
 msgstr "Администратор пункта приема не может сдавать отходы"
 
-#: src/controllers/recycle/recycle_transaction_user.py:124
+#: src/controllers/recycle/recycle_transaction_user.py:127
 msgid "Some filters are duplicated"
 msgstr "Некоторые ресурсы дублируются"
 
-#: src/controllers/recycle/recycle_transaction_user.py:128
+#: src/controllers/recycle/recycle_transaction_user.py:131
 #, python-format
 msgid "Filters not found: %(value)s"
 msgstr "Фильтр не найден:  %(value)s"
@@ -148,28 +152,28 @@ msgstr "На этот вопрос уже дан ответ"
 msgid "Available tests not found"
 msgstr "Не найдены доступные тест, проверьте позже"
 
-#: src/controllers/user/confirm.py:12 src/controllers/user/login.py:11
+#: src/controllers/user/confirm.py:13 src/controllers/user/login.py:11
 #: src/controllers/user/recovery_password/get_recovery_token.py:12
 #: src/controllers/user/recovery_password/send_check_code.py:15
 msgid "Email"
 msgstr ""
 
-#: src/controllers/user/confirm.py:13
+#: src/controllers/user/confirm.py:14
 msgid "Check code from letter"
 msgstr "Проверочный код из письма"
 
-#: src/controllers/user/confirm.py:37
+#: src/controllers/user/confirm.py:38
 #: src/controllers/user/recovery_password/chage_password.py:29
 #: src/controllers/user/recovery_password/get_recovery_token.py:39
 #: src/controllers/user/recovery_password/send_check_code.py:28
 msgid "User not found"
 msgstr "Пользователь не найден"
 
-#: src/controllers/user/confirm.py:39
+#: src/controllers/user/confirm.py:40
 msgid "Account already confirmed. Please login."
 msgstr "Аккаунт уже подтвержден. Пожалуйста войдите в личный кабинет."
 
-#: src/controllers/user/confirm.py:41
+#: src/controllers/user/confirm.py:42
 msgid "Not valid code"
 msgstr "Не верный проверочный код"
 
@@ -187,32 +191,32 @@ msgstr "Неверный логин или пароль"
 msgid "User not confirmed"
 msgstr "Пользователь не подтвержден"
 
-#: src/controllers/user/register.py:15
+#: src/controllers/user/register.py:16
 #, fuzzy
 msgid "Username must be not empty"
 msgstr "Имя не может быть пустым"
 
-#: src/controllers/user/register.py:17
+#: src/controllers/user/register.py:18
 msgid "Email must contains: mail addres, @, provider, doman (.com)"
 msgstr ""
 "Почта пользователя должна содержать: имя ящика, @, почтового провайдера, "
 "домен (.ru)"
 
-#: src/controllers/user/register.py:19
+#: src/controllers/user/register.py:20
 #, python-format
 msgid "Password must contains %(value)s"
 msgstr "Пароль пользователя должен содержать %(value)s"
 
-#: src/controllers/user/register.py:20
+#: src/controllers/user/register.py:21
 msgid "Invite code"
 msgstr "Код приглашения"
 
-#: src/controllers/user/register.py:55
+#: src/controllers/user/register.py:56
 #, fuzzy
 msgid "This email already registered"
 msgstr "На эту почту уже зарегистрирован аккаунт"
 
-#: src/controllers/user/register.py:59
+#: src/controllers/user/register.py:60
 #, fuzzy
 msgid "Invite user not found"
 msgstr "Пользователь по приглашению не найден"
@@ -259,17 +263,17 @@ msgstr ""
 "Проверочный код уже отправлен, пожалуйста подождите %(value)s секунд для "
 "того чтобы отправить еще раз."
 
-#: src/controllers/utils/BaseController.py:14
+#: src/controllers/utils/BaseController.py:16
 #, python-format
 msgid "%(name)s not found id=%(id)s"
 msgstr "%(name)s не найдены id=%(id)s"
 
-#: src/controllers/utils/BaseController.py:18
+#: src/controllers/utils/BaseController.py:20
 #, python-format
 msgid "Not unique: %(value)s"
 msgstr "Не уникально: %(value)s"
 
-#: src/controllers/utils/BaseController.py:23
+#: src/controllers/utils/BaseController.py:25
 msgid "Not unique: $(value)s"
 msgstr "Не уникально: %(value)s"
 
