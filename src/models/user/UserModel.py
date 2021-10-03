@@ -1,5 +1,6 @@
 import datetime
 
+from flask import current_app as app
 from flask_jwt_extended import get_jwt_identity
 from mongoengine import Document, StringField, BooleanField, DateTimeField, IntField, ReferenceField
 from flask_login import UserMixin
@@ -54,6 +55,7 @@ class User(Document, UserMixin, BaseCrud, Atomic):
     def add_freeze_coins(self, coins):
         with self.lock() as user:
             user.update(inc__freeze_eco_coins=coins)
+        app.logger.info(f'{repr(user)} receive an {coins} coins')
 
     @staticmethod
     def get_statistic(**kwargs):

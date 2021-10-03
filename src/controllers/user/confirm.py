@@ -1,5 +1,6 @@
 import datetime
 
+from flask import current_app as app
 from flask_babel import lazy_gettext as _
 from flask_restful import reqparse, Resource, fields
 from flask_restful_swagger_3 import swagger, Schema
@@ -41,6 +42,7 @@ class ConfirmController(Resource):
             return {'message': _('Not valid code')}, 400
 
         user.update(confirmed=True, confirmed_on=datetime.datetime.utcnow())
+        app.logger.info(f'{repr(user)} was confirmed')
         if user.invite_by_user is not None:
             # добавляем экокоины пользователю за приглашение
             AdmissionTransaction.create_and_pay_for_user(
@@ -50,4 +52,6 @@ class ConfirmController(Resource):
                 user=user.invite_by_user.id,  # это действие должно отображаться у пригласившего
                 eco_coins=Configuration.ECO_COINS_BY_INVITE
             )
+            app.logger.info(f'{repr(user.invite_by_user)} received '
+                            f'{Configuration.ECO_COINS_BY_INVITE} by invite {repr(user)}')
         return {'status': 'success'}, 200

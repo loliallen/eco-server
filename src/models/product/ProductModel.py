@@ -1,9 +1,10 @@
 import datetime
 
+from flask import current_app as app
 from mongoengine import Document, IntField, StringField, ReferenceField, ListField, BooleanField, DateField
 
-from src.models.product.ProductItemModel import ProductItem
 from src.exceptions.Product import NotEnoughtCoins, ProductsIsOver
+from src.models.product.ProductItemModel import ProductItem
 from src.models.product.ProductItemTransactionModel import ProductItemTransaction
 from src.models.utils.BaseCrud import BaseCrud
 
@@ -47,6 +48,7 @@ class Product(Document, BaseCrud):
                 item.update(user=user.id)
                 transaction.status = "success"
                 transaction.save()
+        app.logger.info(f'{item} was buy by {user} ({transaction})')
         return transaction
 
     @staticmethod

@@ -1,4 +1,5 @@
 from cerberus import Validator
+from flask import current_app as app
 from flask_babel import lazy_gettext as _
 from flask_jwt_extended import jwt_required
 from flask_restful import reqparse, fields, marshal
@@ -143,6 +144,7 @@ class RecycleTransactionListController(BaseListController):
         )
         if error:
             return error
+        app.logger.info(f'{repr(user)} recycle {items} ({rec_transaction}))')
         # создаем транзакцию на зачисление экокоинов
         AdmissionTransaction.create_(
             action_type=ActionType.recycle.value,

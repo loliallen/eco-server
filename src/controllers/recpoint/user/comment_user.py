@@ -1,3 +1,4 @@
+from flask import current_app as app
 from flask_babel import lazy_gettext as _
 from flask_jwt_extended import jwt_required
 from flask_restful import reqparse, fields, marshal
@@ -71,6 +72,7 @@ class RecPointCommentController(BaseListController):
         if not rec_point:
             return {'error': _('RecPoint not found')}
         rec_point_comment, error = self._create_obj(**args, user=user, rec_point=rec_point)
+        app.logger.info(f'{rec_point_comment} was created by {user}')
         if error:
             return error
         transaction = AdmissionTransaction.create_(

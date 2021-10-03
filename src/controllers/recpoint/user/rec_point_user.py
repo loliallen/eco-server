@@ -1,5 +1,6 @@
 from ast import literal_eval
 
+from flask import current_app as app
 from flask_babel import lazy_gettext as _
 from flask_jwt_extended import jwt_required
 from flask_restful import reqparse, fields, marshal
@@ -59,7 +60,6 @@ put_parser.add_argument('accept_types', type=str, action='append', required=Fals
 put_parser.add_argument('description', type=str, required=False)
 put_parser.add_argument('getBonus', type=bool, required=False)
 # put_parser.add_argument('external_images', type=str, action='append', required=False)
-
 
 
 class RecPointResponseModel(Schema):
@@ -162,6 +162,7 @@ class RecPointListController(BaseListController):
         rec_point, error = self._create_obj(**args, author=user)
         if error:
             return error
+        app.logger.info(f'{rec_point} was created by {user}')
         AdmissionTransaction.create_(
             action_type=ActionType.add_pp.value,
             action=rec_point,

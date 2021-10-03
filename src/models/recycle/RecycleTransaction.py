@@ -13,6 +13,9 @@ class RecycleTransactionItem(EmbeddedDocument):
     filter = ReferenceField('Filter')
     amount = FloatField(default=0.0)
 
+    def __repr__(self):
+        return f'<RecycleTransactionItem: {repr(self.filter)}: {self.amount}>'
+
 
 class RecycleTransaction(Document, BaseCrud):
     """Транзакция сдачи мусора на переработку"""
@@ -66,4 +69,4 @@ class RecycleTransaction(Document, BaseCrud):
         ])
 
     def __repr__(self):
-        return f'<RecycleTransaction: ({self.id})>'
+        return f'<RecycleTransaction: ({self.id}) from: {self.from_} to: {self.to_} reward: {self.reward}>'

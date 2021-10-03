@@ -1,14 +1,13 @@
-import json
-
+from flask import current_app as app
 from flask_restful import reqparse
 from flask_restful_swagger_3 import swagger
 
+from src.models.user.UserModel import User
 from src.config import Configuration
 from src.controllers.utils.BaseController import BaseListController
 from src.models.recpoint.RecPointComment import RecPointComment
 from src.models.recpoint.RecPointModel import RecPoint
-from src.models.transaction.AdmissionTransaction import AdmissionTransaction
-from src.models.utils.enums import Status, STATUS_CHOICES
+from src.models.utils.enums import Status
 from src.utils.roles import jwt_reqired_backoffice
 
 post_parser = reqparse.RequestParser()
@@ -40,11 +39,14 @@ class CommentsApproveController(BaseListController):
         if comment.transaction.status != Status.idle.value:
             return {'error': 'Transaction status not idle'}, 404
 
+        admin = User.get_user_from_request()
 
         if status == Status.dismissed.value:
             to_add = 0
+            app.logger.info(f'{admin} was declined {comment}')
         else:
             to_add = args['eco_coins'] or Configuration.ECO_COINS_BY_OFFER_NEW_REC_POINT
+            app.logger.info(f'{admin} was confirmed {comment} with {to_add} eco-coins')
 
         comment.transaction.update(
             set__eco_coins=to_add,

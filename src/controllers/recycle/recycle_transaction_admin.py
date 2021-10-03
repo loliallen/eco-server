@@ -1,7 +1,9 @@
+from flask import current_app as app
 from flask_restful import fields, reqparse, marshal
 from flask_restful_swagger_3 import swagger, Schema
 
 import src.controllers.utils.fields as custom_fields
+from src.models.user.UserModel import User
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.recycle.RecycleTransaction import RecycleTransaction
 from src.models.transaction.AdmissionTransaction import AdmissionTransaction
@@ -121,6 +123,10 @@ class RecycleTransactionController(BaseController):
         args = post_parser.parse_args()
         rec_transaction.update(set__status=args['status'])
         admission_transaction.update(set__status=args['status'])
+        admin = User.get_user_from_request()
         if args['status'] == Status.confirmed.value:
+            app.logger.info(f'{admin} approved {rec_transaction}')
             rec_transaction.from_.add_freeze_coins(admission_transaction.eco_coins)
+        else:
+            app.logger.info(f'{admin} declined {rec_transaction}')
         return marshal(rec_transaction, self.resource_fields)

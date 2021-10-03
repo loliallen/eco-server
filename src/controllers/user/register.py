@@ -1,3 +1,4 @@
+from flask import current_app as app
 from flask import render_template
 from flask_babel import lazy_gettext as _
 from flask_mail import Message
@@ -63,7 +64,7 @@ class RegisterController(BaseListController):
         user, error = self._create_obj(**args)
         if error:
             return error
-
+        app.logger.info(f'{repr(user)} was registered')
         # TODO вынести это дело в фоновую таску
         code = user.code
         print(code)
