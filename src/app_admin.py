@@ -5,7 +5,7 @@ from flask_jwt_extended import JWTManager
 from flask_swagger_ui import get_swaggerui_blueprint
 
 import src.services.Database as Database
-from controllers.product.product_admin_image_upload import ProductAdminImageUploaderController
+from src.controllers.product.product_admin_image_upload import ProductAdminImageUploaderController
 from src.config import Configuration
 from src.controllers.filter.filter_admin import FilterController, FilterControllerList
 from src.controllers.filter.filter_admin_image_update import FilterImageUploaderController
