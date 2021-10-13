@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-10-03 19:34+0300\n"
+"POT-Creation-Date: 2021-10-13 17:46+0300\n"
 "PO-Revision-Date: 2021-08-25 16:08+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
@@ -26,6 +26,19 @@ msgstr "Вы не вошли в аккаунт"
 #: src/controllers/news/news_user.py:76
 msgid "Param only_my_news only for admin_pp"
 msgstr "Фильтр 'только мои новости' не доступен"
+
+#: src/controllers/partner/admin.py:88
+#, fuzzy
+msgid "User already create partner"
+msgstr "Пользователь уже создал заявку на партнерство"
+
+#: src/controllers/partner/user.py:49
+msgid "You already create partner"
+msgstr "Вы уже создали заявку на партнерство"
+
+#: src/controllers/partner/user.py:51
+msgid "Your role is not simple user"
+msgstr "Вы не являетесь простым пользователем"
 
 #: src/controllers/product/buy_product_user.py:69
 #, fuzzy

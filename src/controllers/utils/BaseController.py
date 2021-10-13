@@ -43,7 +43,7 @@ class BaseController(Resource):
         if self.log_settings['get']:
             user = User.get_user_from_request()
             app.logger.info(f'({repr(obj)}) was selected by {repr(user)}')
-        return marshal(obj, self.resource_fields)
+        return marshal(obj, self.resource_fields), 200
 
     def put_(self, id, **kwargs):
         updates = self.parser.parse_args()
@@ -55,7 +55,7 @@ class BaseController(Resource):
         if self.log_settings['put']:
             user = User.get_user_from_request()
             app.logger.info(f'({repr(obj)}) was updated by {repr(user)}')
-        return marshal(obj, self.resource_fields)
+        return marshal(obj, self.resource_fields), 202
 
     def delete_(self, id, **kwargs):
         obj = self.model.delete_(id, **kwargs)
@@ -64,7 +64,7 @@ class BaseController(Resource):
         if self.log_settings['delete']:
             user = User.get_user_from_request()
             app.logger.info(f'({repr(obj)}) was deleted by {repr(user)}')
-        return marshal(obj, self.resource_fields)
+        return marshal(obj, self.resource_fields), 204
 
     def update_obj(self, id, updates, **kwargs):
         try:
@@ -91,7 +91,7 @@ class BaseListController(Resource):
         if paginate_:
             return paginate(objs, page, size, self.resource_fields,
                             select_related_depth=select_related_depth)
-        return marshal(list(objs), self.resource_fields)
+        return marshal(list(objs), self.resource_fields), 200
 
     def post_(self, **kwargs):
         args = self.parser.parse_args()
@@ -101,7 +101,7 @@ class BaseListController(Resource):
         if self.log_settings['post']:
             user = User.get_user_from_request()
             app.logger.info(f'({repr(obj)}) was created by {repr(user)}')
-        return marshal(obj, self.resource_fields)
+        return marshal(obj, self.resource_fields), 201
 
     def _create_obj(self, **kwargs):
         """

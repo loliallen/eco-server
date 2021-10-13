@@ -25,6 +25,11 @@
    pip install -r requremets-test.txt
    ```
 2) Запуск тестов
+   Перед запуском тестов необходимо развернуть локально (из шага [Локальный запуск](#Локальный-запуск)):
+   1) пользовательское апи
+   2) админское апи
+   3) монгу
+
    ```bash
    export PYTHONPATH=$(pwd)
    cd src/tests/
@@ -72,6 +77,9 @@ pybabel extract -F src/translations/babel.cfg -k lazy_gettext -o src/translation
 ```bash
 pybabel update -i src/translations/messages.pot -d src/translations
 ```
+
+-- На этом шаге в файл `messages.po` добавляем переводы
+
 Скомплировать перевод:
 ```bash
 pybabel compile -f -d src/translations

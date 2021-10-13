@@ -80,4 +80,4 @@ class User(Document, UserMixin, BaseCrud, Atomic):
         return get_role_schema(Roles(self.role))
 
     def __repr__(self):
-        return f'<User: ({self.id}) {self.role} {self.username} [{self.name}]>'
+        return f'<{self.role}: {self.username} ({self.id})>'

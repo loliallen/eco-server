@@ -5,6 +5,7 @@ from flask_jwt_extended import JWTManager
 from flask_swagger_ui import get_swaggerui_blueprint
 
 import src.services.Database as Database
+from controllers.partner.user import PartnerListController
 from src.config import Configuration
 from src.controllers.filter.filter_user import FilterController, FilterControllerList
 from src.controllers.lookups.user.lookup_controller import LookupsControllerList
@@ -80,6 +81,9 @@ api.add_resource(RecycleImageUploaderController, '/api/recycle/<recycle_id>/imag
 # Transactions
 api.add_resource(AdmissionTransactionListController, '/api/transactions')
 api.add_resource(AdmissionTransactionTransactionController, '/api/transactions/<transaction_id>')
+
+# Partner
+api.add_resource(PartnerListController, '/api/partners')
 
 # Products
 api.add_resource(ProductListController, '/api/products')
