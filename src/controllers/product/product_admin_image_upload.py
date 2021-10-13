@@ -1,6 +1,6 @@
 from flask_restful_swagger_3 import swagger
 
-from models.product.ProductModel import Product
+from src.models.product.ProductModel import Product
 from src.controllers.utils.BaseController import BaseController
 from src.controllers.utils.img_saver import save_img
 from src.utils import custom_swagger
