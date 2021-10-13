@@ -3,7 +3,7 @@ from flask_jwt_extended import jwt_required
 from flask_restful import reqparse, fields
 from flask_restful_swagger_3 import swagger, Schema
 
-from models.utils.enums import Status
+from src.models.utils.enums import Status
 from src.controllers.utils.BaseController import BaseListController
 from src.models.partner.PartnerModel import Partner
 from src.models.user.UserModel import User

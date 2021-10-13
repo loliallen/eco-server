@@ -5,18 +5,18 @@ from flask_jwt_extended import JWTManager
 from flask_swagger_ui import get_swaggerui_blueprint
 
 import src.services.Database as Database
-from controllers.partner.user import PartnerListController
 from src.config import Configuration
 from src.controllers.filter.filter_user import FilterController, FilterControllerList
 from src.controllers.lookups.user.lookup_controller import LookupsControllerList
 from src.controllers.news.news_img_upload import NewsUserImageUploaderController
 from src.controllers.news.news_user import NewsListController, NewsController
-from src.controllers.product.product_user import ProductController, ProductListController
+from src.controllers.partner.user import PartnerListController
 from src.controllers.product.buy_product_user import BuyProductController
+from src.controllers.product.product_user import ProductController, ProductListController
 from src.controllers.recpoint.user.comment_img_update import RecPointCommentImageUploaderController
 from src.controllers.recpoint.user.comment_user import RecPointCommentController
-from src.controllers.recpoint.user.rec_point_user_img_update import RecPointImageUploaderController
 from src.controllers.recpoint.user.rec_point_user import RecPointController, RecPointListController
+from src.controllers.recpoint.user.rec_point_user_img_update import RecPointImageUploaderController
 from src.controllers.recycle.recycle_transaction_user import RecycleTransactionListController, \
     RecycleTransactionController
 from src.controllers.recycle.recycle_transaction_user_img_update import RecycleImageUploaderController
@@ -35,7 +35,6 @@ from src.controllers.user.upload_profile_image import UserImageUploaderControlle
 from src.controllers.user.user_info import UserInfoController
 from src.send_email import mail
 from src.utils.custom_swagger import CustomApi
-
 
 app = Flask(__name__,
             static_url_path=Configuration.STATIC_URL_PATH,
@@ -99,7 +98,6 @@ api.add_resource(UserAnswerController, '/api/test_attempts/<attempt_id>/answer')
 api.add_resource(NewsListController, '/api/news')
 api.add_resource(NewsController, '/api/news/<news_id>')
 api.add_resource(NewsUserImageUploaderController, '/api/news/<news_id>/image')
-
 
 # Stats
 api.add_resource(RecycleStatisticController, '/api/stats')
