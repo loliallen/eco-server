@@ -18,6 +18,7 @@ class Product(Document, BaseCrud):
     partner = ReferenceField('User')
     items = ListField(ReferenceField('ProductItem'))
     transactions = ListField(ReferenceField('ProductItemTransaction'))
+    image = StringField()
 
     meta = {
         "db_alias": "core",

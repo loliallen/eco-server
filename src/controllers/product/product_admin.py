@@ -2,6 +2,7 @@ from flask_restful import inputs
 from flask_restful import reqparse, fields
 from flask_restful_swagger_3 import swagger, Schema
 
+from src.controllers.utils import fields as custom_fields
 from src.models.user.UserModel import User
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.product.ProductModel import Product
@@ -31,7 +32,8 @@ class ProductResponseModelAdmin(Schema):
         'price': {'type': 'integer', 'description': 'Стоимость продукта'},
         'date_from': {'type': 'string', 'format': 'date', 'description': 'Срок действия с'},
         'date_to': {'type': 'string', 'format': 'date',  'description': 'Срок действия по'},
-        'is_active': {'type': 'boolean', 'description': 'Активность продукта (можно ли его купить)'}
+        'is_active': {'type': 'boolean', 'description': 'Активность продукта (можно ли его купить)'},
+        'image': {'type': 'string', 'description': 'Иконка'}
     }
 
 
@@ -42,6 +44,7 @@ resource_fields_ = {
     'date_from': fields.DateTime('iso8601'),
     'date_to': fields.DateTime('iso8601'),
     'is_active': fields.Boolean,
+    'image': custom_fields.ImageLink,
 }
 
 

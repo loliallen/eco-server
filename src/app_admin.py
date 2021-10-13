@@ -5,6 +5,7 @@ from flask_jwt_extended import JWTManager
 from flask_swagger_ui import get_swaggerui_blueprint
 
 import src.services.Database as Database
+from controllers.product.product_admin_image_upload import ProductAdminImageUploaderController
 from src.config import Configuration
 from src.controllers.filter.filter_admin import FilterController, FilterControllerList
 from src.controllers.filter.filter_admin_image_update import FilterImageUploaderController
@@ -98,6 +99,7 @@ api.add_resource(AdmissionTransactionTransactionController, '/admin/transactions
 # Products
 api.add_resource(ProductListController, '/admin/products')
 api.add_resource(ProductController, '/admin/products/<product_id>')
+api.add_resource(ProductAdminImageUploaderController, '/admin/products/<product_id>/image')
 api.add_resource(ProductItemListController, '/admin/product_items')
 api.add_resource(ProductItemController, '/admin/product_items/<product_item_id>')
 api.add_resource(BuyProductListController, '/admin/buy_product')

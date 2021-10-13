@@ -4,7 +4,7 @@
 ## Локальный запуск
 1) Развернуть mongo локально:
    ```bash
-   docker -f ./deployment/local/ up -d 
+   docker-compose -f deployment/local/docker-compose.yaml up -d
    ```
 2) Запуск апи пользователя:
    ```bash  
