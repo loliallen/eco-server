@@ -1,4 +1,4 @@
-from models.utils.enums import Status
+from src.models.utils.enums import Status
 from src.tests.helpers.user import generate_user, generate_admin
 from src.utils.roles import Roles
 

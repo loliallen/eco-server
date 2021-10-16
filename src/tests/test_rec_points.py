@@ -15,7 +15,7 @@ def test_add_new_filter(client_user, client_admin, default_moderator):
     # создаем фильтров модератором
     filter_ = FilterFactory()
     resp = client_admin.post('/admin/filters', headers=moderator_headers, json=filter_)
-    assert resp.status_code == 200
+    assert resp.status_code == 201
 
     # проверяем доступность созданного фильтра модератором
     resp = client_admin.get(f'/admin/filters/{resp.json["id"]}', headers=moderator_headers)
