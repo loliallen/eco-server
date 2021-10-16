@@ -74,6 +74,7 @@ class Product(Document, BaseCrud):
                     'price': 1,
                     'date_from': 1,
                     'date_to': 1,
+                    'image': 1,
                     'count': {'$size': "$product_items"},
                 }
             }

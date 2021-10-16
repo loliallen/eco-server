@@ -4,6 +4,7 @@ from flask_jwt_extended import jwt_required
 from flask_restful import fields, marshal
 from flask_restful_swagger_3 import swagger, Schema
 
+from src.controllers.utils import fields as custom_fields
 from src.controllers.utils.BaseController import BaseListController, BaseController, not_found
 from src.models.product.ProductModel import Product
 
@@ -17,7 +18,7 @@ class ProductResponseModel(Schema):
         'date_to': {'type': 'string', 'format': 'date', 'description': 'Срок действия по'},
         'days_rest': {'type': 'integer', 'description': 'Количество оставшихся дней действия продукта'},
         'count': {'type': 'integer', 'description': 'Количество оставшегося продукта'},
-        # TODO добавить количество оставшихся купонов
+        'image': {'type': 'string', 'description': 'Иконка'},
     }
 
 
@@ -29,6 +30,7 @@ resource_fields_ = {
     'date_from': fields.DateTime('iso8601'),
     'date_to': fields.DateTime('iso8601'),
     'days_rest': fields.Integer(attribute=lambda x: (x['date_to'].date() - datetime.datetime.now().date()).days),
+    'image': custom_fields.ImageLink,
 }
 
 
