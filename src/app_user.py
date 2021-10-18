@@ -20,6 +20,7 @@ from src.controllers.recpoint.user.rec_point_user_img_update import RecPointImag
 from src.controllers.recycle.recycle_transaction_user import RecycleTransactionListController, \
     RecycleTransactionController
 from src.controllers.recycle.recycle_transaction_user_img_update import RecycleImageUploaderController
+from src.controllers.statistics.user.get_common_stat import RecycleCommonStatisticController
 from src.controllers.statistics.user.get_recycle_stat import RecycleStatisticController
 from src.controllers.test.user.answere_user_controller import UserAnswerController
 from src.controllers.test.user.attempts_user_controller import UserAttemptsListController, UserAttemptsController
@@ -100,7 +101,8 @@ api.add_resource(NewsController, '/api/news/<news_id>')
 api.add_resource(NewsUserImageUploaderController, '/api/news/<news_id>/image')
 
 # Stats
-api.add_resource(RecycleStatisticController, '/api/stats')
+api.add_resource(RecycleStatisticController, '/api/user_stats')
+api.add_resource(RecycleCommonStatisticController, '/api/common_stat')
 
 # Lookups
 api.add_resource(LookupsControllerList, '/admin/lookups')

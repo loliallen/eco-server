@@ -20,7 +20,6 @@ class RecycleStatItem(Schema):
 class RecycleStatistic(Schema):
     properties = {
         'place': {'type': 'integer', 'description': 'Место в общем зачете'},
-        'users_count': {'type': 'integer', 'description': 'Кол-во пользователей'},
         'total': {'type': 'integer', 'description': 'Всего сданных кг'},
         'items': {'type': 'array', 'items': RecycleStatItem, 'description': 'Сданные ресурсы'},
     }
@@ -51,7 +50,6 @@ class RecycleStatisticController(BaseController):
         total = sum(i['total'] for i in stat)
         return {
             'place': 1,  # TODO подсчитывать место
-            'users_count': User.objects.count(),
             'total': total,
             'items': marshal(stat, resource_fields_),
         }
