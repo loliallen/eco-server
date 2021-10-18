@@ -5,14 +5,16 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_restful import reqparse, fields, marshal
 from flask_restful_swagger_3 import swagger, Schema
 
+from src.controllers.utils import fields as custom_fields
 from src.controllers.utils.BaseController import BaseListController
+from src.controllers.utils.inputs import Id
 from src.exceptions.Product import NotEnoughtCoins, ProductsIsOver
 from src.models.product.ProductItemTransactionModel import ProductItemTransaction
 from src.models.product.ProductModel import Product
 from src.models.user.UserModel import User
 
 parser = reqparse.RequestParser()
-parser.add_argument('product', type=str, required=True)
+parser.add_argument('product', type=Id, required=True)
 
 resource_fields_ = {
     'id': fields.String,
@@ -24,7 +26,8 @@ resource_fields_ = {
     'days_rest': fields.Integer(attribute=lambda x: (x.product.date_to - datetime.datetime.now().date()).days),
     'date_from':  fields.DateTime(dt_format='iso8601', attribute='product.date_from'),
     'date_to':  fields.DateTime(dt_format='iso8601', attribute='product.date_to'),
-    'buy_date': fields.DateTime('iso8601', attribute='date')
+    'buy_date': fields.DateTime('iso8601', attribute='date'),
+    'image': custom_fields.ImageLink(attribute='product.image'),
 }
 
 
