@@ -4,6 +4,7 @@ from flask_restful_swagger_3 import swagger, Schema
 
 from src.controllers.utils import fields as custom_fields
 from src.controllers.utils.BaseController import BaseListController, BaseController
+from src.controllers.utils.inputs import Id
 from src.models.user.UserModel import User
 from src.utils.roles import jwt_reqired_backoffice
 
@@ -24,7 +25,7 @@ post_parser.add_argument('token', type=str, required=True)
 datetime_ = inputs.datetime_from_iso8601
 datetime_.swagger_type = 'datetime'
 post_parser.add_argument('confirmed_on', type=datetime_, required=False)
-post_parser.add_argument('invite_by_user', type=str, required=False)
+post_parser.add_argument('attached_rec_point', type=Id, required=False)
 
 
 class UsersResponseModel(Schema):
@@ -39,6 +40,7 @@ class UsersResponseModel(Schema):
         'token': {'type': 'string'},
         'confirmed_on': {'type': 'datetime'},
         'invite_by_user': {'type': 'string'},
+        'attached_rec_point': {'type': 'string'},
     }
 
 
@@ -53,6 +55,7 @@ resource_fields_ = {
     'token': fields.String,
     'confirmed_on': fields.DateTime('iso8601'),
     'invite_by_user': fields.String(attribute='invite_by_user.id'),
+    'attached_rec_point': fields.String(attribute='attached_rec_point.id'),
     'image': custom_fields.ImageLink,
 }
 
