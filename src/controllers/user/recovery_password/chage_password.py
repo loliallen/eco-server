@@ -32,4 +32,4 @@ class ChangePasswordController(BaseListController):
         salt = generate_salt()
         args['password'] = hash_password(args['password'], salt)
         user.update(set__password=args['password'], set__salt=salt)
-        return {'status': 'ok'}
+        return {'status': 'ok'}, 200

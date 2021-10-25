@@ -1,4 +1,6 @@
-import random, string
+import random
+import string
+
 
 def generate_code():
     return random.randrange(100000, 999999)

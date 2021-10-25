@@ -30,7 +30,7 @@ class RecoverySendCheckCodeController(BaseListController):
         if notify:
             return {'error': _('Check code already sent, please '
                                'wait %(value)s seconds to send check code again.',
-                               Configuration.RECOVERY_TOKEN_EXPIRES)}
+                               value=Configuration.RECOVERY_TOKEN_EXPIRES)}, 400
 
         code = str(generate_code())
         UsersCodeNotify.create_(
@@ -45,4 +45,4 @@ class RecoverySendCheckCodeController(BaseListController):
         message = Message(subject=subject, html=html, recipients=[user.username])
         send_email(message)
 
-        return {'status': 'OK'}
+        return {'status': 'ok'}, 200

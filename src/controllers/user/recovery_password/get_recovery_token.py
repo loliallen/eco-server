@@ -1,6 +1,6 @@
 from flask_babel import lazy_gettext as _
 from flask_jwt_extended import create_access_token
-from flask_restful import reqparse, fields, marshal
+from flask_restful import reqparse
 from flask_restful_swagger_3 import swagger, Schema
 
 from src.config import Configuration
@@ -17,11 +17,6 @@ class RecoveryTokenResponseModel(Schema):
     properties = {
         'recovery_token': {'type': 'string'},
     }
-
-
-resource_fields_ = {
-    'recovery_token': fields.String
-}
 
 
 class RecoveryTokenController(BaseListController):
@@ -41,11 +36,11 @@ class RecoveryTokenController(BaseListController):
         if not notify:
             return {'error': _('Check code not sent, or is deprecated')}
         if args['code'] != notify.code:
-            return {'error': _('Wrong check code')}
+            return {'error': _('Wrong check code')}, 400
         notify.delete()
         token = create_access_token(
             identity=args['username'],
             expires_delta=Configuration.RECOVERY_TOKEN_EXPIRES,
             additional_claims={"is_recovery": True}
         )
-        return marshal({'recovery_token': token}, resource_fields_)
+        return {'recovery_token': token}, 200
