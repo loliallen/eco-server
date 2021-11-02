@@ -8,20 +8,20 @@ from src.utils.custom_swagger import JSONEncoder
 class Configuration:
     BABEL_DEFAULT_LOCALE = 'ru'
 
-    SECRET_KEY = 'a really really really really long secret key'  # TODO вынести в секреты
-    JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(hours=2)
-    JWT_ADMIN_ACCESS_TOKEN_EXPIRES = datetime.timedelta(hours=2)
+    SECRET_KEY = os.getenv("SECRET_KEY", 'aa2258c1-4dd8-43dd-937a-9cd27ee774f0')
+    JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(hours=os.getenv("JWT_ACCESS_TOKEN_EXPIRES", default=2))
+    JWT_ADMIN_ACCESS_TOKEN_EXPIRES = datetime.timedelta(hours=os.getenv("JWT_ADMIN_ACCESS_TOKEN_EXPIRES", default=2))
     JWT_TOKEN_LOCATION = 'headers'
     PROPAGATE_EXCEPTIONS = True
 
-    RECOVERY_TOKEN_EXPIRES = datetime.timedelta(seconds=120)
+    RECOVERY_TOKEN_EXPIRES = datetime.timedelta(seconds=os.getenv("RECOVERY_TOKEN_EXPIRES", default=120))
 
-    MAIL_SERVER = 'smtp.googlemail.com'
-    MAIL_PORT = 587
-    MAIL_USE_TLS = True
-    MAIL_USERNAME = 'cronenbergclaw@gmail.com'  # введите свой адрес электронной почты здесь
-    MAIL_DEFAULT_SENDER = 'cronenbergclaw@gmail.com'  # и здесь
-    MAIL_PASSWORD = 'eikbzcpodtroenca'  # TODO вынести в секреты
+    MAIL_SERVER = os.getenv("MAIL_SERVER", default='smtp.googlemail.com')
+    MAIL_PORT = os.getenv("MAIL_PORT", default=587)
+    MAIL_USE_TLS = os.getenv("MAIL_USE_TLS", default='True') == 'True'
+    MAIL_USERNAME = os.getenv("MAIL_USERNAME")
+    MAIL_DEFAULT_SENDER = os.getenv("MAIL_DEFAULT_SENDER")
+    MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
 
     PASSWORD_HASH_FUNC = 'sha256'  # алгоритм генерации пароля, если поменять все текущие пароли слетят
     PASSWORD_GENERATE_ITERATIONS = 10000  # кол-во итераций при генерации пароля, если поменять все текущие пароли слетят
@@ -35,28 +35,26 @@ class Configuration:
 
     HOST = os.getenv("HOST", default="0.0.0.0")
     PORT = os.getenv("PORT", default=8000)
+    URL_ROOT_END = f":{PORT}" if PORT else ""
 
-    DEBUG = os.getenv("DEBUG", 'True') == 'True'
-    PROTOCOL = "http" if DEBUG else "https"
+    DEBUG = os.getenv("DEBUG", default='True') == 'True'
+    PROTOCOL = os.getenv("PROTOCOL", default="http" if DEBUG else "https")
 
-    USER_SWAGGER_URL = '/api/docs'
-    USER_SCHEMA_URL = f'{PROTOCOL}://{HOST}:{PORT}/api/doc/swagger.json'
+    SWAGGER_URL = '/api/docs'
+    SCHEMA_URL = f'{PROTOCOL}://{HOST}{URL_ROOT_END}/api/doc/swagger.json'
 
-    ADMIN_SWAGGER_URL = '/api/docs'
-    ADMIN_SCHEMA_URL = f'{PROTOCOL}://{HOST}:8000/api/doc/swagger.json'
+    ECO_COINS_BY_INVITE = os.getenv("ECO_COINS_BY_INVITE", default=15)
+    ECO_COINS_BY_OFFER_NEW_REC_POINT = os.getenv("ECO_COINS_BY_OFFER_NEW_REC_POINT", default=30)
+    ECO_COINS_BY_OFFER_CHANGE_REC_POINT = os.getenv("ECO_COINS_BY_OFFER_CHANGE_REC_POINT", default=20)
 
-    ECO_COINS_BY_INVITE = 15
-    ECO_COINS_BY_OFFER_NEW_REC_POINT = 30
-    ECO_COINS_BY_OFFER_CHANGE_REC_POINT = 20
-
-    WEIGHT_RECYCLE_TO_NEED_APPROVE = 10
-    TEST_FREEZE_TIME = datetime.timedelta(days=1)
-    MAX_RADIUS_REC_POINTS_SHOW = 100
+    WEIGHT_RECYCLE_TO_NEED_APPROVE = os.getenv("WEIGHT_RECYCLE_TO_NEED_APPROVE", default=15)
+    TEST_FREEZE_TIME = datetime.timedelta(days=os.getenv("TEST_FREEZE_TIME", default=1))
+    MAX_RADIUS_REC_POINTS_SHOW = os.getenv("MAX_RADIUS_REC_POINTS_SHOW", default=100)
 
     STATIC_FOLDER = os.getenv("STATIC_FOLDER", str(pathlib.Path(__file__).parent.absolute() / "statics"))
     STATIC_URL_PATH = '/statics'
 
-    STATIC_URL = f"{PROTOCOL}://{HOST}:{PORT}{STATIC_URL_PATH}/"
+    STATIC_URL = f'{PROTOCOL}://{HOST}:{URL_ROOT_END}{STATIC_URL_PATH}/'
     if not os.path.exists(STATIC_FOLDER):
         os.mkdir(STATIC_FOLDER)
 

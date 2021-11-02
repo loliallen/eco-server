@@ -109,8 +109,8 @@ api.add_resource(LookupsControllerList, '/admin/lookups')
 
 # swagger
 swagger_ui_blueprint = get_swaggerui_blueprint(
-    Configuration.USER_SWAGGER_URL,
-    Configuration.USER_SCHEMA_URL,
+    Configuration.SWAGGER_URL,
+    Configuration.SCHEMA_URL,
     config={
         'app_name': 'Eco Api',
     }
