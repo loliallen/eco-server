@@ -54,7 +54,7 @@ class Configuration:
     STATIC_FOLDER = os.getenv("STATIC_FOLDER", str(pathlib.Path(__file__).parent.absolute() / "statics"))
     STATIC_URL_PATH = '/statics'
 
-    STATIC_URL = f'{PROTOCOL}://{HOST}:{URL_ROOT_END}{STATIC_URL_PATH}/'
+    STATIC_URL = f'{PROTOCOL}://{HOST}{URL_ROOT_END}{STATIC_URL_PATH}/'
     if not os.path.exists(STATIC_FOLDER):
         os.mkdir(STATIC_FOLDER)
 
