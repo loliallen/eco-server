@@ -3,6 +3,7 @@ import datetime
 from flask import current_app as app
 from flask_jwt_extended import get_jwt_identity
 from mongoengine import Document, StringField, BooleanField, DateTimeField, IntField, ReferenceField
+from mongoengine.queryset.visitor import Q
 from flask_login import UserMixin
 
 from src.controllers.utils.hash_password import hash_password
@@ -78,6 +79,10 @@ class User(Document, UserMixin, BaseCrud, Atomic):
     @property
     def access_schema(self):
         return get_role_schema(Roles(self.role))
+
+    @classmethod
+    def search_q(cls, value):
+        return Q(username__contains=value) | Q(name__contains=value)
 
     def __repr__(self):
         return f'<{self.role}: {self.username} ({self.id})>'

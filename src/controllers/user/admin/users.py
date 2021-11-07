@@ -12,20 +12,23 @@ get_parser = reqparse.RequestParser()
 get_parser.add_argument('page', type=int, required=False, location='args')
 get_parser.add_argument('size', type=int, required=False, location='args')
 get_parser.add_argument('id', dest='id__in', type=str, action='append', location='args')
+get_parser.add_argument('search', type=str, location='args')
+get_parser.add_argument('role', type=str, location='args')
+get_parser.add_argument('confirmed', type=inputs.boolean, location='args')
 
 
-post_parser = reqparse.RequestParser()
-post_parser.add_argument('name', type=str, required=True)
-post_parser.add_argument('username', type=str, required=True)
-post_parser.add_argument('confirmed', type=bool, required=True)
-post_parser.add_argument('eco_coins', type=int, required=True)
-post_parser.add_argument('freeze_eco_coins', type=int, required=True)
-post_parser.add_argument('role', type=str, required=False)
-post_parser.add_argument('token', type=str, required=True)
+put_parser = reqparse.RequestParser()
+put_parser.add_argument('name', type=str, required=True)
+put_parser.add_argument('username', type=str, required=True)
+put_parser.add_argument('confirmed', type=bool, required=True)
+put_parser.add_argument('eco_coins', type=int, required=True)
+put_parser.add_argument('freeze_eco_coins', type=int, required=True)
+put_parser.add_argument('role', type=str, required=False)
+put_parser.add_argument('token', type=str, required=True)
 datetime_ = inputs.datetime_from_iso8601
 datetime_.swagger_type = 'datetime'
-post_parser.add_argument('confirmed_on', type=datetime_, required=False)
-post_parser.add_argument('attached_rec_point', type=Id, required=False)
+put_parser.add_argument('confirmed_on', type=datetime_, required=False)
+put_parser.add_argument('attached_rec_point', type=Id, required=False)
 
 
 class UsersResponseModel(Schema):
@@ -64,19 +67,13 @@ class UsersListController(BaseListController):
     resource_fields = resource_fields_
     model = User
     name = 'User'
-    parser = post_parser
+    parser = put_parser
 
     @jwt_reqired_backoffice('users', 'read')
     @swagger.security(JWT=[])
     @swagger.tags('Users')
     @swagger.response(response_code=201, schema=UsersResponseModel, summary='Список пользователей',
                       description='-')
-    @swagger.parameter(_in='query', name='page',
-                       description='Номер страницы',
-                       example=1, required=False, schema={'type': 'integer'})
-    @swagger.parameter(_in='query', name='size',
-                       description='Кол-во элементов на странице',
-                       example=10, required=False, schema={'type': 'integer'})
     @swagger.parameter(_in='query', name='page',
                        description='Номер страницы',
                        example=1, required=False, schema={'type': 'integer'})
@@ -93,7 +90,7 @@ class UsersController(BaseController):
     resource_fields = resource_fields_
     model = User
     name = 'User'
-    parser = post_parser
+    parser = put_parser
 
     @jwt_reqired_backoffice('users', 'read')
     @swagger.security(JWT=[])
@@ -108,6 +105,6 @@ class UsersController(BaseController):
     @swagger.tags('Users')
     @swagger.response(response_code=201, schema=UsersResponseModel, summary='Обновить пользователя',
                       description='-')
-    @swagger.reqparser(name='UserPutModel', parser=post_parser)
+    @swagger.reqparser(name='UserPutModel', parser=put_parser)
     def put(self, user_id):
         return super().put_(user_id)

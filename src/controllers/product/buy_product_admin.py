@@ -1,5 +1,6 @@
 from flask_restful import fields, reqparse
 from flask_restful_swagger_3 import swagger, Schema
+from bson import ObjectId
 
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.product.ProductItemTransactionModel import ProductItemTransaction
@@ -9,6 +10,7 @@ from src.utils.roles import jwt_reqired_backoffice
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('page', type=int, required=False, location='args')
 get_parser.add_argument('size', type=int, required=False, location='args')
+get_parser.add_argument('user_id', type=ObjectId, required=False, location='args')
 
 resource_fields_ = {
     'id': fields.String,

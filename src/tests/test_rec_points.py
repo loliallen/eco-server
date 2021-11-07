@@ -1,4 +1,6 @@
-from src.tests.factory.rec_point import RecPointModelFactory, FilterFactory
+from src.tests.factory.rec_point import RecPointModelFactory, FilterFactory, CommentFactory
+from src.tests.helpers.user import generate_user
+from src.utils.roles import Roles
 
 
 def test_get_filters(client_user):
@@ -34,6 +36,7 @@ def test_get_rec_points(client_user):
     position = [55.799779, 49.1319283]
     radius = 10
 
+    # cоздаем пункт приема
     RecPointModelFactory(coords=position)
 
     # без параметром запрос не проходит
@@ -57,4 +60,13 @@ def test_get_rec_points(client_user):
     assert ['id', 'name', 'payback_type', 'reception_type',
             'accept_types_names', 'accept_types', 'coords'] == list(resp.json[0].keys())
 
+
+def test_create_comment(client_user):
+    user, user_header = generate_user(client_user, role=Roles.user.value)
+    rec_point = RecPointModelFactory()
+
+    # создаем коммент пользователем
+    comment = CommentFactory(rec_point=str(rec_point.id))
+    resp = client_user.post('/api/rec_comment', headers=user_header, json=comment)
+    assert resp.status_code == 200
 

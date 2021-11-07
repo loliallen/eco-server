@@ -1,5 +1,6 @@
 from flask_restful import reqparse, fields, inputs
 from flask_restful_swagger_3 import swagger
+from bson import ObjectId
 
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.recpoint.RecPointComment import RecPointComment
@@ -10,6 +11,7 @@ get_parser.add_argument('page', type=int, required=False, location='args')
 get_parser.add_argument('size', type=int, required=False, location='args')
 get_parser.add_argument('id', dest='id__in', type=str, action='append', location='args')
 get_parser.add_argument('status', type=str, location='args')
+get_parser.add_argument('rec_point', type=ObjectId, location='args')
 get_parser.add_argument('date_from', dest='date__gt', type=inputs.date, location='args')
 get_parser.add_argument('date_to', dest='date__lt', type=inputs.date, location='args')
 

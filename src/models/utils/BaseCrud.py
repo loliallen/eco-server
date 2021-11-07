@@ -7,10 +7,13 @@ from src.exceptions.common import FieldError
 
 
 class BaseCrud:
-
     @classmethod
     def read_(cls, **kwargs) -> QuerySet:
-        return cls.objects.filter(**kwargs).all()
+        q = cls.objects
+        if 'search' in kwargs:
+            value = kwargs.pop('search')
+            q = q.filter(cls.search_q(value))
+        return q.filter(**kwargs).all()
 
     @classmethod
     def create_(cls, **kwargs):
@@ -59,3 +62,7 @@ class BaseCrud:
     @classmethod
     def find_by_id_(cls, _id: str, **kwargs):
         return cls.objects(id=_id, **kwargs).first()
+
+    @classmethod
+    def search_q(cls, value) -> object:
+        raise NotImplementedError

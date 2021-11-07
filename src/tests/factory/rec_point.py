@@ -26,9 +26,16 @@ class FilterModelFactory(factory.mongoengine.MongoEngineFactory):
 class RecPointModelFactory(factory.mongoengine.MongoEngineFactory):
     name = factory.Faker('word')
     address = factory.Faker('word')
+    coords = [55.799779, 49.1319283]
     # accept_types = factory.RelatedFactory(FilterModelFactory)
     approve_status = Status.confirmed.value
     district = factory.fuzzy.FuzzyChoice(DISTRICTS)
 
     class Meta:
         model = RecPoint
+
+
+class CommentFactory(factory.DictFactory):
+    text = factory.fuzzy.FuzzyText(length=50)
+    rec_point = None
+    type = factory.Faker('word')
