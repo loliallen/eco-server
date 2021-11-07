@@ -10,7 +10,7 @@ from src.utils.roles import jwt_reqired_backoffice
 get_parser = reqparse.RequestParser()
 get_parser.add_argument('page', type=int, required=False, location='args')
 get_parser.add_argument('size', type=int, required=False, location='args')
-get_parser.add_argument('user_id', type=ObjectId, required=False, location='args')
+get_parser.add_argument('user_id', dest='user', type=ObjectId, required=False, location='args')
 
 resource_fields_ = {
     'id': fields.String,
