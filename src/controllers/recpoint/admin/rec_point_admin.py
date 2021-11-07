@@ -27,6 +27,7 @@ get_parser.add_argument('page', type=int, required=False, default=1, location='a
 get_parser.add_argument('size', type=int, required=False, default=10, location='args')
 get_parser.add_argument('id', dest='id__in', type=str, action='append', location='args')
 get_parser.add_argument('visible', type=boolean, location='args')
+get_parser.add_argument('q', dest='search', type=str, required=False, location='args')
 
 
 post_parser = reqparse.RequestParser()

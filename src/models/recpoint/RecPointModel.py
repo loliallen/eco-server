@@ -1,4 +1,5 @@
 from mongoengine import Document, StringField, ListField, ReferenceField, DictField, BooleanField, PointField, QuerySet
+from mongoengine.queryset.visitor import Q
 
 from src.models.filter.FilterModel import Filter
 from src.models.utils.BaseCrud import BaseCrud
@@ -56,12 +57,15 @@ class RecPoint(Document, BaseCrud):
         Custom read for RecPoints with filters
         """
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
-        rec_points = RecPoint.objects.filter(**kwargs)
+        q = RecPoint.objects
+        if 'search' in kwargs:
+            q.filter(cls.search_q(kwargs.pop('search')))
+        q = q.filter(**kwargs)
 
         if position and radius:
             radian = (radius * 10) / 6378.1
-            rec_points = rec_points.filter(coords__geo_within_center=[position, radian])
-        return rec_points
+            q = q.filter(coords__geo_within_center=[position, radian])
+        return q
 
     @classmethod
     def select_rec_points_near(cls, lon: float, lat: float, radius: int = 10) -> QuerySet:
@@ -73,6 +77,10 @@ class RecPoint(Document, BaseCrud):
             radius: radius at kilometres
         """
         return RecPoint.objects.filter(coords__near=[lon, lat], coords__max_distance=radius)
+
+    @classmethod
+    def search_q(cls, value) -> object:
+        return Q(name__contains=value) | Q(address__contains=value)
 
     def __repr__(self):
         return f'<RecPoint: ({self.id}) {self.name}>'
