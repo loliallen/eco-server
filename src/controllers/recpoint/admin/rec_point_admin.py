@@ -1,3 +1,5 @@
+import datetime
+
 from flask_restful import reqparse, fields, marshal
 from flask_restful.inputs import boolean
 from flask_restful_swagger_3 import swagger, Schema
@@ -140,7 +142,7 @@ class RecPointListController(BaseListController):
     @swagger.reqparser(name='RecPointCreateModelAdmin', parser=post_parser)
     def post(self):
         admin = User.get_user_from_request()
-        return super().post_(author=admin)
+        return super().post_(author=admin, date_created=datetime.datetime.utcnow())
 
 
 class RecPointController(BaseController):
@@ -167,6 +169,7 @@ class RecPointController(BaseController):
         updates = self.parser.parse_args()
         if updates['coords'] is None or updates['coords'] == [None]:
             updates.pop('coords')
+        updates['last_update'] = datetime.datetime.utcnow()
         err, obj = self.update_obj(rec_point_id, updates)
         if err:
             return err

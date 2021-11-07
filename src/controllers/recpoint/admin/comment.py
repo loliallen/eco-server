@@ -4,6 +4,7 @@ from bson import ObjectId
 
 from src.controllers.utils.BaseController import BaseListController, BaseController
 from src.models.recpoint.RecPointComment import RecPointComment
+import src.controllers.utils.fields as custom_fields
 from src.utils.roles import jwt_reqired_backoffice
 
 get_parser = reqparse.RequestParser()
@@ -28,6 +29,7 @@ resource_fields_ = {
     'text': fields.String(),
     'type': fields.List(fields.String()),
     'date': fields.DateTime('iso8601'),
+    'images': fields.List(custom_fields.ImageLink),
 }
 
 

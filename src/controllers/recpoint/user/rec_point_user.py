@@ -1,3 +1,4 @@
+import datetime
 from ast import literal_eval
 
 from flask import current_app as app
@@ -159,7 +160,7 @@ class RecPointListController(BaseListController):
         user = User.get_user_from_request()
         args = post_parser.parse_args()
         args['work_time'] = {'comment': args.get('work_time', None)}
-        rec_point, error = self._create_obj(**args, author=user)
+        rec_point, error = self._create_obj(**args, author=user, date_created=datetime.datetime.utcnow())
         if error:
             return error
         app.logger.info(f'{rec_point} was created by {user}')
@@ -193,4 +194,4 @@ class RecPointController(BaseController):
                       description='-')
     @swagger.reqparser(name='RecPointPutModel', parser=post_parser)
     def put(self, rec_point_id):
-        return super().put_(rec_point_id)
+        return super().put_(rec_point_id, last_update=datetime.datetime.utcnow())

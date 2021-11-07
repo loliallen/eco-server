@@ -1,10 +1,12 @@
-from mongoengine import Document, StringField, ListField, ReferenceField, DictField, BooleanField, PointField, QuerySet
+from mongoengine import (
+    Document, StringField, ListField, ReferenceField, DictField, BooleanField, PointField, QuerySet,
+    DateTimeField
+)
 from mongoengine.queryset.visitor import Q
 
 from src.models.filter.FilterModel import Filter
 from src.models.utils.BaseCrud import BaseCrud
 from src.models.utils.enums import STATUS_CHOICES, Status
-
 
 RECEPTION_TYPE_CHOICES = ('recycle', 'utilisation', 'charity')
 PAYBACK_TYPE_CHOICES = ('free', 'paid', 'partner')
@@ -39,6 +41,8 @@ class RecPoint(Document, BaseCrud):
     visible = BooleanField(default=True)
     approve_status = StringField(choices=STATUS_CHOICES, default=Status.idle.value)
     author = ReferenceField('User')
+    date_created = DateTimeField()
+    last_update = DateTimeField()
 
     meta = {
         "db_alias": "core",
