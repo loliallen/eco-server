@@ -59,7 +59,7 @@ class RecPoint(Document, BaseCrud):
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
         q = RecPoint.objects
         if 'search' in kwargs:
-            q.filter(cls.search_q(kwargs.pop('search')))
+            q = q.filter(cls.search_q(kwargs.pop('search')))
         q = q.filter(**kwargs)
 
         if position and radius:
